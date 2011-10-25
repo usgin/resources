@@ -13,4 +13,7 @@ server.use(express.bodyParser());
 // Homepage
 server.get("/", routeFunctions.main);
 
+// Create a new resource - GET gives you a blank page to fill out. POST saves your record.
+server.get("/new-resource/", routeFunctions.editResource);
+
 server.listen(config.serverInfo.localListenPort);
