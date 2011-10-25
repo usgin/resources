@@ -1,0 +1,67 @@
+!!! 5
+html(lang="en")
+	head
+		title= mainTitle
+		link(rel="stylesheet", type="text/css", href="/static/css/base.css")
+		block styles
+		script(type="application/javascript", src="../static/js/jquery/jquery-1.6.4.min.js")
+		block scripts
+	body
+		#header.clear-block
+			ul#sub-navigation.horiz-list
+				li#contact-link
+					a.orange-link(href="/contact/") Contact
+				li#login-link
+					a.orange-link(href="/login/") Login
+				li#register-link
+					a.orange-link(href="/register/") Register
+			#title-banner.clear-block
+				#site-logo
+					a(href="/")
+						img#logo-image(src= mainLogo, alt="Home")
+				#site-titles
+					h1#site-title= mainTitle
+					#site-subtitle= mainSubTitle
+		#navigation
+			ul#nav-menu.clear-block
+				li#home-link
+					a(href="/") Home
+				li#browse-link
+					a(href="/browse/") Browse Collections
+				li#search-link
+					a(href="/search/") Find Resources
+				block extra-navigation
+				li#new-resource-link
+					a(href="/new-resource/") Create a New Resource
+				li#new-harvest-link
+					a(href="/new-harvest/") Harvest a Resource
+				li#manage-collections-link
+					a(href="/manage-collections/") Manage Collections
+		#content.clear-block
+			#sidebar
+				block site-info-sidebar
+					#site-info-block
+						h2#site-info-title.block-title Site Information
+						#site-info-content.block-content
+							ul#site-info-menu.menu
+								li#site-info-about
+									a(href="/about/") About this Repository
+								li#site-info-terms
+									a(href="/terms/") Terms of Use
+								li#site-info-metadata
+									a(href="/on-metadata/") About Metadata
+				block sidebar-content							
+			#page-content
+				block page-content
+		#footer
+			#footer-content
+				a(href="http://usgin.org") U.S. Geoscience Information Network
+				|  | 
+				span Copyright © 
+				a(href= orgUrl)= orgName + ", " + orgYear
+				|  | 
+				a(href="/terms/") Terms of Use
+				|  | 
+				a(href="/contact/") Contact
+				|  | 
+				a(href="all-records/sitemap") XML Sitemap

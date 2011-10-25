@@ -1,0 +1,179 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+html {
+	background-image: url("../img/bg.gif");
+	padding: 10px;
+}
+
+body {
+	width: 960px;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid white;
+	background-color: white;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+	font-size: 34px;
+	font-weight: bold;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+#sub-navigation {
+	float: right;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#header {
+	background-image: url("../img/header_bg.gif");
+	padding: 20px;
+	padding-bottom: 10px;
+}
+
+#site-logo {
+	float: left;
+	margin-right: 10px;
+}
+
+#site-titles {
+	
+}
+
+#site-title {
+	color: white;
+}
+
+#site-subtitle {
+	color: #F08B6F;
+	font-weight: bold;
+}
+
+#navigation {
+	height: 32px;
+	border-bottom: 3px solid #ED9472;
+	background-image: url("../img/primary_bg.gif");
+}
+
+#nav-menu li {
+	height: 32px;
+	float: left;
+	list-style-type: none;
+}
+
+#nav-menu li a {
+	color: white;
+	font-weight: bold;
+	font-size: 15px;
+	text-decoration: none;
+	line-height: 32px;
+	padding-right: 14px;
+	padding-left: 14px;
+}
+
+#nav-menu li a:hover {
+	color: #F08B6F;
+}
+
+.horiz-list li {
+	display: inline;
+	padding-left: 10px;
+	padding-right: 10px;
+	list-style-type: none;	
+}
+
+.orange-link, .orange-link:hover {
+	color: #F08B6F;
+	text-decoration: none;
+}
+
+.orange-link:hover {
+	text-decoration: underline;
+}
+
+#footer {
+	background-color: #497498;
+}
+
+#footer-content {
+	text-align: center;
+	padding: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	font-size: 12px;
+	color: white;
+}
+
+#footer-content a {
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#footer-content a:hover {
+	color: white;
+	text-decoration: underline;
+}
+
+#sidebar {
+	float: left;
+	width: 220px;
+	padding: 10px;
+}
+
+.block-content {
+	border: 1px solid #DEE7EA;
+	background-color: #EDF2F4;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	padding: 10px;
+}
+
+.block-title {
+	color: white;
+	background-image: url("../img/primary_bg.gif");
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	font-size: 13px;
+	font-weight: bold;
+	padding: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.clear-block::after {
+	content: ".";
+	display: block;
+	visibility: hidden;
+	height: 0px;
+	clear: both;
+}
+
+
+.menu {
+	margin-left: 15px;
+}
+
+.menu li {
+	list-style-image: url("../img/menu-bullet.png");
+	font-size: 12px;
+	margin-bottom: 4px;
+}
+
+.menu li a {
+	color: #006891;
+	text-decoration: none;
+}
+
+.menu li a:hover {
+	text-decoration: underline;
+}
+
+#page-content { 
+	padding: 10px;
+}
