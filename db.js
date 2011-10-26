@@ -6,6 +6,18 @@ repository = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).
 collections = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbCollectionName);
 harvested = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbHarvestName);
 
+exports.getMetadata = function(id, clientResponse) {
+	repository.get(id, function(err, doc) {
+		if (err) {
+			clientResponse.render("404", { searchedId: id, status: 404 });
+		} else {
+			context = config.defaultContext;
+			context.existingResource = doc;
+			clientResponse.render("edit", context);
+		}
+	});
+};
+
 exports.saveMetadata = function(id, metadata, files, clientResponse) {
 	// Set modified date
 	function ISODateString(d){

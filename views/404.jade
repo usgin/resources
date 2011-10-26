@@ -1,0 +1,10 @@
+!!! 5
+html(lang="en")
+	head
+		title There Is Nothing There
+	body
+		h2 404: What you were looking for doesn't exist
+		if (typeof(searchedId) != 'undefined')
+			p I don't have any thing called "#{searchedId}".
+		if (typeof(message) != 'undefined')
+			p= message

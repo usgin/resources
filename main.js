@@ -17,4 +17,9 @@ server.get("/", routeFunctions.main);
 server.get("/new-resource/", routeFunctions.editResource);
 server.post("/new-resource/", routeFunctions.saveResource);
 
+// Edit an existing record, again GET for the page, POST for the saving.
+server.get("/resource/:id", routeFunctions.editResource);
+server.post("/resource/:id", routeFunctions.saveResource);
+
+// Listen to the port specified in the configuration file.
 server.listen(config.serverInfo.localListenPort);
