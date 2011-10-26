@@ -1,15 +1,19 @@
 extends ./base
 
+block styles
+	link(rel="stylesheet", type="text/css", href="/static/css/edit.css")
+	
 block scripts
-	script(type="application/javascript", src="../static/js/jade.js")
-	script(type="application/javascript", src="../static/js/editor/read-record.js")
+	script(type="application/javascript", src="/static/js/jade.js")
+	script(type="application/javascript", src="/static/js/editor/read-record.js")
+	script(type="application/javascript", src="/static/js/editor/write-record.js")
+	script(type="application/javascript", src="/static/js/editor/obj-template.js")
+	script(type="application/javascript", src="/static/js/editor/value-template.js")
+	script(type="application/javascript", src="/static/js/editor/editor.js")
 	script(type="application/javascript")
-		- var contactObj = JSON.stringify(contactTemplate)
-		- var linkObj = JSON.stringify(linkTemplate)
-		- var metadataObj = JSON.stringify(metadataTemplate)
-		| contactObj = !{contactObj};
-		| linkObj = !{linkObj};
-		| metadataObj = !{metadataObj};
+		| contactObj = !{contactTemplate};
+		| linkObj = !{linkTemplate};
+		| metadataObj = !{metadataTemplate};
 		- if (existingResource) {
 		| startObj = !{existingResource};
 		- } else {
@@ -23,3 +27,8 @@ block page-content
 		- } else {
 		h1#editor-title Create a New Resource
 		- }
+	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="return writeResource()")
+		#resource-container
+			ul#theResource
+		input#the-new-resource(name="theResource")
+		input#save-resource-button(type="submit", value="Save Your Resource")

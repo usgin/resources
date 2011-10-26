@@ -15,5 +15,6 @@ server.get("/", routeFunctions.main);
 
 // Create a new resource - GET gives you a blank page to fill out. POST saves your record.
 server.get("/new-resource/", routeFunctions.editResource);
+server.post("/new-resource/", routeFunctions.saveResource);
 
 server.listen(config.serverInfo.localListenPort);
