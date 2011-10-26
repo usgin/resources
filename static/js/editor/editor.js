@@ -9,5 +9,4 @@ function writeResource() {
 	});
 	
 	$("#the-new-resource").val(JSON.stringify(theResource));
-	return true;
 }

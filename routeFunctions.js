@@ -1,5 +1,6 @@
 var exports = module.exports,
-	config = require("./config.js");
+	config = require("./config.js"),
+	db = require("./db.js");
 
 
 // Front Page:
@@ -45,11 +46,12 @@ function formParser(fields) {
 
 // Save a Resource
 exports.saveResource = function(req, res, next) {
+	resourceId = req.param("id", null);
 	req.form.complete(function(err, fields, files) {
 		if (err) { next(err); }
 		else {
-			theResource = JSON.parse(fields.theResource);
-			res.json(theResource);
+			metadata = JSON.parse(fields.theResource);
+			db.saveMetadata(resourceId, metadata, files, res);
 		}
 	});
 };
