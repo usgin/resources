@@ -17,6 +17,17 @@
 	padding: 4px;
 }
 
+#the-new-resource {
+	display: none;	
+}
+
+#save-resource-button {
+	margin-top: 10px;
+	padding: 4px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 ul[eletype="array"] > li > div[ele="attribute"] {
 	height: 19px;
 	text-indent: -3000px;

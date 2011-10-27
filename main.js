@@ -21,5 +21,13 @@ server.post("/new-resource/", routeFunctions.saveResource);
 server.get("/resource/:id", routeFunctions.editResource);
 server.post("/resource/:id", routeFunctions.saveResource);
 
+// All other requests should 404
+server.get("*", function(req, res) {
+	context = config.defaultContext;
+	context.status = 404;
+	context.message = "Perhaps this page hasn't been created yet...";
+	res.render("404", context);
+});
+
 // Listen to the port specified in the configuration file.
 server.listen(config.serverInfo.localListenPort);
