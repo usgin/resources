@@ -8,7 +8,7 @@ var objStr = objList.join("\n");
 
 var objFn = jade.compile(objStr);
 
-function objAsHtml(property, parentId, type, thisId) {
+function objAsHtml(property, type, thisId) {
 	objContext = {
 		listId: thisId,	
 		propertyName: property,

@@ -2,6 +2,18 @@ extends ./base
 
 block styles
 	link(rel="stylesheet", type="text/css", href="/static/css/edit.css")
+
+block sidebar-content
+	#standard-addition-block
+		h2#standard-addition-title.block-title Add Formal Content
+		#standard-addition-content.block-content
+			ul#standard-addition-menu.menu
+				li#standard-addition-author
+					a(href="#", onclick="addAuthor()") Add an Author
+				li#standard-addition-distributor
+					a(href="#", onclick="addDsitributor()") Add a Distributor
+				li#standard-addition-link
+					a(href="#", onclick="addLink()") Add a Link
 	
 block scripts
 	script(type="application/javascript", src="/static/js/jade.js")

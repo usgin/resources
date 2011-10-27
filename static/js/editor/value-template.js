@@ -8,7 +8,7 @@ var valueStr = valueList.join("\n");
 
 var valueFn = jade.compile(valueStr);
 
-function valueAsHtml(value, property, parentId) {
+function valueAsHtml(value, property) {
 	valueContext = {
 		value: value,
 		propertyName: property,

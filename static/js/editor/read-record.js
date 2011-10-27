@@ -25,7 +25,7 @@ function typeChooser(obj, parentId) {
 			renderObject(obj[property], property, "array", parentId);
 			break;
 		default:
-			addHtml(valueAsHtml(obj[property], property, parentId), parentId);
+			addHtml(valueAsHtml(obj[property], property), parentId);
 			break;
 		}
 	}
@@ -33,7 +33,7 @@ function typeChooser(obj, parentId) {
 
 function renderObject(obj, propertyName, type, parentId) {
 	thisId = getId();
-	addHtml(objAsHtml(propertyName, parentId, type, thisId), parentId);
+	addHtml(objAsHtml(propertyName, type, thisId), parentId);
 	typeChooser(obj, thisId);
 }
 
