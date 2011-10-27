@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	typeChooser(startObj, "theResource");
+	$("ul[eletype='array'] > li > div[ele='attribute']").removeAttr("contenteditable");
 });
 
 function writeResource() {
