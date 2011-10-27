@@ -34,9 +34,14 @@ function typeChooser(obj, parentId) {
 function renderObject(obj, propertyName, type, parentId) {
 	thisId = getId();
 	addHtml(objAsHtml(propertyName, type, thisId), parentId);
+	addHtml(controlToolbar(thisId, true, true), thisId + "-header", true);
 	typeChooser(obj, thisId);
 }
 
-function addHtml(html, parentId) {
-	$(parentIdCleanup(parentId)).append(html);
+function addHtml(html, parentId, shouldPrepend) {
+	if (shouldPrepend) {
+		$(parentIdCleanup(parentId)).prepend(html);
+	} else {
+		$(parentIdCleanup(parentId)).append(html);
+	}	
 }

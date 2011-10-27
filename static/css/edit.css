@@ -8,7 +8,7 @@
 	margin-top: 4px;
 }
 
-#theResource ul {
+#theResource ul[eletype] {
 	border: 1px solid #A5AFC2;
 	border-top: none;
 	border-bottom-left-radius: 5px;
@@ -28,22 +28,26 @@
 	padding-right: 10px;
 }
 
-ul[eletype="array"] > li > div[ele="attribute"] {
+/* Hide text in array titles -- they're just numbers anyway */
+ul[eletype="array"] > li > div > div[ele="attribute"] {
 	height: 19px;
 	text-indent: -3000px;
 	overflow: hidden;
 }
 
-ul[eletype='array'] > li > div[ele='attribute'][eletype='value'] {
+/* Inside an array, items that are simply values should have their titles removed completely -- Keywords are a good example */
+ul[eletype='array'] > li > div > div[ele='attribute'][eletype='value'] {
 	display: none;
 }
 
-ul[eletype='array'] > li > div[ele='attribute'][eletype='value'] + div[ele="value"] {
+/* In the same situation as that immediately prior, we want the input box to be shaped nicely */
+ul[eletype='array'] > li > div > div[ele='attribute'][eletype='value'] + div[ele="value"] {
 	border-top: 1px solid #A5AFC2;
 	border-top-right-radius: 5px;
 	border-top-left-radius: 5px;	
 }
 
+/* Standard attribute names and values */
 div[ele="value"] {
 	border: 1px solid #A5AFC2;
 	border-top: none;
@@ -61,7 +65,44 @@ div[ele="attribute"] {
 	border-top-right-radius: 5px;
 	padding: 4px;
 	padding-left: 10px;
+}
+
+.object-header, div[ele='attribute'][eletype='value'] {
 	background-image: url("../img/primary_bg.gif");
 }
 
+.object-header {
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	height: 27px;
+} 
 
+/* Control Toolbar */
+.control-tools {
+	float: right;
+	margin-top: 2px;
+}
+
+.control-tools li {
+	height: 16px;
+	width: 16px;
+	float: left;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.minimize-button {	
+	background-image: url("../img/collapse.gif");
+}
+
+.minimize-button.collapsed {
+	background-image: url("../img/expand.gif");
+}
+
+ul.collapsed {
+	display: none;
+}
+
+.delete-button {
+	background-image: url("../img/cancel.png");
+}

@@ -1,10 +1,10 @@
 function domChooser(ele, parentObj) {
 	// Grab the name of the property
-	var propertyName = ele.children("div[ele='attribute']").html();
+	var propertyName = ele.find("div > div[ele='attribute']").html();
 	
 	// DOM li nodes containing ul eles are objects, otherwise they are property/value pairs
 	if (ele.children("ul").length > 0) {
-		switch (ele.children("div[ele='attribute']").attr("eletype")) {
+		switch (ele.find("div > div[ele='attribute']").attr("eletype")) {
 		case "array":
 			addObject(propertyName, ele, [], parentObj);
 			break;
@@ -13,7 +13,7 @@ function domChooser(ele, parentObj) {
 			break;
 		}
 	} else {
-		parentObj[propertyName] = ele.children("div[ele='value']").html();
+		parentObj[propertyName] = ele.find("div > div[ele='value']").html();
 	}
 }
 

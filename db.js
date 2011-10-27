@@ -36,7 +36,7 @@ exports.saveMetadata = function(id, metadata, files, clientResponse) {
 		if (err) {
 			clientResponse.send(err, 500);
 		} else {
-			clientResponse.send("Record was saved with id: " + dbRes.id);
+			clientResponse.redirect("/resource/" + dbRes.id);
 		}
 	}
 	

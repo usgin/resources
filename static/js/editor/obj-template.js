@@ -1,8 +1,9 @@
 var jade = require("jade");
 
 var objList = [];
-objList.push("li");
-objList.push("\t" + "div(ele='attribute', eletype=eleType, contenteditable='true')=propertyName");
+objList.push("li(id=listId + '-container')");
+objList.push("\t" + "div.object-header.clear-block(id=listId + '-header')");
+objList.push("\t\t" + "div(ele='attribute', eletype=eleType, contenteditable='true')=propertyName");
 objList.push("\t" + "ul(id=listId, eletype=eleType)");
 var objStr = objList.join("\n");
 

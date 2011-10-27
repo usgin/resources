@@ -1,6 +1,10 @@
 $(document).ready(function() {
 	typeChooser(startObj, "theResource");
-	$("ul[eletype='array'] > li > div[ele='attribute']").removeAttr("contenteditable");
+	
+	// A couple of adjustments:
+	//	First, make the text of attributes of titles in arrays un-editable	
+	$("ul[eletype='array'] > li > div > div[ele='attribute']").removeAttr("contenteditable");
+	//	Then, move the site information block below the other blocks
 	$("#standard-addition-block").insertBefore("#site-info-block");
 });
 

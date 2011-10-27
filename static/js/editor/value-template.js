@@ -2,8 +2,9 @@ var jade = require("jade");
 
 var valueList = [];
 valueList.push("li");
-valueList.push("\t" + "div(ele='attribute', eletype='value', contenteditable='true')=propertyName");
-valueList.push("\t" + "div(ele='value', contenteditable='true')=value");
+valueList.push("\t" + ".value-container");
+valueList.push("\t\t" + "div(ele='attribute', eletype='value', contenteditable='true')=propertyName");
+valueList.push("\t\t" + "div(ele='value', contenteditable='true')=value");
 var valueStr = valueList.join("\n");
 
 var valueFn = jade.compile(valueStr);
