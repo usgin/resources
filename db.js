@@ -1,6 +1,7 @@
 var cradle = require("cradle"),
 	config = require("./config.js"),
-	exports = module.exports;
+	exports = module.exports,
+	xmlParser = require("xml2json");
 
 repository = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbRepoName);
 collections = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbCollectionName);
@@ -58,6 +59,11 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 			switch(format) {
 			case "geojson":
 				clientResponse.json(dbRes.rows[0].value);
+				break;
+			case "iso":
+				json = dbRes.rows[0].value;
+				clientResponse.contentType("application/xml");
+				clientResponse.send(xmlParser.toXml(json));
 				break;
 			default:
 				context.message = "Something went wrong. Tell your server admin to make sure this output format is configured correctly.";
