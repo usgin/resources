@@ -21,12 +21,15 @@ server.post("/new-resource/", routeFunctions.saveResource);
 server.get("/resource/:id", routeFunctions.editResource);
 server.post("/resource/:id", routeFunctions.saveResource);
 
+// Get a single record in some defined output format
+server.get("/resource/:id/:format", routeFunctions.getFormattedResource);
+
 // All other requests should 404
 server.get("*", function(req, res) {
 	context = config.defaultContext;
 	context.status = 404;
 	context.message = "Perhaps this page hasn't been created yet...";
-	res.render("404", context);
+	res.render("errorResponse", context);
 });
 
 // Listen to the port specified in the configuration file.

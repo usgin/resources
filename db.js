@@ -8,10 +8,12 @@ harvested = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).d
 
 exports.getMetadata = function(id, clientResponse) {
 	repository.get(id, function(err, doc) {
+		context = config.defaultContext;
 		if (err) {
-			clientResponse.render("404", { searchedId: id, status: 404 });
+			context.searchedId = id;
+			context.status = 404;
+			clientResponse.render("errorResponse", context);
 		} else {
-			context = config.defaultContext;
 			context.existingResource = doc;
 			clientResponse.render("edit", context);
 		}
@@ -45,4 +47,23 @@ exports.saveMetadata = function(id, metadata, files, clientResponse) {
 	} else {
 		repository.save(metadata, dbResponse);
 	}
+};
+
+exports.returnFormattedRecord = function(id, format, clientResponse) {
+	viewName = "outputs/" + format;
+	repository.view(viewName, { key: id }, function(err, dbRes) {
+		if (err) { clientResponse.send(err, 500); }
+		else {
+			context = config.defaultContext;
+			switch(format) {
+			case "geojson":
+				clientResponse.json(dbRes.rows[0].value);
+				break;
+			default:
+				context.message = "Something went wrong. Tell your server admin to make sure this output format is configured correctly.";
+				context.status = 500;
+				clientResponse.render("errorResponse", context);
+			}
+		}
+	});
 };
