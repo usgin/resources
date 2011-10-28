@@ -1,7 +1,7 @@
 var exports = module.exports;
 
 _stdFormatsHarvestable = {
-	//iso: "USGIN-ISO 19139",
+	iso: "USGIN-ISO 19139",
 	//fgdc: "FGDC XML",
 	//wms: "WMS Capabilities",
 	//wfs: "WFS Capabilities",
