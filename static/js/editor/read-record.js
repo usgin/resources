@@ -39,9 +39,7 @@ function renderObject(obj, propertyName, type, parentId) {
 }
 
 function addHtml(html, parentId, shouldPrepend) {
-	if (shouldPrepend) {
-		$(parentIdCleanup(parentId)).prepend(html);
-	} else {
-		$(parentIdCleanup(parentId)).append(html);
-	}	
+	parent = $(parentIdCleanup(parentId));
+	if (shouldPrepend) { parent.prepend(html); }
+	else { $(parentIdCleanup(parentId)).append(html); }	
 }

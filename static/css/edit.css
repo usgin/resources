@@ -9,10 +9,8 @@
 }
 
 #theResource ul[eletype] {
-	border: 1px solid #A5AFC2;
+	border: 1px solid #DEE7EA;
 	border-top: none;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
 	background-color: #EDF2F4;
 	padding: 4px;
 }
@@ -40,22 +38,28 @@ ul[eletype='array'] > li > div > div[ele='attribute'][eletype='value'] {
 	display: none;
 }
 
-/* In the same situation as that immediately prior, we want the input box to be shaped nicely */
-ul[eletype='array'] > li > div > div[ele='attribute'][eletype='value'] + div[ele="value"] {
-	border-top: 1px solid #A5AFC2;
-	border-top-right-radius: 5px;
-	border-top-left-radius: 5px;	
+/* Adjustments to put titles of key/value pairs left of the content */
+.value-container div[ele='attribute'] {
+	float: left;
+	border-radius: 0px;
+	padding-right: 10px;
+	margin: -1px;
+	margin-right: 5px;
+	color: #006891;
+	background-color: #D4E0F4;
+}
+
+.value-container {
+	border: 1px solid #DEE7EA;
+	background-color: white;
 }
 
 /* Standard attribute names and values */
 div[ele="value"] {
-	border: 1px solid #A5AFC2;
-	border-top: none;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
+	border: none;
 	padding: 4px;
+	margin-top: 2px;
 	font-size: 12px;
-	background-color: white;
 }
 
 div[ele="attribute"] {
@@ -67,7 +71,7 @@ div[ele="attribute"] {
 	padding-left: 10px;
 }
 
-.object-header, div[ele='attribute'][eletype='value'] {
+.object-header {
 	background-image: url("../img/primary_bg.gif");
 }
 

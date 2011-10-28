@@ -177,5 +177,6 @@ h1 {
 
 #page-content { 
 	padding: 10px;
-	margin-left: 240px;
+	width: 700px;
+	float:right;
 }
