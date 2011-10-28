@@ -103,6 +103,20 @@ div[ele="attribute"] {
 	background-image: url("../img/expand.gif");
 }
 
+.add-obj-button {
+	background-image: url("../img/add-obj.png");	
+}
+
+.add-arr-button {
+	background-image: url("../img/add-arr.png");	
+}
+
+.add-val-button {
+	background-image: url("../img/add-val.png");
+	margin-right: 20px !important;	
+}
+
+
 ul.collapsed {
 	display: none;
 }
