@@ -162,6 +162,7 @@ h1 {
 
 .menu li {
 	list-style-image: url("../img/menu-bullet.png");
+	color: #006891;
 	font-size: 12px;
 	margin-bottom: 4px;
 }
@@ -179,4 +180,10 @@ h1 {
 	padding: 10px;
 	width: 700px;
 	float:right;
+}
+
+#map-block #map {
+	height: 250px;
+	border: 1px solid #DEE7EA;
+	background-color: white;
 }

@@ -11,9 +11,29 @@ block sidebar-content
 				li#standard-addition-author
 					a(href="#", onclick="addAuthor()") Add an Author
 				li#standard-addition-distributor
-					a(href="#", onclick="addDsitributor()") Add a Distributor
+					a(href="#", onclick="addDistributor()") Add a Distributor
 				li#standard-addition-link
 					a(href="#", onclick="addLink()") Add a Link
+					
+	#file-attachment-block
+		h2#file-attachment-title.block-title Manage File Attachments
+		#file-attachment-content.block-content
+			ul#file-attachment-menu.menu
+				li#file-attachment-add
+					a(href="#", onclick="addFile()") Add a File
+					
+	#collections-block
+		h2#collections-title.block-title Manage Collections
+		#collections-content.block-content
+			ul#collections-menu.menu
+				li#collections-current Current Collections:
+					ul#collections-current-list
+				li#collections-new Request addition to Collection:
+				
+	#map-block
+		h2#map-title.block-title Resource Location
+		#map-content.block-content
+			#map
 	
 block scripts
 	script(type="application/javascript", src="/static/js/jade.js")

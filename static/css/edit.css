@@ -124,3 +124,9 @@ ul.collapsed {
 .delete-button {
 	background-image: url("../img/cancel.png");
 }
+
+.included-collection {
+	list-style-image: none !important;
+	list-style-type: none !important;
+	padding-left: 15px;
+}
