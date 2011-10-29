@@ -16,28 +16,28 @@ function controlToolbar(id, canDelete, canMinimize) {
 	context = {
 		canDelete: canDelete,
 		id: id,
-		addObjFunction: "addObject('" + id + "')",
-		addArrFunction: "addArray('" + id + "')",
-		addValFunction: "addValue('" + id + "')",
+		addObjFunction: "addNewObject('" + id + "')",
+		addArrFunction: "addNewArray('" + id + "')",
+		addValFunction: "addNewValue('" + id + "')",
 		minimizeFunction: "minimize('#" + id + "')",
 		deleteFunction: "deleteObj('#" + id + "')"
 	};
 	return controlFn(context);
 }
 
-function addObject(parentId) {
+function addNewObject(parentId) {
 	thisId = getId();
 	addHtml(objAsHtml("NewProperty", "object", thisId), parentId, true);
 	addHtml(controlToolbar(thisId, true, true), thisId + "-header", true);
 }
 
-function addArray(parentId) {
+function addNewArray(parentId) {
 	thisId = getId();
 	addHtml(objAsHtml("NewProperty", "array", thisId), parentId, true);
 	addHtml(controlToolbar(thisId, true, true), thisId + "-header", true);
 }
 
-function addValue(parentId) {
+function addNewValue(parentId) {
 	addHtml(valueAsHtml("Add a new value", "NewProperty"), parentId, true);
 }
 
