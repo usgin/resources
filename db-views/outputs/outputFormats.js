@@ -4,7 +4,7 @@ _stdFormatsAvailable = {
 	iso: "USGIN-ISO 19139",
 	//fgdc: "FGDC XML",
 	geojson: "GeoJSON",
-	//atom: "Atom Feed",
+	atom: "Atom Feed",
 	//html: "HTML"
 };
 
