@@ -11,7 +11,8 @@ function addAuthor() {
 	});
 	if (authorsFound) {
 		$("#authors-container + ul")[0].id = "authors-list";
-		typeChooser(contactObj, "authors-list");
+		newAuthor = { "NewProperty": contactObj };
+		typeChooser(newAuthor, "authors-list");
 	}
 }
 
