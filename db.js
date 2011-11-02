@@ -50,6 +50,12 @@ exports.saveMetadata = function(id, metadata, files, clientResponse) {
 	}
 };
 
+function _returnXml(dbResponse, clientResponse) {
+	json = dbResponse.rows[0].value;
+	clientResponse.contentType("application/xml");
+	clientResponse.send(xmlParser.toXml(json));
+}
+
 exports.returnFormattedRecord = function(id, format, clientResponse) {
 	viewName = "outputs/" + format;
 	repository.view(viewName, { key: id }, function(err, dbRes) {
@@ -61,9 +67,11 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 				clientResponse.json(dbRes.rows[0].value);
 				break;
 			case "iso":
-				json = dbRes.rows[0].value;
-				clientResponse.contentType("application/xml");
-				clientResponse.send(xmlParser.toXml(json));
+				_returnXml(dbRes, clientResponse);
+				break;
+			case "atom":
+				//clientResponse.json(dbRes.rows[0].value);
+				_returnXml(dbRes, clientResponse);
 				break;
 			default:
 				context.message = "Something went wrong. Tell your server admin to make sure this output format is configured correctly.";
