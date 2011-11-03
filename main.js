@@ -24,6 +24,9 @@ server.post("/resource/:id", routeFunctions.saveResource);
 // Get a single record in some defined output format
 server.get("/resource/:id/:format", routeFunctions.getFormattedResource);
 
+// Get all the records in some defined output format
+server.get("/resources/:format", routeFunctions.getAllRecords);
+
 // All other requests should 404
 server.get("*", function(req, res) {
 	context = config.defaultContext;

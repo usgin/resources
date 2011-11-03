@@ -34,6 +34,15 @@ exports.saveResource = function(req, res, next) {
 	});
 };
 
+function _returnInvalidFormatResponse(clientResponse) {
+	context = config.defaultContext;
+	formatsAvailable = [];
+	for (var k in output.stdFormatsAvailable) { formatsAvailable.push(k); }
+	context.message = "You requested an invalid format. You can request one of: " + formatsAvailable;
+	context.status = 404;
+	clientResponse.render("errorResponse", context);
+}
+
 // Get a formatted Resource
 exports.getFormattedResource = function(req, res) {
 	resourceId = req.param("id", null);
@@ -41,11 +50,16 @@ exports.getFormattedResource = function(req, res) {
 	if (requestedFormat in output.stdFormatsAvailable) {
 		db.returnFormattedRecord(resourceId, requestedFormat, res);
 	} else {
-		context = config.defaultContext;
-		formatsAvailable = [];
-		for (var k in output.stdFormatsAvailable) { formatsAvailable.push(k); }
-		context.message = "You requested an invalid format. You can request one of: " + formatsAvailable;
-		context.status = 404;
-		res.render("errorResponse", context);
+		_returnInvalidFormatResponse(res);
+	}
+};
+
+// Get all formatted Resources
+exports.getAllRecords = function(req, res) {
+	requestedFormat = req.param("format", null);
+	if (requestedFormat in output.stdFormatsAvailable) {
+		db.returnAllRecords(requestedFormat, res);
+	} else {
+		_returnInvalidFormatResponse(res);
 	}
 };

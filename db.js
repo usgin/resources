@@ -50,8 +50,7 @@ exports.saveMetadata = function(id, metadata, files, clientResponse) {
 	}
 };
 
-function _returnXml(dbResponse, clientResponse) {
-	json = dbResponse.rows[0].value;
+function _returnXml(json, clientResponse) {
 	clientResponse.contentType("application/xml");
 	clientResponse.send(xmlParser.toXml(json));
 }
@@ -67,17 +66,48 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 				clientResponse.json(dbRes.rows[0].value);
 				break;
 			case "iso":
-				_returnXml(dbRes, clientResponse);
+				_returnXml(dbRes.rows[0].value, clientResponse);
 				break;
 			case "atom":
-				//clientResponse.json(dbRes.rows[0].value);
-				_returnXml(dbRes, clientResponse);
+				_returnXml(dbRes.rows[0].value, clientResponse);
 				break;
 			default:
 				context.message = "Something went wrong. Tell your server admin to make sure this output format is configured correctly.";
 				context.status = 500;
 				clientResponse.render("errorResponse", context);
 			}
+		}
+	});
+};
+
+exports.returnAllRecords = function(format, clientResponse) {
+	viewName = "outputs/" + format;
+	repository.all(function(err, dbResponse) {
+		if (err) { clientResponse.send(err, 500); }
+		else {
+			ids = [];
+			for (var r in dbResponse.rows) {
+				id = dbResponse.rows[r].id;
+				if (id.indexOf("_") != 0) { ids.push(id); }
+			}
+			repository.view(viewName, { keys: ids }, function(err, viewResponse) {
+				if (err) { clientResponse.send(err, 500); }
+				else {
+					switch (format) {
+					case "geojson":
+						geoCollection = { type: "FeatureCollection", features: [] };
+						for (var vr in viewResponse.rows) {
+							geoCollection.features.push(viewResponse.rows[vr].value);
+						}
+						clientResponse.json(geoCollection);
+						break;
+					default: 
+						context.message = "Something went wrong. Tell your server admin to make sure this output format is configured correctly.";
+						context.status = 500;
+						clientResponse.render("errorResponse", context);
+					}					
+				}
+			});
 		}
 	});
 };
