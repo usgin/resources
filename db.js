@@ -74,7 +74,13 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 	viewName = "outputs/" + format;
 	repository.view(viewName, { key: id }, function(err, dbRes) {
 		if (err) { clientResponse.send(err, 500); }
-		else {			
+		else {
+			if (dbRes.rows.length == 0) {
+				context.message = "The resource ID requested was invalid.";
+				context.status = 404;
+				clientResponse.render("errorResponse", context);
+				return;
+			}
 			switch(format) {
 			case "geojson":
 				clientResponse.json(dbRes.rows[0].value);
@@ -116,6 +122,12 @@ exports.returnAllRecords = function(format, clientResponse) {
 			repository.view(viewName, { keys: ids }, function(err, viewResponse) {
 				if (err) { clientResponse.send(err, 500); }
 				else {
+					if (dbRes.rows.length == 0) {
+						context.message = "The resource IDs requested were invalid.";
+						context.status = 404;
+						clientResponse.render("errorResponse", context);
+						return;
+					}
 					switch (format) {
 					case "geojson":
 						geoCollection = { type: "FeatureCollection", features: [] };
