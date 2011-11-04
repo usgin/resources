@@ -56,11 +56,25 @@ function _returnXml(json, clientResponse) {
 }
 
 exports.returnFormattedRecord = function(id, format, clientResponse) {
+	context = config.defaultContext;
+	if (format == "html") {
+		repository.get(id, function(err, doc) {
+			if (err) {
+				context.searchedId = id;
+				context.status = 404;
+				clientResponse.render("errorResponse", context);
+			} else {
+				context.doc = doc;
+				clientResponse.render("html-record", context);
+			}
+		});
+		return;
+	}
+	
 	viewName = "outputs/" + format;
 	repository.view(viewName, { key: id }, function(err, dbRes) {
 		if (err) { clientResponse.send(err, 500); }
-		else {
-			context = config.defaultContext;
+		else {			
 			switch(format) {
 			case "geojson":
 				clientResponse.json(dbRes.rows[0].value);

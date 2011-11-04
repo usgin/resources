@@ -5,7 +5,7 @@ _stdFormatsAvailable = {
 	//fgdc: "FGDC XML",
 	geojson: "GeoJSON",
 	atom: "Atom Feed",
-	//html: "HTML"
+	html: "HTML"
 };
 
 _outputViews = {};
