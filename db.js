@@ -85,10 +85,19 @@ exports.returnAllRecords = function(format, clientResponse) {
 	repository.all(function(err, dbResponse) {
 		if (err) { clientResponse.send(err, 500); }
 		else {
-			ids = [];
+			ids = [], isoUrls = {};
 			for (var r in dbResponse.rows) {
 				id = dbResponse.rows[r].id;
-				if (id.indexOf("_") != 0) { ids.push(id); }
+				if (id.indexOf("_") != 0) { 
+					ids.push(id);
+					isoUrls[id] = "/resource/" + id + "/iso";
+				}
+			}
+			if (format == "iso") { 
+				context = config.defaultContext;
+				context.recordUrls = isoUrls;
+				clientResponse.render("waf", context);
+				return;
 			}
 			repository.view(viewName, { keys: ids }, function(err, viewResponse) {
 				if (err) { clientResponse.send(err, 500); }
