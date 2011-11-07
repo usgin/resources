@@ -25,7 +25,8 @@ _serverInfo = {
 _organizationInfo = {
 	orgName: "Arizona Geological Survey",
 	orgUrl: "http://azgs.az.gov",
-	orgYear: 2011
+	orgYear: 2011,
+	orgEmail: "web-admin@azgs.az.gov"
 };
 
 /*
@@ -79,6 +80,7 @@ _defaultContext = {
 	orgName: _organizationInfo.orgName,
 	orgUrl: _organizationInfo.orgUrl,
 	orgYear: _organizationInfo.orgYear,
+	helpEmail: _organizationInfo.orgEmail,
 	contactTemplate: JSON.stringify(_storage.contactTemplate),
 	linkTemplate: JSON.stringify(_storage.linkTemplate),
 	metadataTemplate: JSON.stringify(_storage.metadataTemplate)

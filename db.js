@@ -123,7 +123,7 @@ exports.returnAllRecords = function(format, clientResponse) {
 			repository.view(viewName, { keys: ids }, function(err, viewResponse) {
 				if (err) { clientResponse.send(err, 500); }
 				else {
-					if (dbRes.rows.length == 0) {
+					if (viewResponse.rows.length == 0) {
 						context.message = "The resource IDs requested were invalid.";
 						context.status = 404;
 						clientResponse.render("errorResponse", context);
@@ -140,14 +140,19 @@ exports.returnAllRecords = function(format, clientResponse) {
 					case "atom":
 						///Define a feed
 						atomFeed = { feed: 
-							{"xmlns": "http://www.w3.org/2005/Atom", 
-							"xmlns:georss": "http://www.georss.org/georss", 
-							"xmlns:opensearch": "http://a9.com/-/spec/opensearch/1.1/",
-							"id": {$t: "azgs.az.gov"},
-							"title": {$t: "AZGS Atom Feed"},
-							"entry": []
+							{
+								"xmlns": "http://www.w3.org/2005/Atom", 
+								"xmlns:georss": "http://www.georss.org/georss", 
+								//"xmlns:opensearch": "http://a9.com/-/spec/opensearch/1.1/",
+								"id": { $t: config.defaultContext.orgUrl + "/resources/atom" },
+								"title": { $t: "AZGS Atom Feed" },
+								"author": { 
+									"name": { $t: config.defaultContext.orgName }, 
+									"email": { $t: config.defaultContext.helpEmail } 
+								},
+								"entry": []
 							} 
-							};
+						};
 						
 						///Integrate all the entries into a feed
 						for (var vr in viewResponse.rows){
