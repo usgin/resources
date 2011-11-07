@@ -1,7 +1,8 @@
 var exports = module.exports,
 	config = require("./config.js"),
 	db = require("./db.js"),
-	output = require("./db-views/outputs/outputFormats.js");
+	output = require("./db-views/outputs/outputFormats.js"),
+	errorPage = require("./error.js");
 
 
 // Front Page:
@@ -38,9 +39,7 @@ function _returnInvalidFormatResponse(clientResponse) {
 	context = config.defaultContext;
 	formatsAvailable = [];
 	for (var k in output.stdFormatsAvailable) { formatsAvailable.push(k); }
-	context.message = "You requested an invalid format. You can request one of: " + formatsAvailable;
-	context.status = 404;
-	clientResponse.render("errorResponse", context);
+	errorPage.sendErrorPage(clientResponse, 404, "You requested an invalid format. You can request one of: " + formatsAvailable);
 }
 
 // Get a formatted Resource

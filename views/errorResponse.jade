@@ -2,6 +2,7 @@ extends ./base
 
 block page-content
 	h3 I'm sorry, but what you were looking for doesn't exist
+	br
 	if (typeof(searchedId) != 'undefined')
 		p I don't have any resource called "#{searchedId}".
 	if (typeof(message) != 'undefined')
