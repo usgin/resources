@@ -56,11 +56,31 @@ function _returnXml(json, clientResponse) {
 }
 
 exports.returnFormattedRecord = function(id, format, clientResponse) {
+	context = config.defaultContext;
+	if (format == "html") {
+		repository.get(id, function(err, doc) {
+			if (err) {
+				context.searchedId = id;
+				context.status = 404;
+				clientResponse.render("errorResponse", context);
+			} else {
+				context.doc = doc;
+				clientResponse.render("html-record", context);
+			}
+		});
+		return;
+	}
+	
 	viewName = "outputs/" + format;
 	repository.view(viewName, { key: id }, function(err, dbRes) {
 		if (err) { clientResponse.send(err, 500); }
 		else {
-			context = config.defaultContext;
+			if (dbRes.rows.length == 0) {
+				context.message = "The resource ID requested was invalid.";
+				context.status = 404;
+				clientResponse.render("errorResponse", context);
+				return;
+			}
 			switch(format) {
 			case "geojson":
 				clientResponse.json(dbRes.rows[0].value);
@@ -86,14 +106,29 @@ exports.returnAllRecords = function(format, clientResponse) {
 	repository.all(function(err, dbResponse) {
 		if (err) { clientResponse.send(err, 500); }
 		else {
-			ids = [];
+			ids = [], isoUrls = {};
 			for (var r in dbResponse.rows) {
 				id = dbResponse.rows[r].id;
-				if (id.indexOf("_") != 0) { ids.push(id); }
+				if (id.indexOf("_") != 0) { 
+					ids.push(id);
+					isoUrls[id] = "/resource/" + id + "/iso";
+				}
+			}
+			if (format == "iso") { 
+				context = config.defaultContext;
+				context.recordUrls = isoUrls;
+				clientResponse.render("waf", context);
+				return;
 			}
 			repository.view(viewName, { keys: ids }, function(err, viewResponse) {
 				if (err) { clientResponse.send(err, 500); }
 				else {
+					if (dbRes.rows.length == 0) {
+						context.message = "The resource IDs requested were invalid.";
+						context.status = 404;
+						clientResponse.render("errorResponse", context);
+						return;
+					}
 					switch (format) {
 					case "geojson":
 						geoCollection = { type: "FeatureCollection", features: [] };

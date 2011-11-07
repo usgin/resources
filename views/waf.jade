@@ -1,0 +1,12 @@
+!!! 5
+html(lang="en")
+	head
+		title= mainTitle
+	body
+		h1= mainTitle + " -- All ISO Documents"
+		ul
+			- for (var id in recordUrls) {
+			li
+				a(href="#{recordUrls[id]}")= id + ".xml"
+			- }
+	
