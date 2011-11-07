@@ -140,14 +140,19 @@ exports.returnAllRecords = function(format, clientResponse) {
 					case "atom":
 						///Define a feed
 						atomFeed = { feed: 
-							{"xmlns": "http://www.w3.org/2005/Atom", 
-							"xmlns:georss": "http://www.georss.org/georss", 
-							"xmlns:opensearch": "http://a9.com/-/spec/opensearch/1.1/",
-							"id": {$t: "azgs.az.gov"},
-							"title": {$t: "AZGS Atom Feed"},
-							"entry": []
+							{
+								"xmlns": "http://www.w3.org/2005/Atom", 
+								"xmlns:georss": "http://www.georss.org/georss", 
+								//"xmlns:opensearch": "http://a9.com/-/spec/opensearch/1.1/",
+								"id": { $t: config.defaultContext.orgUrl + "/resources/atom" },
+								"title": { $t: "AZGS Atom Feed" },
+								"author": { 
+									"name": { $t: config.defaultContext.orgName }, 
+									"email": { $t: config.defaultContext.helpEmail } 
+								},
+								"entry": []
 							} 
-							};
+						};
 						
 						///Integrate all the entries into a feed
 						for (var vr in viewResponse.rows){
