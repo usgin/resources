@@ -80,6 +80,7 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 	});
 };
 
+var atomFeed;
 exports.returnAllRecords = function(format, clientResponse) {
 	viewName = "outputs/" + format;
 	repository.all(function(err, dbResponse) {
@@ -100,6 +101,33 @@ exports.returnAllRecords = function(format, clientResponse) {
 							geoCollection.features.push(viewResponse.rows[vr].value);
 						}
 						clientResponse.json(geoCollection);
+						break;
+					case "atom":
+						///Define a feed
+						atomFeed = { feed: 
+							{"xmlns": "http://www.w3.org/2005/Atom", 
+							"xmlns:georss": "http://www.georss.org/georss", 
+							"xmlns:opensearch": "http://a9.com/-/spec/opensearch/1.1/",
+							"id": {$t: "azgs.az.gov"},
+							"title": {$t: "AZGS Atom Feed"},
+							"entry": []
+							} 
+							};
+						
+						///Integrate all the entries into a feed
+						for (var vr in viewResponse.rows){
+							var thisEntry = viewResponse.rows[vr].value;
+							
+							///Delete the namespaces in each entry
+							delete thisEntry.entry["xmlns"];
+							delete thisEntry.entry["xmlns:georss"];
+							delete thisEntry.entry["xmlns:opensearch"];
+							
+							atomFeed.feed.entry.push(thisEntry.entry);
+						}
+						
+						///Transform json format into xml format
+						_returnXml(atomFeed, clientResponse);
 						break;
 					default: 
 						context.message = "Something went wrong. Tell your server admin to make sure this output format is configured correctly.";
