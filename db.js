@@ -123,7 +123,7 @@ exports.returnAllRecords = function(format, clientResponse) {
 			repository.view(viewName, { keys: ids }, function(err, viewResponse) {
 				if (err) { clientResponse.send(err, 500); }
 				else {
-					if (dbRes.rows.length == 0) {
+					if (viewResponse.rows.length == 0) {
 						context.message = "The resource IDs requested were invalid.";
 						context.status = 404;
 						clientResponse.render("errorResponse", context);
