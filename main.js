@@ -1,7 +1,8 @@
 var express = require("express"),
 	form = require("connect-form"),
 	config = require("./config.js"),
-	routeFunctions = require("./routeFunctions.js");
+	routeFunctions = require("./routeFunctions.js"),
+	errorPage = require("./error.js");
 
 var server = express.createServer(config.serverInfo.localListenAddress, form({ keepExtensions: true }));
 
@@ -29,10 +30,7 @@ server.get("/resources/:format", routeFunctions.getAllRecords);
 
 // All other requests should 404
 server.get("*", function(req, res) {
-	context = config.defaultContext;
-	context.status = 404;
-	context.message = "Perhaps this page hasn't been created yet...";
-	res.render("errorResponse", context);
+	errorPage.sendErrorPage(res, 404, "Perhaps this page hasn't been created yet...");
 });
 
 // Listen to the port specified in the configuration file.

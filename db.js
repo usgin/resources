@@ -1,5 +1,6 @@
 var cradle = require("cradle"),
 	config = require("./config.js"),
+	errorPage = require("./error.js"),
 	exports = module.exports,
 	xmlParser = require("xml2json");
 
@@ -10,11 +11,8 @@ harvested = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).d
 exports.getMetadata = function(id, clientResponse) {
 	repository.get(id, function(err, doc) {
 		context = config.defaultContext;
-		if (err) {
-			context.searchedId = id;
-			context.status = 404;
-			clientResponse.render("errorResponse", context);
-		} else {
+		if (err) { errorPage.sendErrorPage(clientResponse, 404, null, id); } 
+		else {
 			context.existingResource = doc;
 			clientResponse.render("edit", context);
 		}
@@ -37,7 +35,7 @@ exports.saveMetadata = function(id, metadata, files, clientResponse) {
 	
 	function dbResponse(err, dbRes) {
 		if (err) {
-			clientResponse.send(err, 500);
+			errorPage.sendErrorPage(clientResponse, 500, "There was an error saving the resource");
 		} else {
 			clientResponse.redirect("/resource/" + dbRes.id);
 		}
@@ -60,9 +58,7 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 	if (format == "html") {
 		repository.get(id, function(err, doc) {
 			if (err) {
-				context.searchedId = id;
-				context.status = 404;
-				clientResponse.render("errorResponse", context);
+				errorPage.sendErrorPage(clientResponse, 404, null, id);
 			} else {
 				context.doc = doc;
 				clientResponse.render("html-record", context);
@@ -76,9 +72,7 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 		if (err) { clientResponse.send(err, 500); }
 		else {
 			if (dbRes.rows.length == 0) {
-				context.message = "The resource ID requested was invalid.";
-				context.status = 404;
-				clientResponse.render("errorResponse", context);
+				errorPage.sendErrorPage(clientResponse, 404, null, id);
 				return;
 			}
 			switch(format) {
@@ -92,9 +86,7 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 				_returnXml(dbRes.rows[0].value, clientResponse);
 				break;
 			default:
-				context.message = "Something went wrong. Tell your server admin to make sure this output format is configured correctly.";
-				context.status = 500;
-				clientResponse.render("errorResponse", context);
+				errorPage.sendErrorPage(clientResponse, 500, "Something went wrong. Tell your server admin to make sure this output format is configured correctly.");
 			}
 		}
 	});
@@ -104,7 +96,7 @@ var atomFeed;
 exports.returnAllRecords = function(format, clientResponse) {
 	viewName = "outputs/" + format;
 	repository.all(function(err, dbResponse) {
-		if (err) { clientResponse.send(err, 500); }
+		if (err) { errorPage.sendErrorPage(clientResponse, 500, "Error retrieving database records."); }
 		else {
 			ids = [], isoUrls = {};
 			for (var r in dbResponse.rows) {
@@ -121,12 +113,10 @@ exports.returnAllRecords = function(format, clientResponse) {
 				return;
 			}
 			repository.view(viewName, { keys: ids }, function(err, viewResponse) {
-				if (err) { clientResponse.send(err, 500); }
+				if (err) { errorPage.sendErrorPage(clientResponse, 500, "Error retrieving database views"); }
 				else {
 					if (viewResponse.rows.length == 0) {
-						context.message = "The resource IDs requested were invalid.";
-						context.status = 404;
-						clientResponse.render("errorResponse", context);
+						errorPage.sendErrorPage(clientResponse, 404, "The resource IDs requested were invalid.");
 						return;
 					}
 					switch (format) {
@@ -172,10 +162,8 @@ exports.returnAllRecords = function(format, clientResponse) {
 						///Transform json format into xml format
 						_returnXml(atomFeed, clientResponse);
 						break;
-					default: 
-						context.message = "Something went wrong. Tell your server admin to make sure this output format is configured correctly.";
-						context.status = 500;
-						clientResponse.render("errorResponse", context);
+					default:
+						errorPage.sendErrorPage(clientResponse, 500, "Something went wrong. Tell your server admin to make sure this output format is configured correctly.");
 					}					
 				}
 			});
