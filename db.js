@@ -156,14 +156,17 @@ exports.returnAllRecords = function(format, clientResponse) {
 						
 						///Integrate all the entries into a feed
 						for (var vr in viewResponse.rows){
-							var thisEntry = viewResponse.rows[vr].value;
-							
-							///Delete the namespaces in each entry
-							delete thisEntry.entry["xmlns"];
-							delete thisEntry.entry["xmlns:georss"];
-							delete thisEntry.entry["xmlns:opensearch"];
-							
-							atomFeed.feed.entry.push(thisEntry.entry);
+							var thisEntryList = viewResponse.rows[vr].value.entry;
+						
+							for(var e in thisEntryList){
+								thisEntry = thisEntryList[e];
+								///Delete the namespaces in each entry
+								delete thisEntry["xmlns"];
+								delete thisEntry["xmlns:georss"];
+								delete thisEntry["xmlns:opensearch"];
+								
+								atomFeed.feed.entry.push(thisEntry);
+							}							
 						}
 						
 						///Transform json format into xml format
