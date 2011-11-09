@@ -129,17 +129,28 @@ exports.returnAllRecords = function(format, clientResponse) {
 						break;
 					case "atom":
 						///Define a feed
+						var currentTime = new Date();
+						var thisTime = currentTime.getFullYear().toString() + "-"
+									+ currentTime.getMonth().toString() + "-"
+									+ currentTime.getDate().toString() + "T"
+									+ currentTime.getHours().toString() + ":"
+									+ currentTime.getMinutes().toString() + ":"
+									+ currentTime.getSeconds().toString() + "."
+									+ currentTime.getMilliseconds().toString() + "Z"
+									+ currentTime.getTimezoneOffset().toString();
 						atomFeed = { feed: 
 							{
 								"xmlns": "http://www.w3.org/2005/Atom", 
 								"xmlns:georss": "http://www.georss.org/georss", 
 								//"xmlns:opensearch": "http://a9.com/-/spec/opensearch/1.1/",
+								"xmlns:scast": "http://sciflo.jpl.nasa.gov/serviceCasting/2009v1",
 								"id": { $t: config.defaultContext.orgUrl + "/resources/atom" },
 								"title": { $t: "AZGS Atom Feed" },
 								"author": { 
 									"name": { $t: config.defaultContext.orgName }, 
 									"email": { $t: config.defaultContext.helpEmail } 
 								},
+								"updated": { $t: thisTime },
 								"entry": []
 							} 
 						};
@@ -154,6 +165,7 @@ exports.returnAllRecords = function(format, clientResponse) {
 								delete thisEntry["xmlns"];
 								delete thisEntry["xmlns:georss"];
 								delete thisEntry["xmlns:opensearch"];
+								delete thisEntry["xmlns:scast"];
 								
 								atomFeed.feed.entry.push(thisEntry);
 							}							

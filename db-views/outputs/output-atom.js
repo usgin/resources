@@ -47,6 +47,7 @@ exports.views = {
 				atom.setProperty(thisEntryPath + "xmlns", "http://www.w3.org/2005/Atom");
 				atom.setProperty(thisEntryPath + "xmlns:georss", "http://www.georss.org/georss");
 				atom.setProperty(thisEntryPath + "xmlns:opensearch", "http://a9.com/-/spec/opensearch/1.1/");
+				atom.setProperty(thisEntryPath + "xmlns:scast", "http://sciflo.jpl.nasa.gov/serviceCasting/2009v1");
 				
 				///Entry
 				atom.setProperty(thisEntryPath + "title.$t", objGet(doc, "Title", "No title given"));
@@ -69,15 +70,27 @@ exports.views = {
 					atom.setProperty(thisPath + ".contactInformation.address.zip.$t", objGet(thisAuthor, "ContactInformation.Address.Zip", ""));	
 				}				
 				
-				///Link
+				/***********************************Link*************************************************/
 				thisLink = doc.Links[l];
-				atom.setProperty(thisEntryPath + "link.href", objGet(thisLink, "URL", "Link not found"));
+				thisLinkType = objGet(thisLink, "Type", "No type found");
+				
+				atom.setProperty(thisEntryPath + "scast:serviceSemantics.$t", thisLinkType);
+				atom.setProperty(thisEntryPath + "scast:serviceProtocol.$t", "HTTP");
+				
+				atom.setProperty(thisEntryPath + "link", []);
+				///Define 'alternate' link
+				atom.setProperty(thisEntryPath + "link.0.href", objGet(thisLink, "URL", "No link found"));
+				///Define 'interfaceDescription' link
+				atom.setProperty(thisEntryPath + "link.1.rel", "scast:interfaceDescription");
+				atom.setProperty(thisEntryPath + "link.1.type", "application/xml");
+				atom.setProperty(thisEntryPath + "link.1.href", objGet(thisLink, "URL", "No link found"));
+				/****************************************************************************************/
 				
 				///Date
 				atom.setProperty(thisEntryPath + "updated.$t", doc.ModifiedDate);
 				
 				///Summary
-				atom.setProperty(thisEntryPath + "summary.$t", objGet(doc, "Description", "Description not found"));			
+				atom.setProperty(thisEntryPath + "summary.$t", objGet(doc, "Description", "No description found"));			
 				
 				///Bounding box
 				n = objGet(doc, "GeographicExtent.NorthBound", 89);
