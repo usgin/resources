@@ -51,6 +51,7 @@ exports.saveMetadata = function(id, metadata, files, clientResponse) {
 function _returnXml(json, clientResponse) {
 	clientResponse.contentType("application/xml");
 	clientResponse.send(xmlParser.toXml(json));
+	//console.log(xmlParser.toXml(json));
 }
 
 exports.returnFormattedRecord = function(id, format, clientResponse) {

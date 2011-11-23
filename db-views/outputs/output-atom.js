@@ -27,7 +27,8 @@ exports.views = {
 							obj = obj[props[p]];
 						} else {
 							if (parseInt(p) + 1 == props.length) {
-								obj[props[p]] = value;
+								obj[props[p]] = url2Text(value);
+								
 							} else {
 								obj[props[p]] = {};
 								obj = obj[props[p]];
@@ -37,7 +38,19 @@ exports.views = {
 				}
 			};
 			
+			///Convert url into the xml text which can be displayed by the browser
+			function url2Text(strValue){
+				if(strValue.constructor.toString().indexOf("String") != -1){
+					strValue = strValue.replace('&', "&amp;");
+					strValue = strValue.replace('<', "&lt;");
+					strValue = strValue.replace('>', "&gt;");
+					strValue = strValue.replace('"', "&quot;");
+					strValue = strValue.replace("'", "&apos;")
+				}
+				return strValue;
+			}
 			
+			/**********************************************************************************************/
 			///Loop each link
 			atom.setProperty("entry", []);
 			
@@ -87,17 +100,19 @@ exports.views = {
 					
 					///Author elements
 					atom.setProperty(thisEntryPath + "author", []);
-					theAuthors = objGet(doc, "Authors", [{ Name: "No Author Given" }]);
-					for(var a in theAuthors) {
-						thisAuthor = theAuthors[a];
-						thisPath = thisEntryPath + "author." + a;
-						atom.setProperty(thisPath + ".name.$t", objGet(thisAuthor, "Name", ""));
-						atom.setProperty(thisPath + ".contactInformation.phone.$t", objGet(thisAuthor, "ContactInformation.Phone", ""));
-						atom.setProperty(thisPath + ".contactInformation.email.$t", objGet(thisAuthor, "ContactInformation.Email", ""));
-						atom.setProperty(thisPath + ".contactInformation.address.street.$t", objGet(thisAuthor, "ContactInformation.Address.Street", ""));
-						atom.setProperty(thisPath + ".contactInformation.address.city.$t", objGet(thisAuthor, "ContactInformation.Address.City", ""));
-						atom.setProperty(thisPath + ".contactInformation.address.state.$t", objGet(thisAuthor, "ContactInformation.Address.State", ""));
-						atom.setProperty(thisPath + ".contactInformation.address.zip.$t", objGet(thisAuthor, "ContactInformation.Address.Zip", ""));	
+					theAuthors = objGet(doc, "Authors", "");
+					if(theAuthors){
+						for(var a in theAuthors) {
+							thisAuthor = theAuthors[a];
+							thisPath = thisEntryPath + "author." + a;
+							atom.setProperty(thisPath + ".name.$t", objGet(thisAuthor, "Name", ""));
+							atom.setProperty(thisPath + ".contactInformation.phone.$t", objGet(thisAuthor, "ContactInformation.Phone", ""));
+							atom.setProperty(thisPath + ".contactInformation.email.$t", objGet(thisAuthor, "ContactInformation.Email", ""));
+							atom.setProperty(thisPath + ".contactInformation.address.street.$t", objGet(thisAuthor, "ContactInformation.Address.Street", ""));
+							atom.setProperty(thisPath + ".contactInformation.address.city.$t", objGet(thisAuthor, "ContactInformation.Address.City", ""));
+							atom.setProperty(thisPath + ".contactInformation.address.state.$t", objGet(thisAuthor, "ContactInformation.Address.State", ""));
+							atom.setProperty(thisPath + ".contactInformation.address.zip.$t", objGet(thisAuthor, "ContactInformation.Address.Zip", ""));	
+						}
 					}				
 					
 					///Link

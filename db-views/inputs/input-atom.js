@@ -37,7 +37,8 @@ exports.views = {
 				}
 			};
 			/**********************************************************************************************/
-			///Find feed object
+			///Create an extra object including the info not needed
+			var extra = doc;
 			///Set title
 			atom.setProperty("Title", objGet(doc, "title", "No title found"));
 			///Set summary
