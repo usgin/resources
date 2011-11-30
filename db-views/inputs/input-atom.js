@@ -19,7 +19,7 @@ exports.views = {
 				}
 			};
 			
-			///Delete the property from the given object
+			///Delete the used property from the given object
 			extra = doc; 
 			
 			extra.delProperty = function(propName){
@@ -28,13 +28,32 @@ exports.views = {
 
 					for(i = 0; i < props.length; i ++){					
 						if(i == props.length - 1){
-							delete obj[props[i]];
+							delete obj[props[i]]; ///Delete the used property
+							if(props.slice(0, props.length - 1).length > 0){
+								this.delEmptyProperty(props.slice(0, props.length - 1));
+							}							
 						}else{
 							obj = obj[props[i]];
 						}
-					}
-					
+					}					
 			};
+			
+			///Delete empty branch
+			extra.delEmptyProperty = function(props){
+				obj = this;
+				for(i = 0; i < props.length; i ++){
+					if(i == props.length - 1){
+						if(obj[props[i]].toSource() === "({})"){ ///If this property is empty
+							delete obj[props[i]];
+							if(props.slice(0, props.length - 1).length > 0){
+								this.delEmptyProperty(props.slice(0, props.length - 1));
+							}							
+						}
+					}else{
+						obj = obj[props[i]];
+					}
+				}
+			}
 			///
 				
 			atom = {
@@ -113,18 +132,23 @@ exports.views = {
 						}
 					}
 			} else if(objLinks){ ///This is an atom feed without service casting namespace
-					linkSequence = 0;
+					var linkSequence = 0;
 					if(objLinks.constructor.toString().indexOf("Array") != -1){///ObjLinks is an array
 						for(l in objLinks){
-							thisUrl = objGet(doc, "link." + l + ".href", "");
+							thisUrl = objLinks[l]["href"];
 							if(thisUrl){
-								linkSequence = parseUrl(thisUrl, linkSequence);
+								if(parseUrl(thisUrl, linkSequence)){
+									linkSequence ++;
+									extra.delProperty("link." + l + ".href");
+								}
 							}
 						}
 					}else{///ObjLinks is not an array
-						thisUrl = objGet(doc, "link.href", "");
+						thisUrl = objLinks["href"];
 						if(thisUrl){
-							linkSequence = parseUrl(thisUrl, linkSequence);
+							if(parseUrl(thisUrl, linkSequence)){
+								extra.delProperty("link.href");
+							}
 						}
 					}
 			}
@@ -136,28 +160,30 @@ exports.views = {
 			///Identify the type of link if service casting is not provided
 			///Parameters: thisUrl - the link to be parsed; i - the link sequence in database
 			function parseUrl(thisUrl, i) {
+				var isNext = false;
 				if(thisUrl.search(/getcapabilities/i) != -1) {
 					if(thisUrl.search(/wms/i) != -1) {
 						///WMS service
-						setLinkProp("OGC.WMS", thisUrl, i ++)						
+						isNext = setLinkProp("OGC.WMS", thisUrl, i)						
 					} else if(thisUrl.search(/wfs/i) != -1) {
 						///WFS service
-						setLinkProp("OGC.WFS", thisUrl, i ++)
+						isNext = setLinkProp("OGC.WFS", thisUrl, i)
 					} else if(thisUrl.search(/csw/i) != -1) {
 						///CSW service
-						setLinkProp("OGC.CSW", thisUrl, i ++);
+						isNext = setLinkProp("OGC.CSW", thisUrl, i);
 					}
 				}else if(thisUrl.search(/download/i) != -1) {
 					///Download service
-					setLinkProp("Download", thisUrl, i ++);
+					isNext = setLinkProp("Download", thisUrl, i);
 				}
 				
-				return i; ///Return the sequence for the next link which should be stored in database
+				return isNext; ///If we need to move to the next link
 			}
 			
 			function setLinkProp(type, url, sequence){
 				atom.setProperty("Links." + sequence + ".Type", type);
 				atom.setProperty("Links." + sequence + ".URL", url);
+				return true;
 			}
 			
 		}
