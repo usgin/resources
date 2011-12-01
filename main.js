@@ -18,6 +18,10 @@ server.get("/", routeFunctions.main);
 server.get("/new-resource/", routeFunctions.editResource);
 server.post("/new-resource/", routeFunctions.saveResource);
 
+// Harvest a new resource - GET gives you a page to enter a URL, POST runs the harvest routine.
+server.get("/new-harvest/", routeFunctions.newHarvest);
+server.post("/new-harvest/", routeFunctions.harvestResource);
+
 // Edit an existing record, again GET for the page, POST for the saving.
 server.get("/resource/:id", routeFunctions.editResource);
 server.post("/resource/:id", routeFunctions.saveResource);

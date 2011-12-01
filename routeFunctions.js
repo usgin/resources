@@ -2,7 +2,8 @@ var exports = module.exports,
 	config = require("./config.js"),
 	db = require("./db.js"),
 	output = require("./db-views/outputs/outputFormats.js"),
-	errorPage = require("./error.js");
+	errorPage = require("./error.js"),
+	input = require("./db-views/inputs/inputFormats.js");
 
 
 // Front Page:
@@ -61,4 +62,15 @@ exports.getAllRecords = function(req, res) {
 	} else {
 		_returnInvalidFormatResponse(res);
 	}
+};
+
+// Harvesting page
+exports.newHarvest = function(req, res) {
+	context = config.defaultContext;
+	context.inputFormats = input.stdFormatsHarvestable;
+	res.render("harvest", context);
+};
+
+exports.harvestResource = function(req, res) {
+	
 };

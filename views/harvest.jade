@@ -1,0 +1,12 @@
+extends ./base
+
+block page-content
+	form#new-harvest(name="harvestForm", method="post")
+		p Input Format
+		- for (format in inputFormats) {
+		input(id=format, type="radio", name="harvestFormat", value=format)
+		#{inputFormats[format]}
+		- }
+		p Input URL
+		input#input-url(name="url")
+		input#harvest-button(type="submit", value="Harvest")
