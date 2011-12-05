@@ -2,9 +2,11 @@ var exports = module.exports,
 	config = require("./config.js"),
 	db = require("./db.js"),
 	output = require("./db-views/outputs/outputFormats.js"),
+	input = require("./db-views/inputs/inputFormats.js"),
 	errorPage = require("./error.js"),
-	input = require("./db-views/inputs/inputFormats.js");
-
+	http = require("http"),
+	parser = require("xml2json"),
+	urlParser = require("url");
 
 // Front Page:
 exports.main = function(req, res) {
@@ -71,6 +73,42 @@ exports.newHarvest = function(req, res) {
 	res.render("harvest", context);
 };
 
-exports.harvestResource = function(req, res) {
+function _validateInputFormat(input, data) {
+	if (data.indexOf("<?xml version=") == 0) {
+		try { inputJson = parser.toJson(data, { object: true, reversible: true }); }
+		catch(err) { return [false, null, "URL returned an invalid XML document."]; }
+		
+		switch (input) {
+		case "atom":
+			if (inputJson.hasOwnProperty("feed")) {
+				return [true, inputJson];
+			} else { return [false, "URL did not return a valid Atom Feed."]; }
+		case "iso":
+			if (inputJson.hasOwnProperty("gmd:MD_Metadata")) {
+				return [true, inputJson];
+			} else { return [false, "URL did not return a valid ISO 19139 XML document."]; }
+		}
+	} else {
+		return [false, "Not configured to harvest from anything but XML documents... yet."];
+	}
 	
+}
+
+exports.harvestResource = function(req, res) {
+	urlBits = urlParser.parse(req.body.url, false, true);
+	getOptions = { host: urlBits.hostname, path: urlBits.pathname + ( urlBits.search || "" ) };
+	http.get(getOptions, function(proxyResponse) {
+		data = "";
+		proxyResponse.on("data", function(chunk) { data += chunk; });
+		proxyResponse.on("end", function() {
+			formatted = _validateInputFormat(req.body.harvestFormat, data);
+			if (!formatted[0]) {
+				errorPage.sendErrorPage(res, 200, formatted[1]);
+			} else {
+				db.saveHarvestedRecord(formatted[1], res, req.body.harvestFormat);
+			}
+		});
+	}).on("error", function(err) {
+		errorPage.sendErrorPage(res, 200, "The URL that you entered was invalid. Please try again.");
+	});
 };

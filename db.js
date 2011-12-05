@@ -19,8 +19,7 @@ exports.getMetadata = function(id, clientResponse) {
 	});
 };
 
-exports.saveMetadata = function(id, metadata, files, clientResponse) {
-	// Set modified date
+function _getCurrentDate() {
 	function ISODateString(d){
 		 function pad(n){return n<10 ? '0'+n : n;}
 		 return d.getUTCFullYear()+'-'
@@ -31,7 +30,11 @@ exports.saveMetadata = function(id, metadata, files, clientResponse) {
 		      + pad(d.getUTCSeconds())+'Z';}
 	
 	now = new Date();
-	metadata.ModifiedDate = ISODateString(now);
+	return ISODateString(now);
+}
+
+_saveMetadata = function(id, metadata, files, clientResponse) {
+	metadata.ModifiedDate = _getCurrentDate();
 	
 	function dbResponse(err, dbRes) {
 		if (err) {
@@ -48,10 +51,11 @@ exports.saveMetadata = function(id, metadata, files, clientResponse) {
 	}
 };
 
+exports.saveMetadata = _saveMetadata;
+
 function _returnXml(json, clientResponse) {
 	clientResponse.contentType("application/xml");
 	clientResponse.send(xmlParser.toXml(json));
-	//console.log(xmlParser.toXml(json));
 }
 
 exports.returnFormattedRecord = function(id, format, clientResponse) {
@@ -130,20 +134,10 @@ exports.returnAllRecords = function(format, clientResponse) {
 						break;
 					case "atom":
 						///Define a feed
-						var currentTime = new Date();
-						var thisTime = currentTime.getFullYear().toString() + "-"
-									+ currentTime.getMonth().toString() + "-"
-									+ currentTime.getDate().toString() + "T"
-									+ currentTime.getHours().toString() + ":"
-									+ currentTime.getMinutes().toString() + ":"
-									+ currentTime.getSeconds().toString() + "."
-									+ currentTime.getMilliseconds().toString() + "Z"
-									+ currentTime.getTimezoneOffset().toString();
 						atomFeed = { feed: 
 							{
 								"xmlns": "http://www.w3.org/2005/Atom", 
-								"xmlns:georss": "http://www.georss.org/georss", 
-								//"xmlns:opensearch": "http://a9.com/-/spec/opensearch/1.1/",
+								"xmlns:georss": "http://www.georss.org/georss",
 								"xmlns:scast": "http://sciflo.jpl.nasa.gov/serviceCasting/2009v1",
 								"id": { $t: config.defaultContext.orgUrl + "/resources/atom" },
 								"title": { $t: "AZGS Atom Feed" },
@@ -151,7 +145,7 @@ exports.returnAllRecords = function(format, clientResponse) {
 									"name": { $t: config.defaultContext.orgName }, 
 									"email": { $t: config.defaultContext.helpEmail } 
 								},
-								"updated": { $t: thisTime },
+								"updated": { $t: _getCurrentDate() },
 								"entry": []
 							} 
 						};
@@ -181,5 +175,20 @@ exports.returnAllRecords = function(format, clientResponse) {
 				}
 			});
 		}
+	});
+};
+
+exports.saveHarvestedRecord = function(jsonData, clientResponse, format) {
+	harvested.save(jsonData, function(err, dbResponse) {
+		if (err) { errorPage.sendErrorPage(clientResponse, 500, "An error occurred saving data to the harvest table."); }
+		else {
+			harvested.view("inputs/" + format, { key: dbResponse.id }, function(err, dbRes) {
+				if (err) { clientResponse.send(err, 500); }
+				else {
+					_saveMetadata(null, dbRes.rows[0].value, null, clientResponse);
+				}
+			});
+		}
+		
 	});
 };
