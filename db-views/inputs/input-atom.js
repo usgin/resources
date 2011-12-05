@@ -152,7 +152,7 @@ exports.views = {
 					}
 			}
 			
-			atom.Extra = extra;
+			atom.setProperty("HarvestInformation.ExtraContent", extra);
 
 			emit(doc._id, atom);
 
