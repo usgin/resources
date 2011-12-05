@@ -121,12 +121,12 @@ exports.views = {
 			objScastSemantics = objGet(doc, "scast:serviceSemantics.$t", "");
 			atom.setProperty("Links",[]);
 			if(objScastSemantics && objLinks) { ///This is an atom feed with service casting namespace
-					atom.setProperty("Links.0.Type", objScastSemantics);
+					atom.setProperty("Links.0.Type.$t", objScastSemantics);
 					for(l in objLinks){
-						if(objGet(doc, "link." + l + ".rel.$t", "") == "scast:interfaceDescription"
-							|| objGet(doc, "link." + l + ".rel.$t", "") == "scast:serviceInterface"
+						if(doc["link"][l]["rel"] == "scast:interfaceDescription"
+							|| doc["link"][l]["rel"] == "scast:serviceInterface"
 							){
-							atom.setProperty("Links.0.URL", objGet(doc, "link." + l + ".href.$t", "No URL found"));
+							atom.setProperty("Links.0.URL.$t", objGet(doc, "link." + l + ".href", "No URL found"));
 							break;
 						}
 					}
