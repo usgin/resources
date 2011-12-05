@@ -33,14 +33,16 @@ function _getCurrentDate() {
 	return ISODateString(now);
 }
 
-_saveMetadata = function(id, metadata, files, clientResponse) {
+_saveMetadata = function(id, metadata, files, clientResponse, doNotRedirect, customResponseFunction) {
 	metadata.ModifiedDate = _getCurrentDate();
 	
 	function dbResponse(err, dbRes) {
 		if (err) {
 			errorPage.sendErrorPage(clientResponse, 500, "There was an error saving the resource");
-		} else {
+		} else if (!doNotRedirect) {
 			clientResponse.redirect("/resource/" + dbRes.id);
+		} else if (customResponseFunction && doNotRedirect) {
+			customResponseFunction(clientResponse);
 		}
 	}
 	
@@ -178,17 +180,39 @@ exports.returnAllRecords = function(format, clientResponse) {
 	});
 };
 
-exports.saveHarvestedRecord = function(jsonData, clientResponse, format) {
+_harvestResponse = function(clientResponse) {
+	clientResponse.send("The harvest completed successfully");
+};
+
+_saveHarvestedRecord = function(jsonData, clientResponse, format, sendResponse) {
 	harvested.save(jsonData, function(err, dbResponse) {
 		if (err) { errorPage.sendErrorPage(clientResponse, 500, "An error occurred saving data to the harvest table."); }
 		else {
 			harvested.view("inputs/" + format, { key: dbResponse.id }, function(err, dbRes) {
-				if (err) { clientResponse.send(err, 500); }
+				if (err) { errorPage.sendErrorPage(clientResponse, 500, "An error occurred retrieving a view from the harvest table."); }
 				else {
-					_saveMetadata(null, dbRes.rows[0].value, null, clientResponse);
+					if (sendResponse) { _saveMetadata(null, dbRes.rows[0].value, null, clientResponse, true, _harvestResponse); }
+					else { _saveMetadata(null, dbRes.rows[0].value, null, clientResponse, true); }
 				}
 			});
 		}
 		
 	});
+};
+
+exports.saveHarvestedRecords = function(jsonData, clientResponse, format) {
+	switch (format) {
+	case "atom":
+		entries = jsonData.feed.entry || [];
+		if (entries.length == 0) {
+			errorPage.sendErrorPage(clientResponse, 200, "The feed did not contain any entries.");
+		}
+		for (var e in entries) {
+			if (e == entries.length - 1) { _saveHarvestedRecord(entries[e], clientResponse, format, true); }
+			else { _saveHarvestedRecord(entries[e], clientResponse, format); }
+		}
+		break;
+	case "iso":
+		break;
+	}
 };

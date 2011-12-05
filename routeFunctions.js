@@ -105,7 +105,7 @@ exports.harvestResource = function(req, res) {
 			if (!formatted[0]) {
 				errorPage.sendErrorPage(res, 200, formatted[1]);
 			} else {
-				db.saveHarvestedRecord(formatted[1], res, req.body.harvestFormat);
+				db.saveHarvestedRecords(formatted[1], res, req.body.harvestFormat);
 			}
 		});
 	}).on("error", function(err) {
