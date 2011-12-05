@@ -207,7 +207,13 @@ _saveHarvestedRecord = function(jsonData, clientResponse, format, harvestUrl, se
 exports.saveHarvestedRecords = function(jsonData, clientResponse, format, harvestUrl) {
 	switch (format) {
 	case "atom":
-		entries = jsonData.feed.entry || [];
+		entryConString = jsonData.feed.entry.constructor.toString();
+		if (entryConString.indexOf("Array") != -1) {
+			entries = jsonData.feed.entry;
+		} else if (entryConString.indexOf("Object") != -1) {
+			entries = [ jsonData.feed.entry ];
+		} else { entries = []; }
+		
 		if (entries.length == 0) {
 			errorPage.sendErrorPage(clientResponse, 200, "The feed did not contain any entries.");
 		}
