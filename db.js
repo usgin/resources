@@ -76,7 +76,7 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 	
 	viewName = "outputs/" + format;
 	repository.view(viewName, { key: id }, function(err, dbRes) {
-		if (err) { clientResponse.send(err, 500); }
+		if (err) { errorPage.sendErrorPage(clientResponse, 500, "Error retrieving database records."); }
 		else {
 			if (dbRes.rows.length == 0) {
 				errorPage.sendErrorPage(clientResponse, 404, null, id);
@@ -99,7 +99,6 @@ exports.returnFormattedRecord = function(id, format, clientResponse) {
 	});
 };
 
-var atomFeed;
 exports.returnAllRecords = function(format, clientResponse) {
 	viewName = "outputs/" + format;
 	repository.all(function(err, dbResponse) {
