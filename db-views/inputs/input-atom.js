@@ -3,14 +3,16 @@ var exports = module.exports;
 exports.views = {
 	atom: {
 		map: function(doc) {
-			objGet = function(obj, propName, defVal) {
+			objGet = function(obj, propName, defVal, isDel) {
 				if (!obj) { return defVal; }
 				propParts = propName.split(".");
 				for (var i = 0; i < propParts.length; i ++) {
 					if (obj.hasOwnProperty(propParts[i])) {
 						obj = obj[propParts[i]];
 						if (i == propParts.length - 1) { 
-							extra.delProperty(propName);
+							if(isDel){
+								extra.delProperty(propName);
+							}
 							return obj; 
 						}
 					} else {
@@ -75,81 +77,84 @@ exports.views = {
 			};
 			/**********************************************************************************************/
 			///Set title
-			atom.setProperty("Title", objGet(doc, "title.$t", "No title found"));
+			atom.setProperty("Title", objGet(doc, "title.$t", "No title found", true));
 			///Set summary
-			atom.setProperty("Description", objGet(doc, "summary.$t", "No summary found"));
+			atom.setProperty("Description", objGet(doc, "summary.$t", "No summary found", true));
 			///Set author infomation
-			if(doc.author){
-				if(doc.author.constructor.toString().indexOf("Array") != -1){
+			thisAuthor = objGet(doc, "author", "No author found", false);
+			if(thisAuthor != "No author found"){
+				if(thisAuthor.constructor.toString().indexOf("Array") != -1){
 					atom.setProperty("Author", []);
-					for(a in doc.author){
+					for(a in thisAuthor){
 						thisAuthorPath = "Author." + a + ".";
-						atom.setProperty(thisAuthorPath + "Name", objGet(doc, "author." + a + ".name.$t", "No name found"));
-						atom.setProperty(thisAuthorPath + "ContactInformation.Phone", objGet(doc, "author." + a + ".contactInformation.phone.$t", "No phone found"));
-						atom.setProperty(thisAuthorPath + "ContactInformation.Email", objGet(doc, "author." + a + ".contactInformation.email.$t", "No email found"));
-						atom.setProperty(thisAuthorPath + "ContactInformation.Address.Street", objGet(doc, "author." + a + ".contactInformation.address.street.$t", "No address found"));
-						atom.setProperty(thisAuthorPath + "ContactInformation.Address.City", objGet(doc, "author." + a + ".contactInformation.address.city.$t", "No city found"));
-						atom.setProperty(thisAuthorPath + "ContactInformation.Address.State", objGet(doc, "author." + a + ".contactInformation.address.state.$t", "No state found"));
-						atom.setProperty(thisAuthorPath + "ContactInformation.Address.Zip", objGet(doc, "author." + a + ".contactInformation.address.zip.$t", "No zip found"));
+						atom.setProperty(thisAuthorPath + "Name", objGet(doc, "author." + a + ".name.$t", "No name found", true));
+						atom.setProperty(thisAuthorPath + "ContactInformation.Phone", objGet(doc, "author." + a + ".contactInformation.phone.$t", "No phone found", true));
+						atom.setProperty(thisAuthorPath + "ContactInformation.Email", objGet(doc, "author." + a + ".contactInformation.email.$t", "No email found", true));
+						atom.setProperty(thisAuthorPath + "ContactInformation.Address.Street", objGet(doc, "author." + a + ".contactInformation.address.street.$t", "No address found", true));
+						atom.setProperty(thisAuthorPath + "ContactInformation.Address.City", objGet(doc, "author." + a + ".contactInformation.address.city.$t", "No city found", true));
+						atom.setProperty(thisAuthorPath + "ContactInformation.Address.State", objGet(doc, "author." + a + ".contactInformation.address.state.$t", "No state found", true));
+						atom.setProperty(thisAuthorPath + "ContactInformation.Address.Zip", objGet(doc, "author." + a + ".contactInformation.address.zip.$t", "No zip found", true));
 					}					
 				}else{
-					atom.setProperty("Author.Name", objGet(doc, "author.name", "No name found"));
-					atom.setProperty("Author.ContactInformation.Phone", objGet(doc, "author.contactInformation.phone.$t", "No phone found"));
-					atom.setProperty("Author.ContactInformation.Email", objGet(doc, "author.contactInformation.email.$t", "No email found"));
-					atom.setProperty("Author.ContactInformation.Address.Street", objGet(doc, "author.contactInformation.address.street.$t", "No address found"));
-					atom.setProperty("Author.ContactInformation.Address.City", objGet(doc, "author.contactInformation.address.city.$t", "No city found"));
-					atom.setProperty("Author.ContactInformation.Address.State", objGet(doc, "author.contactInformation.address.state.$t", "No state found"));
-					atom.setProperty("Author.ContactInformation.Address.Zip", objGet(doc, "author.contactInformation.address.zip.$t", "No zip found"));
+					atom.setProperty("Author.Name", objGet(doc, "author.name", "No name found", true));
+					atom.setProperty("Author.ContactInformation.Phone", objGet(doc, "author.contactInformation.phone.$t", "No phone found", true));
+					atom.setProperty("Author.ContactInformation.Email", objGet(doc, "author.contactInformation.email.$t", "No email found", true));
+					atom.setProperty("Author.ContactInformation.Address.Street", objGet(doc, "author.contactInformation.address.street.$t", "No address found", true));
+					atom.setProperty("Author.ContactInformation.Address.City", objGet(doc, "author.contactInformation.address.city.$t", "No city found", true));
+					atom.setProperty("Author.ContactInformation.Address.State", objGet(doc, "author.contactInformation.address.state.$t", "No state found", true));
+					atom.setProperty("Author.ContactInformation.Address.Zip", objGet(doc, "author.contactInformation.address.zip.$t", "No zip found", true));
 				}
-
+			}else{
+				atom.setProperty("Author", thisAuthor);
 			}
+			
 			///Set geographic extent
-			objGeoExt = objGet(doc, "georss:box", "");
-			if(objGeoExt){
-				rGeoExt = objGeoExt.toString().split(" ");
+			thisGeoExt = objGet(doc, "georss:box", "No geographic extent found", true);
+			if(thisGeoExt != "No geographic extent found"){
+				rGeoExt = thisGeoExt.toString().split(" ");
 				if(rGeoExt.length == 4){
 					atom.setProperty("GeographicExtent.WestBound", rGeoExt[0]);
 					atom.setProperty("GeographicExtent.SouthBound", rGeoExt[1]);
 					atom.setProperty("GeographicExtent.EastBound", rGeoExt[2]);
 					atom.setProperty("GeographicExtent.NorthBound", rGeoExt[3]);
 				}
+			}else{
+				atom.setProperty("GeographicExtent", thisGeoExt);
 			}
 			
 
 			///Identify if this is a scast atom feed
-			objLinks = doc.link;
-			objScastSemantics = objGet(doc, "scast:serviceSemantics.$t", "");
+			thisLinks = objGet(doc, "link", "", false);
+			thisScastSemantics = objGet(doc, "scast:serviceSemantics.$t", "", true);
+			
 			atom.setProperty("Links",[]);
-			if(objScastSemantics && objLinks) { ///This is an atom feed with service casting namespace
-					atom.setProperty("Links.0.Type.$t", objScastSemantics);
-					for(l in objLinks){
-						if(doc["link"][l]["rel"] == "scast:interfaceDescription"
-							|| doc["link"][l]["rel"] == "scast:serviceInterface"
-							){
-							atom.setProperty("Links.0.URL.$t", objGet(doc, "link." + l + ".href", "No URL found"));
-							break;
-						}
+			if(thisScastSemantics && thisLinks) { ///This is an atom feed with service casting namespace
+				for(l in thisLinks){
+					thisRel = objGet(thisLinks, l + ".rel", "", false);
+					thisUrl = objGet(doc, "link." + l + ".href", "No URL found", true);
+					if(thisRel == "scast:interfaceDescription" || thisRel == "scast:serviceInterface"){
+						atom.setProperty("Links." + l + ".Type", thisScastSemantics);
+						atom.setProperty("Links." + l + ".URL", thisUrl);
+					}else{
+						parseUrl(thisUrl, "Links." + l);
 					}
-			} else if(objLinks){ ///This is an atom feed without service casting namespace
-					var linkSequence = 0;
-					if(objLinks.constructor.toString().indexOf("Array") != -1){///ObjLinks is an array
-						for(l in objLinks){
-							thisUrl = objLinks[l]["href"];
-							if(thisUrl){
-								if(parseUrl(thisUrl, linkSequence)){
-									linkSequence ++;
-									extra.delProperty("link." + l + ".href");
-								}
-							}
-						}
-					}else{///ObjLinks is not an array
-						thisUrl = objLinks["href"];
+				}
+			} else if(thisLinks){ ///This is an atom feed without service casting namespace
+
+				if(thisLinks.constructor.toString().indexOf("Array") != -1){///ObjLinks is an array
+					
+					for(l in thisLinks){
+						thisUrl = objGet(doc, "link." + l + ".href", "", true);
 						if(thisUrl){
-							if(parseUrl(thisUrl, linkSequence)){
-								extra.delProperty("link.href");
-							}
+							parseUrl(thisUrl, linkSequence, "Links." + l);
 						}
 					}
+				}else{///ObjLinks is not an array
+					thisUrl = objGet(doc, "link.href", "", true);
+					if(thisUrl){
+						parseUrl(thisUrl, "Links.0")
+					}
+				}
 			}
 			
 			atom.setProperty("HarvestInformation.ExtraContent", extra);
@@ -157,32 +162,31 @@ exports.views = {
 			emit(doc._id, atom);
 
 			///Identify the type of link if service casting is not provided
-			///Parameters: thisUrl - the link to be parsed; i - the link sequence in database
-			function parseUrl(thisUrl, i) {
-				var isNext = false;
+			///Parameters: thisUrl - the link to be parsed; propName - the link property needs to be set values
+			function parseUrl(thisUrl, propName) {
 				if(thisUrl.search(/getcapabilities/i) != -1) {
 					if(thisUrl.search(/wms/i) != -1) {
 						///WMS service
-						isNext = setLinkProp("OGC.WMS", thisUrl, i)						
+						setLinkProp("OGC.WMS", thisUrl, propName)						
 					} else if(thisUrl.search(/wfs/i) != -1) {
 						///WFS service
-						isNext = setLinkProp("OGC.WFS", thisUrl, i)
+						setLinkProp("OGC.WFS", thisUrl, propName)
 					} else if(thisUrl.search(/csw/i) != -1) {
 						///CSW service
-						isNext = setLinkProp("OGC.CSW", thisUrl, i);
+						setLinkProp("OGC.CSW", thisUrl, propName);
 					}
 				}else if(thisUrl.search(/download/i) != -1) {
 					///Download service
-					isNext = setLinkProp("Download", thisUrl, i);
+					setLinkProp("Download", thisUrl, propName);
+				}else{
+					setLinkProp("Unknown", thisUrl, propName);
 				}
-				
-				return isNext; ///If we need to move to the next link
+
 			}
 			
-			function setLinkProp(type, url, sequence){
-				atom.setProperty("Links." + sequence + ".Type", type);
-				atom.setProperty("Links." + sequence + ".URL", url);
-				return true;
+			function setLinkProp(type, url, propName){
+				atom.setProperty(propName + ".Type", type);
+				atom.setProperty(propName + ".URL", url);
 			}
 			
 		}
