@@ -74,24 +74,19 @@ exports.newHarvest = function(req, res) {
 };
 
 function _validateInputFormat(input, data) {
-	if (data.indexOf("<?xml version=") == 0) {
-		try { inputJson = parser.toJson(data, { object: true, reversible: true }); }
-		catch(err) { return [false, null, "URL returned an invalid XML document."]; }
-		
-		switch (input) {
-		case "atom":
-			if (inputJson.hasOwnProperty("feed")) {
-				return [true, inputJson];
-			} else { return [false, "URL did not return a valid Atom Feed."]; }
-		case "iso":
-			if (inputJson.hasOwnProperty("gmd:MD_Metadata")) {
-				return [true, inputJson];
-			} else { return [false, "URL did not return a valid ISO 19139 XML document."]; }
-		}
-	} else {
-		return [false, "Not configured to harvest from anything but XML documents... yet."];
-	}
+	try { inputJson = parser.toJson(data, { object: true, reversible: true }); }
+	catch(err) { return [false, null, "URL returned an invalid XML document."]; }
 	
+	switch (input) {
+	case "atom":
+		if (inputJson.hasOwnProperty("feed")) {
+			return [true, inputJson];
+		} else { return [false, "URL did not return a valid Atom Feed."]; }
+	case "iso":
+		if (inputJson.hasOwnProperty("gmd:MD_Metadata")) {
+			return [true, inputJson];
+		} else { return [false, "URL did not return a valid ISO 19139 XML document."]; }
+	}
 }
 
 exports.harvestResource = function(req, res) {
