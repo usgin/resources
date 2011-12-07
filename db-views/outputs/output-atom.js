@@ -41,13 +41,35 @@ exports.views = {
 			///Convert url into the xml text which can be displayed by the browser
 			function url2Text(strValue){
 				if(strValue.constructor.toString().indexOf("String") != -1){
-					strValue = strValue.replace('&', "&amp;");
-					strValue = strValue.replace('<', "&lt;");
-					strValue = strValue.replace('>', "&gt;");
-					strValue = strValue.replace('"', "&quot;");
-					strValue = strValue.replace("'", "&apos;")
+					strValue = replaceAll(strValue, '&', "&amp;");
+					strValue = replaceAll(strValue, '<', "&lt;");
+					strValue = replaceAll(strValue, '>', "&gt;");
+					strValue = replaceAll(strValue, '"', "&quot;");
+					strValue = replaceAll(strValue, "'", "&apos;");
 				}
 				return strValue;
+			}
+			
+			function replaceAll(str, sym, subSym){
+				var tempSubStr = "$temporary;"; ///Temporary string used to substitute the original symbol
+				
+				///Step 1: substitute the original symbol with a temporary string
+				var indexOfMatch = str.indexOf(sym);				
+				if(indexOfMatch != -1){
+					while(indexOfMatch != -1){
+						str = str.replace(sym, tempSubStr);
+						indexOfMatch = str.indexOf(sym);
+					}
+					
+					///Step 2: substitue the temporary string with the final symbol
+					var indexOfNewMatch = str.indexOf(tempSubStr);
+					while(indexOfNewMatch != -1){
+						str = str.replace(tempSubStr, subSym);
+						indexOfNewMatch = str.indexOf(tempSubStr);
+					}					
+				}
+		
+				return str;	
 			}
 			
 			/**********************************************************************************************/

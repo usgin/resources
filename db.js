@@ -135,18 +135,17 @@ exports.returnAllRecords = function(format, clientResponse) {
 						break;
 					case "atom":
 						///Define a feed
-						atomFeed = { feed: 
-							{
+						atomFeed = { "feed": {
 								"xmlns": "http://www.w3.org/2005/Atom", 
 								"xmlns:georss": "http://www.georss.org/georss",
 								"xmlns:scast": "http://sciflo.jpl.nasa.gov/serviceCasting/2009v1",
-								"id": { $t: config.defaultContext.orgUrl + "/resources/atom" },
-								"title": { $t: "AZGS Atom Feed" },
+								"id": { "$t": config.defaultContext.orgUrl + "/resources/atom" },
+								"title": { "$t": "AZGS Atom Feed" },
 								"author": { 
-									"name": { $t: config.defaultContext.orgName }, 
-									"email": { $t: config.defaultContext.helpEmail } 
+									"name": { "$t": config.defaultContext.orgName }, 
+									"email": { "$t": config.defaultContext.helpEmail } 
 								},
-								"updated": { $t: _getCurrentDate() },
+								"updated": { "$t": _getCurrentDate() },
 								"entry": []
 							} 
 						};
@@ -164,7 +163,8 @@ exports.returnAllRecords = function(format, clientResponse) {
 								delete thisEntry["xmlns:scast"];
 								
 								atomFeed.feed.entry.push(thisEntry);
-							}							
+							}
+													
 						}
 						
 						///Transform json format into xml format
