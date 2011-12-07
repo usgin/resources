@@ -57,7 +57,8 @@ exports.saveMetadata = _saveMetadata;
 
 function _returnXml(json, clientResponse) {
 	clientResponse.contentType("application/xml");
-	clientResponse.send(xmlParser.toXml(json));
+	xmlDoc = '<?xml version="1.0" encoding=-"utf-8"?>\n' + xmlParser.toXml(json); 
+	clientResponse.send(xmlDoc);
 }
 
 exports.returnFormattedRecord = function(id, format, clientResponse) {
