@@ -90,8 +90,13 @@ function _validateInputFormat(input, data) {
 }
 
 exports.harvestResource = function(req, res) {
+	// TODO: Better handling of empty/incorrect parameters on harvesting form
+	if (!req.body.harvestFormat) {
+		res.redirect("/new-harvest/");
+		return;
+	}
 	urlBits = urlParser.parse(req.body.url, false, true);
-	getOptions = { host: urlBits.hostname, path: urlBits.pathname + ( urlBits.search || "" ) };
+	getOptions = { host: urlBits.hostname, port: (urlBits.port || 80), path: urlBits.pathname + ( urlBits.search || "" ) };
 	http.get(getOptions, function(proxyResponse) {
 		data = "";
 		proxyResponse.on("data", function(chunk) { data += chunk; });
