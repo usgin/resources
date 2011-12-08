@@ -146,7 +146,7 @@ exports.views = {
 					for(l in thisLinks){
 						thisUrl = objGet(doc, "link." + l + ".href", "", true);
 						if(thisUrl){
-							parseUrl(thisUrl, linkSequence, "Links." + l);
+							parseUrl(thisUrl, "Links." + l);
 						}
 					}
 				}else{///ObjLinks is not an array
