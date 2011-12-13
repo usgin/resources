@@ -56,7 +56,8 @@ exports.views = {
 				role = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeListValue", "");
 				if (["originator", "pointOfContact"].indexOf(role) != -1) {
 					var author = {};
-					author["Name"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Name Was Given"));
+					author["Name"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", "");
+					if (author["Name"] == "Missing" || author["Name"] == "missing") { author["Name"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Name Was Given"); }
 					author["ContactInformation"] = {};
 					author["ContactInformation"]["Phone"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", "No Phone Number Was Given");
 					author["ContactInformation"]["email"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:Address.gmd:electronicMailAddress.gco:CharacterString.$t", "No email Was Given");
@@ -84,6 +85,7 @@ exports.views = {
 			for (var d in descKeywords) {
 				theseKeywords = descKeywords[d];
 				actualKeywords = objGet(theseKeywords, "gmd:MD_Keywords.gmd:keyword", []);
+				if (actualKeywords.hasOwnProperty("gco:CharacterString")) { actualKeywords = [ actualKeywords ]; }
 				for (var k in actualKeywords) {
 					thisKeyword = objGet(actualKeywords[k], "gco:CharacterString.$t", null);
 					if (thisKeyword) { keywords.push(thisKeyword); }
@@ -103,7 +105,8 @@ exports.views = {
 			distributors = [], links = {};
 			for (var iDist in isoDistributors) {
 				thisDist = objGet(isoDistributors[iDist], "gmd:MD_Distributor.gmd:distributorContact", {}); newDist = {};
-				newDist["Name"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Name Was Given"));
+				newDist["Name"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", "");
+				if (newDist["Name"] == "Missing" || newDist["Name"] == "missing") { newDist["Name"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Name Was Given"); }
 				newDist["ContactInformation"] = {};
 				newDist["ContactInformation"]["Phone"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", "No Phone Number Was Given");
 				newDist["ContactInformation"]["email"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:Address.gmd:electronicMailAddress.gco:CharacterString.$t", "No email Was Given");
