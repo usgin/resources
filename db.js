@@ -224,6 +224,7 @@ exports.saveHarvestedRecords = function(jsonData, clientResponse, format, harves
 		}
 		break;
 	case "iso":
+		_saveHarvestedRecord(jsonData, clientResponse, format, harvestUrl, true);
 		break;
 	}
 };
