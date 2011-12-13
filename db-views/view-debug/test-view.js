@@ -1,5 +1,6 @@
-xmlParser = require("xml2json"),
-fs = require("fs");
+var xmlParser = require("xml2json"),
+fs = require("fs"),
+thisView, viewFunction, result, inputData, outputRoutine;
 
 // Get arguments
 var filename = process.argv[2], viewname = process.argv[3];
@@ -12,42 +13,39 @@ fs.readFile(filepath, function(err, data) {
 	else {
 		
 		if (viewname.match(/input/)) {
-			// Convert XML to JSON
-			var jsonData = xmlParser.toJson(data, { object: true, reversible: true });
-			
-			// Find the input view
-			var thisView = require("../inputs/" + viewname + ".js").views;
-			
-			// Get the map function
-			for (var format in thisView) {
-				var viewFunction = thisView[format].map || function(input) { console.log("Map function for " + viewname + "was not found."); return; };
-			}
-			
-			try {
-				// Run the conversion
-				
-/*
- *  --------------------------------------------------------------------------------------
- *  PUT A BREAKPOINT ON THE NEXT LINE AND STEP IN IF YOU WANT TO DEBUG THE VIEW FUNCTION
- *  --------------------------------------------------------------------------------------
- */				
-				var result = viewFunction(jsonData);
-				if (result) {
-					console.log(JSON.stringify(result));
-					return;
-				} else {
-					console.log("The view returned no data. Did you remember to comment out the emit line and replace it with return doc;?");
-					return;
-				}
-				
-			} catch(err) {
-				throw err;
-				return;
-			}
+			inputData = xmlParser.toJson(data, { object: true, reversible: true });
+			thisView = require("../inputs/" + viewname + ".js").views;
+			outputRoutine = function(output) {
+				console.log(JSON.stringify(output));
+			};
 		} else if (viewname.match(/output/)) {
-			console.log("Does not yet test output views."); return;
+			inputData = JSON.parse(data);
+			thisView = require("../outputs/" + viewname + ".js").views;
+			outputRoutine = function(output, outputFormat) {
+				if (outputFormat == "geojson") { console.log(JSON.stringify(output)); return; }
+ 				else { console.log(xmlParser.toXml(output)); return; }
+			};
 		} else {
 			console.log("The view name given was invalid."); return;
+		}
+			
+		// Get the map function and the outputFormat
+		for (var format in thisView) {
+			viewFunction = thisView[format].map || function(input) { console.log("Map function for " + viewname + "was not found."); return; };
+		}
+		
+		try {		
+/*
+ *  -----------------------------------------------------------------------------------------------
+ *  PUT A BREAKPOINT ON THE NEXT LINE AND STEP IN IF YOU WANT TO DEBUG THE VIEW FUNCTION
+ *  -----------------------------------------------------------------------------------------------
+ */				
+			result = viewFunction(inputData);
+			outputRoutine(result, format);
+			
+		} catch(err) {
+			throw err;
+			return;
 		}
 	}
 });
