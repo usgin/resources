@@ -2,19 +2,15 @@ var exports = module.exports;
 
 exports.views = {
 	iso: {
-		map: function(doc) {			
-			objGet = function(obj, prop, defVal) {
-				if (!obj) { return defVal; }
-				propParts = prop.split(".");
-				count = 0;
-				for (p in propParts) {
-					if (obj.hasOwnProperty(propParts[p])) {
-						obj = obj[propParts[p]];
-						count++;
-						if (count === propParts.length) { 
-							if (obj == "Missing" || obj == "missing") { return defVal; }
-							else { return obj; } 
-						}
+		map: function(iso) {			
+			objGet = function(obj, propName, defVal) {
+				propParts = propName.split(".");
+				if (!obj || propParts.length == 0) { return defVal; }
+				for (var i = 0; i < propParts.length; i++) {
+					thisProp = propParts[i];
+					if (obj.hasOwnProperty(thisProp)) {
+						obj = obj[thisProp];
+						if (i == propParts.length -1) { return obj; }
 					} else {
 						return defVal;
 					}
@@ -24,24 +20,24 @@ exports.views = {
 			doc = {
 				setProperty: function(propName, value) {
 					obj = this;
-					props = propName.split(".");
-					for (p in props) {
-						if (obj.hasOwnProperty(props[p])) {
-							obj = obj[props[p]];
+					propParts = propName.split(".");
+					for (var i = 0; i < propParts.length; i++) {
+						thisProp = propParts[i];
+						if (obj.hasOwnProperty(thisProp)) {
+							obj = obj[thisProp];
 						} else {
-							if (parseInt(p) + 1 == props.length) {
-								obj[props[p]] = value;
-							} else {
-								obj[props[p]] = {};
-								obj = obj[props[p]];
+							if (i == propParts.length - 1) { obj[thisProp] = value; } 
+							else {
+								obj[thisProp] = {};
+								obj = obj[thisProp];
 							}
 						}
 					}
-				}
+				}				
 			};
 			
 			// Find the appropriate identification info -- if there are multiple, the first is used.
-			ident = objGet(input, "gmd:MD_Metadata.gmd:identificationInfo", {});
+			ident = objGet(iso, "gmd:MD_Metadata.gmd:identificationInfo", {});
 			ident = objGet(ident, "0", ident);
 			ident = objGet(ident, "gmd:MD_DataIdentification", objGet(ident, "gmd:SV_ServiceIdentification", {}));
 			
@@ -102,7 +98,7 @@ exports.views = {
 			doc.setProperty("GeographicExtent.WestBound", objGet(ident, "gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:westBoundLongitude.gco:Decimal.$t", -179));
 			
 			// Distribution -- Get distributors as a list
-			isoDistributors = objGet(input, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor", []);
+			isoDistributors = objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor", []);
 			if (isoDistributors.hasOwnProperty("gmd:MD_Distributor")) { isoDistributors = [ isoDistributors ]; }
 			distributors = [], links = {};
 			for (var iDist in isoDistributors) {
@@ -138,7 +134,7 @@ exports.views = {
 			doc.Distributors = distributors;
 			
 			// Other Distribution Information
-			distributions = objGet(input, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions", []);
+			distributions = objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions", []);
 			if (distributions.hasOwnProperty("gmd:MD_DigitalTransferOptions")) { distributions = [ distributions ]; }
 			for (var d in distributions) {
 				thisDist = objGet(distributions[d], "gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource", {}); thisLink = {};
@@ -155,14 +151,15 @@ exports.views = {
 			
 			// Extra stuff in ISO that should probably be collected:
 			doc.setProperty("ResourceIds", []);
-			dataSetUri = objGet(input, "gmd:MD_Metadata.gmd:dataSetURI.gco:CharacterString.$t", null);
+			dataSetUri = objGet(iso, "gmd:MD_Metadata.gmd:dataSetURI.gco:CharacterString.$t", null);
 			if (dataSetUri) { doc.setProperty("ResourceIds.0", dataSetUri); }
 			
-			doc.setProperty("HarvestInformation.OriginalFileIdentifier", objGet(input, "gmd:MD_Metadata.gmd:fileIdentifier.gco:CharacterString.$t"));
-			doc.setProperty("HarvestInformation.SourceURL", objGet(input, "sourceUrl"));
+			// Harvest Information
+			doc.setProperty("HarvestInformation.OriginalFileIdentifier", objGet(iso, "gmd:MD_Metadata.gmd:fileIdentifier.gco:CharacterString.$t"));
 			doc.setProperty("HarvestInformation.OriginalFormat", "iso");
 			
-			emit(input._id, doc);			
+			emit(iso._id, doc);
+			//return doc;
 		}
 	}	
 };
