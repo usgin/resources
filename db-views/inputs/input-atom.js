@@ -10,9 +10,9 @@ exports.views = {
 					if (obj.hasOwnProperty(propParts[i])) {
 						obj = obj[propParts[i]];
 						if (i == propParts.length - 1) { 
-							if(isDel){
+							/*if(isDel){
 								extra.delProperty(propName);
-							}
+							}*/
 							return obj; 
 						}
 					} else {
@@ -22,7 +22,7 @@ exports.views = {
 			};
 			
 			///Delete the used property from the given object
-			extra = doc; 
+/*			extra = doc; 
 			
 			extra.delProperty = function(propName){
 					obj = this;
@@ -56,7 +56,7 @@ exports.views = {
 					}
 				}
 			};
-				
+*/				
 			atom = {
 				setProperty: function(propName, value) {
 					obj = this;
@@ -75,6 +75,7 @@ exports.views = {
 					}
 				}
 			};
+
 			/**********************************************************************************************/
 			///Set title
 			atom.setProperty("Title", objGet(doc, "title.$t", "No title found", true));
@@ -157,7 +158,7 @@ exports.views = {
 				}
 			}
 			
-			atom.setProperty("HarvestInformation.ExtraContent", extra);
+			//atom.setProperty("HarvestInformation.ExtraContent", extra);
 
 			emit(doc._id, atom);
 
