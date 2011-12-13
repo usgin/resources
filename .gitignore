@@ -2,4 +2,6 @@
 .project
 node_modules/
 config.js
+db-views/view-debug/test-files/*.xml
+db-views/view-debug/test-files/*.json
 *.DS_Store
