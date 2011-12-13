@@ -53,6 +53,7 @@ _saveMetadata = function(id, metadata, files, clientResponse, doNotRedirect, cus
 	}
 };
 
+
 exports.saveMetadata = _saveMetadata;
 
 function _returnXml(json, clientResponse) {
