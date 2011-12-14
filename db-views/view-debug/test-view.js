@@ -13,7 +13,8 @@ fs.readFile(filepath, function(err, data) {
 	else {
 		
 		if (viewname.match(/input/)) {
-			inputData = xmlParser.toJson(data, { object: true, reversible: true });
+			try { inputData = xmlParser.toJson(data, { object: true, reversible: true }); }
+			catch(err) { throw err; }
 			thisView = require("../inputs/" + viewname + ".js").views;
 			outputRoutine = function(output) {
 				console.log(JSON.stringify(output));
