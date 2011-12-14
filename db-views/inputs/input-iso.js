@@ -39,7 +39,7 @@ exports.views = {
 			// Find the appropriate identification info -- if there are multiple, the first is used.
 			ident = objGet(iso, "gmd:MD_Metadata.gmd:identificationInfo", {});
 			ident = objGet(ident, "0", ident);
-			ident = objGet(ident, "gmd:MD_DataIdentification", objGet(ident, "gmd:SV_ServiceIdentification", {}));
+			ident = objGet(ident, "gmd:MD_DataIdentification", objGet(ident, "srv:SV_ServiceIdentification", {}));
 			
 			// Find title/description
 			doc.setProperty("Title", objGet(ident, "gmd:citation.gmd:CI_Citation.gmd:title.gco:CharacterString.$t", "No Title Was Given"));
@@ -82,6 +82,7 @@ exports.views = {
 			// Find Keywords
 			keywords = [];
 			descKeywords = objGet(ident, "gmd:descriptiveKeywords", []);
+			if (descKeywords.hasOwnProperty("gmd:MD_Keywords")) { descKeywords = [ descKeywords ]; }
 			for (var d in descKeywords) {
 				theseKeywords = descKeywords[d];
 				actualKeywords = objGet(theseKeywords, "gmd:MD_Keywords.gmd:keyword", []);
