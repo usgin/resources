@@ -193,9 +193,10 @@ _saveHarvestedRecord = function(jsonData, clientResponse, format, harvestUrl, se
 				if (err) { errorPage.sendErrorPage(clientResponse, 500, "An error occurred retrieving a view from the harvest table."); }
 				else {
 					storageJson = dbRes.rows[0].value;
-					//storageJson["HarvestInformation"]["HarvestRecordId"] = dbResponse.id;
-					//storageJson["HarvestInformation"]["HarvestURL"] = harvestUrl;
-					//storageJson["HarvestInformation"]["HarvestDate"] = _getCurrentDate();
+					if (!storageJson.hasOwnProperty("HarvestInformation")) { storageJson["HarvestInformation"] = {}; }
+					storageJson["HarvestInformation"]["HarvestRecordId"] = dbResponse.id;
+					storageJson["HarvestInformation"]["HarvestURL"] = harvestUrl;
+					storageJson["HarvestInformation"]["HarvestDate"] = _getCurrentDate();
 					
 					if (sendResponse) { _saveMetadata(null, storageJson, null, clientResponse, true, _harvestResponse); }
 					else { _saveMetadata(null, storageJson, null, clientResponse, true); }
