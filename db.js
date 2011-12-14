@@ -42,7 +42,7 @@ _saveMetadata = function(id, metadata, files, clientResponse, doNotRedirect, cus
 		} else if (!doNotRedirect) {
 			clientResponse.redirect("/resource/" + dbRes.id);
 		} else if (customResponseFunction && doNotRedirect) {
-			customResponseFunction(clientResponse);
+			customResponseFunction(clientResponse, dbRes.id);
 		}
 	}
 	
@@ -181,8 +181,11 @@ exports.returnAllRecords = function(format, clientResponse) {
 	});
 };
 
-_harvestResponse = function(clientResponse) {
-	clientResponse.send("The harvest completed successfully");
+_harvestResponse = function(clientResponse, id) {
+	context = config.defaultContext;
+	context["pageContent"] = "<p>The harvest completed successfully</p>";
+	if (id) { context["pageContent"] += "<a href='/resource/" + id + "/html'>View your harvested resource here</a>"; }
+	clientResponse.render("genericPage", context);
 };
 
 _saveHarvestedRecord = function(jsonData, clientResponse, format, harvestUrl, sendResponse) {
