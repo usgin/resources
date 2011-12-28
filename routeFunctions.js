@@ -29,13 +29,8 @@ exports.editResource = function(req, res) {
 // Save a Resource
 exports.saveResource = function(req, res, next) {
 	resourceId = req.param("id", null);
-	req.form.complete(function(err, fields, files) {
-		if (err) { next(err); }
-		else {
-			metadata = JSON.parse(fields.theResource);
-			db.saveMetadata(resourceId, metadata, files, res);
-		}
-	});
+	metadata = JSON.parse(req.body.theResource);
+	db.saveMetadata(resourceId, metadata, null, res);
 };
 
 function _returnInvalidFormatResponse(clientResponse) {

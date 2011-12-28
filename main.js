@@ -4,12 +4,13 @@ var express = require("express"),
 	routeFunctions = require("./routeFunctions.js"),
 	errorPage = require("./error.js");
 
-var server = express.createServer(config.serverInfo.localListenAddress, form({ keepExtensions: true }));
+var server = express.createServer(config.serverInfo.localListenAddress);
 
 server.set("view engine", "jade");
 server.set("view options", { layout: false });
 server.use("/static", express.static(__dirname + "/static"));
 server.use(express.bodyParser());
+//server.use(form({ keepExtensions: true }));
 
 // Homepage
 server.get("/", routeFunctions.main);
