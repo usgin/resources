@@ -50,10 +50,14 @@ _storageFormat = function() {
 		    }
 	    }
 	};
-	this.linkTemplate = {
-		Type: "Describe how the link is to be used (download, wms, random service, etc.)",
-		URL: "http://fake.server.com/path/to/your/resource"
+	this.fileLinkTemplate = {
+		URL: "http://fake.server.com/path/to/your/file"
 	};
+	this.serviceLinkTemplate = {
+		serviceType: "URI identifying the type of service available at the URL given",
+		URL: "http://fake.server.com/path/to/your/service",
+		layerId: "Optional layer identifier for finding the described data in the service"
+	}; 
 	this.metadataTemplate = {
 		Title: "The title of the resource being described",
 		Description: "A description of what the resource being described is about",
@@ -67,7 +71,7 @@ _storageFormat = function() {
 	    	WestBound: -109.0
 	    },
 	    Distributors: [ this.contactTemplate ],
-	    Links: [ this.linkTemplate ]
+	    Links: [ this.fileLinkTemplate, this.serviceLinkTemplate ]
 	};
 };
 
@@ -82,7 +86,8 @@ _defaultContext = {
 	orgYear: _organizationInfo.orgYear,
 	helpEmail: _organizationInfo.orgEmail,
 	contactTemplate: JSON.stringify(_storage.contactTemplate),
-	linkTemplate: JSON.stringify(_storage.linkTemplate),
+	fileLinkTemplate: JSON.stringify(_storage.fileLinkTemplate),
+	serviceLinkTemplate: JSON.stringify(_storage.serviceLinkTemplate),
 	metadataTemplate: JSON.stringify(_storage.metadataTemplate)
 };
 
