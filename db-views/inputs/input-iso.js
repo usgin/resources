@@ -44,7 +44,7 @@ exports.views = {
 			function guessServiceType(url) {
 				// Conditions array has the same length as serviceTypes array. Each entry is a collections of regular expressions.
 				//	Each expression in a set has to validate in order for a URL to be identified as a particular service type -- no ORs.
-				var conditions = [ [/getcapabilities/i, /wms/i], [/getcapabilities/i, /wfs/i], [/getcapabilities/i, /wcs/i], [/\/services\//i, /\/mapserver\//i], [] ];
+				var conditions = [ [/getcapabilities/i, /wms/i], [/getcapabilities/i, /wfs/i], [/getcapabilities/i, /wcs/i], [/\/services\//i, /\/mapserver\/?$/i], [] ];
 				
 				// Loop through all the service types
 				for (var i = 0; i < serviceTypes.length; i++) {
