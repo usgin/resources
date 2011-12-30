@@ -43,7 +43,7 @@ exports.views = {
 
 				geojson.setProperty("properties.Authors", []);
 				for (var a in doc.Authors) {
-					thisLookup = "properties.Authors" + a + ".";
+					thisLookup = "properties.Authors." + a + ".";
 					thisAuthor = doc.Authors[a];
 					geojson.setProperty(thisLookup + "Name", objGet(thisAuthor, "Name", ""));
 					geojson.setProperty(thisLookup + "ContactInformation.Phone", objGet(thisAuthor, "ContactInformation.Phone", ""));
@@ -77,13 +77,7 @@ exports.views = {
 					geojson.setProperty(thisLookup + "ContactInformation.Address.Zip", objGet(thisDist, "ContactInformation.Address.Zip", ""));	
 				}
 				
-				geojson.setProperty("properties.Links", []);
-				for (var l in doc.Links) {
-					thisLookup = "properties.Links." + l + ".";
-					thisLink = doc.Links[l];
-					geojson.setProperty(thisLookup + "Type", objGet(doc.Links[l], "Type", ""));
-					geojson.setProperty(thisLookup + "URL", objGet(doc.Links[l], "URL", ""));
-				}
+				geojson.setProperty("properties.Links", objGet(doc, "Links", {}));
 				
 				geojson.setProperty("properties.ModifiedDate", objGet(doc, "ModifiedDate", ""));
 				
@@ -104,6 +98,7 @@ exports.views = {
 				geojson.setProperty("crs.properties.name", "urn:ogc:def:crs:OGC:1.3:CRS84");
 
 			  	emit(doc._id, geojson);
+				//return geojson;
 			}
 		}	
 };

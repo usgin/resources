@@ -54,9 +54,9 @@ _storageFormat = function() {
 		URL: "http://fake.server.com/path/to/your/file"
 	};
 	this.serviceLinkTemplate = {
-		serviceType: "URI identifying the type of service available at the URL given",
+		ServiceType: "URI identifying the type of service available at the URL given",
 		URL: "http://fake.server.com/path/to/your/service",
-		layerId: "Optional layer identifier for finding the described data in the service"
+		LayerId: "Optional layer identifier for finding the described data in the service"
 	}; 
 	this.metadataTemplate = {
 		Title: "The title of the resource being described",

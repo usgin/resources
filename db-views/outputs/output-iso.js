@@ -36,25 +36,21 @@ exports.views = {
 					}
 				}
 			};
-		/* *************************************** IMPORTANT ***************************************
-		   Here is where we determined whether a link is for a service or a dataset. Note the kludge.
-		   *************************************** IMPORTANT *************************************** */
+			
+			// List of service type identifiers
+			var serviceTypes = ["OGC:WMS", "OGC:WFS", "OGC:WCS", "esri", "opendap"], capServiceTypes = [];
+			for (var s in serviceTypes) { capServiceTypes[s] = serviceTypes[s].toUpperCase(); }
 			
 			serviceLinks = [], datasetLinks = [], docLinks = objGet(doc, "Links", []);
 			for (var l in docLinks) {
-				thisLink = docLinks[l];
-				if (thisLink.hasOwnProperty("Type")) {					
-					if (["wms", "WMS", "wfs", "WFS", "esri", "ESRI"].indexOf(thisLink.Type) != -1) {
-						serviceLinks.push(thisLink);
-					} else {
-						datasetLinks.push(thisLink);
-					}				
+				thisLink = docLinks[l];	
+				
+				if (capServiceTypes.indexOf(objGet(thisLink, "ServiceType", "None").toUpperCase()) != -1) {
+					serviceLinks.push(thisLink);
 				} else {
 					datasetLinks.push(thisLink);
 				}
-			}
-			
-			serviceOrDataset = serviceLinks.length > 0 ? "Service" : "Dataset";
+			}			
 			
 			// Namespaces
 			iso.setProperty("gmd:MD_Metadata.xmlns:gml", "http://www.opengis.net/gml");
@@ -77,9 +73,9 @@ exports.views = {
 			
 			// Hierarchy, whatever the fuck that is
 			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevel.gmd:MD_ScopeCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ScopeCode");
-			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevel.gmd:MD_ScopeCode.codeListValue", serviceOrDataset);
-			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevel.gmd:MD_ScopeCode.$t", serviceOrDataset);
-			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevelName.gco:CharacterString.$t", serviceOrDataset);
+			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevel.gmd:MD_ScopeCode.codeListValue", "Dataset");
+			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevel.gmd:MD_ScopeCode.$t", "Dataset");
+			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevelName.gco:CharacterString.$t", "Dataset");
 			
 			// TODO: Collect Metadata Contact Information. Preferably through login information. 
 			// Metadata Contact Information -- I'm not collecting this yet! -- Using AZGS For now.
@@ -103,11 +99,12 @@ exports.views = {
 			iso.setProperty("gmd:MD_Metadata.gmd:MetadataStandardName.gco:CharacterString.$t", "ISO-USGIN");
 			iso.setProperty("gmd:MD_Metadata.gmd:metadataStandardVersion.gco:CharacterString.$t", "1.2");
 			
-			// Dataset URI 
+			// Dataset URI -- should that be related to the metadata ID??
 			iso.setProperty("gmd:MD_Metadata.gmd:dataSetURI.gco:CharacterString.$t", "http://resources.usgin.org/uri-gin/usgin/resource/" + doc._id);
 						
 			// Finished!!
 			emit(doc._id, iso);
+			//return iso;
 		}
 	}	
 };

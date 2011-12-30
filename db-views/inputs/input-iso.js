@@ -36,6 +36,40 @@ exports.views = {
 				}				
 			};
 			
+			// List of service type identifiers
+			var serviceTypes = ["OGC:WMS", "OGC:WFS", "OGC:WCS", "esri", "opendap"], capServiceTypes = [];
+			for (var s in serviceTypes) { capServiceTypes[s] = serviceTypes[s].toUpperCase(); }
+			
+			// Function to guess if URL is one serviceType or another
+			function guessServiceType(url) {
+				// Conditions array has the same length as serviceTypes array. Each entry is a collections of regular expressions.
+				//	Each expression in a set has to validate in order for a URL to be identified as a particular service type -- no ORs.
+				var conditions = [ [/getcapabilities/i, /wms/i], [/getcapabilities/i, /wfs/i], [/getcapabilities/i, /wcs/i], [/\/services\//i, /\/mapserver\//i], [] ];
+				
+				// Loop through all the service types
+				for (var i = 0; i < serviceTypes.length; i++) {
+					// Grab the conditions for this service type
+					thisCondition = conditions[i];
+					
+					// Setup a boolean for whether or not the URL satisfies the conditions. If there are no conditions given,
+					//	then the URL fails to satisfy
+					satisfiesCondition = true;
+					if (thisCondition.length == 0) { satisfiesCondition = false; }
+					
+					// Loop through the regular expressions in this condition. If any of them fail then the condition is not satisfied.
+					for (var k = 0; k < thisCondition.length; k++) {
+						if (url.search(thisCondition[k]) == -1) { satisfiesCondition = false; }
+					}
+					
+					// If the condition was satisfied, then we've found our service type
+					if (satisfiesCondition) { return serviceTypes[i]; }
+				}
+				
+				// No conditions were satisfied -- we don't know the service type or perhaps it is not a service at all
+				return null;
+			}
+			
+			/**********************************************************************************************/
 			// Find the appropriate identification info -- if there are multiple, the first is used.
 			ident = objGet(iso, "gmd:MD_Metadata.gmd:identificationInfo", {});
 			ident = objGet(ident, "0", ident);
@@ -95,10 +129,11 @@ exports.views = {
 			doc.Keywords = keywords;
 			
 			// Extent Information
-			doc.setProperty("GeographicExtent.NorthBound", objGet(ident, "gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:northBoundLatitude.gco:Decimal.$t", 89));
-			doc.setProperty("GeographicExtent.SouthBound", objGet(ident, "gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:southBoundLatitude.gco:Decimal.$t", -89));
-			doc.setProperty("GeographicExtent.EastBound", objGet(ident, "gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:eastBoundLongitude.gco:Decimal.$t", 179));
-			doc.setProperty("GeographicExtent.WestBound", objGet(ident, "gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:westBoundLongitude.gco:Decimal.$t", -179));
+			theExtent = objGet(ident, "gmd:extent", objGet(ident, "srv:extent", {}));
+			doc.setProperty("GeographicExtent.NorthBound", objGet(theExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:northBoundLatitude.gco:Decimal.$t", 89));
+			doc.setProperty("GeographicExtent.SouthBound", objGet(theExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:southBoundLatitude.gco:Decimal.$t", -89));
+			doc.setProperty("GeographicExtent.EastBound", objGet(theExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:eastBoundLongitude.gco:Decimal.$t", 179));
+			doc.setProperty("GeographicExtent.WestBound", objGet(theExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:westBoundLongitude.gco:Decimal.$t", -179));
 			
 			// Distribution -- Get distributors as a list
 			isoDistributors = objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor", []);
@@ -129,10 +164,19 @@ exports.views = {
 				distOption = objGet(isoDistributors[iDist], "gmd:MD_Distributor.gmd:distributorTransferOptions.gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource", null);
 				if (distOption) {
 					thisLink = {};
-					thisLink["Type"] = objGet(distOption, "gmd:description.gco:CharacterString.$t", "Unknown");
 					thisLink["URL"] = objGet(distOption, "gmd:linkage.gmd:URL.$t", "No URL Was Given");
-					thisLink["Distributor"] = newDist.Name;
+					
+					linkProtocol = objGet(thisDist, "gmd:protocol.gco:CharacterString.$t", "No Protocol Was Given");
+					ind = capServiceTypes.indexOf(linkProtocol.toUpperCase());
+					if (ind != -1) {
+						thisLink["ServiceType"] = serviceTypes[ind];
+					} else {
+						guessedServiceType = guessServiceType(thisLink["URL"]);
+						if (guessedServiceType) { thisLink["ServiceType"] = guessedServiceType; }
+					}				
+									
 					links[thisLink["URL"]] = thisLink;
+					thisLink["Distributor"] = newDist.Name;
 				}
 			}
 			doc.Distributors = distributors;
@@ -141,12 +185,24 @@ exports.views = {
 			distributions = objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions", []);
 			if (distributions.hasOwnProperty("gmd:MD_DigitalTransferOptions")) { distributions = [ distributions ]; }
 			for (var d in distributions) {
-				thisDist = objGet(distributions[d], "gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource", {}); thisLink = {};
-				thisLink["Type"] = objGet(thisDist, "gmd:description.gco:CharacterString.$t", "Unknown");
+				thisDist = objGet(distributions[d], "gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource", {}); 
+				thisLink = {};
+				
 				thisLink["URL"] = objGet(thisDist, "gmd:linkage.gmd:URL.$t", "No URL Was Given");
+				
+				linkProtocol = objGet(thisDist, "gmd:protocol.gco:CharacterString.$t", "No Protocol Was Given");
+				ind = capServiceTypes.indexOf(linkProtocol.toUpperCase());
+				if (ind != -1) {
+					thisLink["ServiceType"] = serviceTypes[ind];
+				} else {
+					guessedServiceType = guessServiceType(thisLink["URL"]);
+					if (guessedServiceType) { thisLink["ServiceType"] = guessedServiceType; }
+				}
+				
 				if (!(thisLink.URL in links)) {
 					links[thisLink.URL] = thisLink;
 				}
+				
 			}
 			
 			linksList = [];
