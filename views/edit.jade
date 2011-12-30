@@ -46,7 +46,8 @@ block scripts
 	script(type="application/javascript", src="/static/js/editor/editor.js")
 	script(type="application/javascript")
 		| contactObj = !{contactTemplate};
-		| linkObj = !{linkTemplate};
+		| fileLinkObj = !{fileLinkTemplate};
+		| serviceLinkObj = !{serviceLinkTemplate};
 		| metadataObj = !{metadataTemplate};
 		- if (existingResource) {
 		| startObj = !{existingResource};
