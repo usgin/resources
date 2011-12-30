@@ -84,17 +84,18 @@ exports.views = {
 			
 			// Find Authors
 			respParties = objGet(ident, "gmd:citation.gmd:CI_Citation.gmd:citedResponsibleParty", []);
+			if (respParties.hasOwnProperty("gmd:CI_ResponsibleParty")) { respParties = [ respParties ]; }
 			authors = [];
 			for (var p in respParties) {
 				thisParty = respParties[p];
 				role = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeListValue", "");
-				if (["originator", "pointOfContact"].indexOf(role) != -1) {
+				if (["originator", "pointOfContact", "resourceProvider"].indexOf(role) != -1) {
 					var author = {};
 					author["Name"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", "");
 					if (author["Name"] == "Missing" || author["Name"] == "missing") { author["Name"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Name Was Given"); }
 					author["ContactInformation"] = {};
 					author["ContactInformation"]["Phone"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", "No Phone Number Was Given");
-					author["ContactInformation"]["email"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:Address.gmd:electronicMailAddress.gco:CharacterString.$t", "No email Was Given");
+					author["ContactInformation"]["email"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:electronicMailAddress.gco:CharacterString.$t", "No email Was Given");
 					author["ContactInformation"]["Address"] = {};
 					author["ContactInformation"]["Address"]["Street"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:deliveryPoint.gco:CharacterString.$t", "No Street Address Was Given");
 					author["ContactInformation"]["Address"]["City"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:city.gco:CharacterString.$t", "No City Was Given");
@@ -123,7 +124,12 @@ exports.views = {
 				if (actualKeywords.hasOwnProperty("gco:CharacterString")) { actualKeywords = [ actualKeywords ]; }
 				for (var k in actualKeywords) {
 					thisKeyword = objGet(actualKeywords[k], "gco:CharacterString.$t", null);
-					if (thisKeyword) { keywords.push(thisKeyword); }
+					if (thisKeyword) {
+						wordArr = thisKeyword.split(",");
+						for (var wi in wordArr) {
+							keywords.push(wordArr[wi].trim()); 
+						}
+					}
 				}
 			}
 			doc.Keywords = keywords;
@@ -145,7 +151,7 @@ exports.views = {
 				if (newDist["Name"] == "Missing" || newDist["Name"] == "missing") { newDist["Name"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Name Was Given"); }
 				newDist["ContactInformation"] = {};
 				newDist["ContactInformation"]["Phone"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", "No Phone Number Was Given");
-				newDist["ContactInformation"]["email"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:Address.gmd:electronicMailAddress.gco:CharacterString.$t", "No email Was Given");
+				newDist["ContactInformation"]["email"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:electronicMailAddress.gco:CharacterString.$t", "No email Was Given");
 				newDist["ContactInformation"]["Address"] = {};
 				newDist["ContactInformation"]["Address"]["Street"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:deliveryPoint.gco:CharacterString.$t", "No Street Address Was Given");
 				newDist["ContactInformation"]["Address"]["City"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:city.gco:CharacterString.$t", "No City Was Given");
