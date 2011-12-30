@@ -27,10 +27,10 @@ exports.editResource = function(req, res) {
 };
 
 // Save a Resource
-exports.saveResource = function(req, res, next) {
+exports.saveResource = function(req, res) {
 	resourceId = req.param("id", null);
 	metadata = JSON.parse(req.body.theResource);
-	db.saveMetadata(resourceId, metadata, null, res);
+	db.saveMetadata(resourceId, metadata, null, res); 
 };
 
 function _returnInvalidFormatResponse(clientResponse) {

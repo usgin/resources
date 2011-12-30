@@ -1,5 +1,4 @@
 var express = require("express"),
-	form = require("connect-form"),
 	config = require("./config.js"),
 	routeFunctions = require("./routeFunctions.js"),
 	errorPage = require("./error.js");
@@ -10,7 +9,6 @@ server.set("view engine", "jade");
 server.set("view options", { layout: false });
 server.use("/static", express.static(__dirname + "/static"));
 server.use(express.bodyParser());
-//server.use(form({ keepExtensions: true }));
 
 // Homepage
 server.get("/", routeFunctions.main);
