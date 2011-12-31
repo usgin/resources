@@ -42,11 +42,11 @@ exports.views = {
 			function url2Text(strValue){
 				if (strValue) {
 					if(strValue.constructor.toString().indexOf("String") != -1){
-						strValue = strValue.replace(/&/g, "&amp");
-						strValue = strValue.replace(/</g, "&lt");
-						strValue = strValue.replace(/>/g, "&gt");
-						strValue = strValue.replace(/"/g, "&quot");
-						strValue = strValue.replace(/'/g, "&apos");
+						strValue = strValue.replace(/&(?!(amp;|lt;|gt;|quot;|apos;))/g, "&amp;");
+						strValue = strValue.replace(/</g, "&lt;");
+						strValue = strValue.replace(/>/g, "&gt;");
+						strValue = strValue.replace(/"/g, "&quot;");
+						strValue = strValue.replace(/'/g, "&apos;");
 					}
 				}
 				return strValue;
