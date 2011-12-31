@@ -37,20 +37,38 @@ exports.views = {
 				}
 			};
 			
+			function writeContactInfo(contactObj, isoLocation, role) {
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", objGet(contactObj, "Name", "No Name Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Phone", "No Phone Number Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:electronicMailAddress.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.email", "No email Address Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:deliveryPoint.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.Street", "No Street Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:city.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.City", "No Street Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:administrativeArea.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.State", "No State Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:postalCode.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.Zip", "No Zip Code Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#CI_RoleCode");
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeListValue", role);
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.$t", role);
+			}
+			
+			function writeLinkInfo(linkObj, isoLocation) {
+				iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:linkage.gmd:URL", objGet(linkObj, "URL", "No URL Was Given"));
+				serviceType = objGet(linkObj, "ServiceType", false);
+				if (serviceType) {
+					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:protocol.gco:CharacterString.$t", serviceType);
+				}
+				layerId = objGet(linkObj, "layerId", false);
+				if (layerId && serviceType) {
+					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:description.gco:CharacterString.$t", "This dataset is available as a layer or featuretype within this service. Look for " + layerId + ".");
+				}
+			}
+			
 			// List of service type identifiers
 			var serviceTypes = ["OGC:WMS", "OGC:WFS", "OGC:WCS", "esri", "opendap"], capServiceTypes = [];
-			for (var s in serviceTypes) { capServiceTypes[s] = serviceTypes[s].toUpperCase(); }
+			for (var s in serviceTypes) { capServiceTypes[s] = serviceTypes[s].toUpperCase(); }						
 			
-			serviceLinks = [], datasetLinks = [], docLinks = objGet(doc, "Links", []);
-			for (var l in docLinks) {
-				thisLink = docLinks[l];	
-				
-				if (capServiceTypes.indexOf(objGet(thisLink, "ServiceType", "None").toUpperCase()) != -1) {
-					serviceLinks.push(thisLink);
-				} else {
-					datasetLinks.push(thisLink);
-				}
-			}			
+			/**********************************************************************************************
+			 * Metadata Information
+			 **********************************************************************************************/
 			
 			// Namespaces
 			iso.setProperty("gmd:MD_Metadata.xmlns:gml", "http://www.opengis.net/gml");
@@ -71,7 +89,7 @@ exports.views = {
 			iso.setProperty("gmd:MD_Metadata.gmd:characterSet.gmd:MD_CharacterSetCode.codeListValue", "utf8");
 			iso.setProperty("gmd:MD_Metadata.gmd:characterSet.gmd:MD_CharacterSetCode.$t", "UTF-8");
 			
-			// Hierarchy, whatever the fuck that is
+			// Hierarchy!!!
 			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevel.gmd:MD_ScopeCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ScopeCode");
 			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevel.gmd:MD_ScopeCode.codeListValue", "Dataset");
 			iso.setProperty("gmd:MD_Metadata.gmd:hierarchyLevel.gmd:MD_ScopeCode.$t", "Dataset");
@@ -99,9 +117,93 @@ exports.views = {
 			iso.setProperty("gmd:MD_Metadata.gmd:MetadataStandardName.gco:CharacterString.$t", "ISO-USGIN");
 			iso.setProperty("gmd:MD_Metadata.gmd:metadataStandardVersion.gco:CharacterString.$t", "1.2");
 			
-			// Dataset URI -- should that be related to the metadata ID??
-			iso.setProperty("gmd:MD_Metadata.gmd:dataSetURI.gco:CharacterString.$t", "http://resources.usgin.org/uri-gin/usgin/resource/" + doc._id);
-						
+			// Dataset URI -- if we have one...
+			dsId = objGet(doc, "ResourceIds.0", null);
+			if (dsId) { iso.setProperty("gmd:MD_Metadata.gmd:dataSetURI.gco:CharacterString.$t", dsId); }
+
+			/**********************************************************************************************
+			 * Identification Info
+			 **********************************************************************************************/
+			
+			// Title
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:title.gmd:CharacterString.$t", objGet(doc, "Title", "No Title Was Given"));
+			
+			// Publication Date
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:date.gco:DateTime.$t", objGet(doc, "PublicationDate", "No Publication Date Was Given"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:dateType.gmd:CI_DateTypeCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:dateType.gmd:CI_DateTypeCode.codeListValue", "publication");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:dateType.gmd:CI_DateTypeCode.$t", "publication");
+			
+			// Authors
+			docAuthors = objGet(doc, "Authors", []);
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:citedResponsibleParty", []);
+			for (a in docAuthors) { 
+				writeContactInfo(docAuthors[a], "gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:citedResponsibleParty." + a, "originator");
+			}
+			
+			// Abstract
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:abstract.gco:CharacterString.$t", objGet(doc, "Description", "No Description Was Given"));
+			
+			// Status
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:status.gmd:MD_ProgressCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ProgressCode");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:status.gmd:MD_ProgressCode.codeListValue", "completed");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:status.gmd:MD_ProgressCode.$t", "completed");
+			
+			// Keywords
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:keyword", []);
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:type.gmd:MD_KeywordTypeCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:type.gmd:MD_KeywordTypeCode.codeListValue", "theme");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:type.gmd:MD_KeywordTypeCode.$t", "theme");
+			
+			docKeywords = objGet(doc, "Keywords", []);
+			for (k in docKeywords) {
+				iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:keyword." + k + ".gco:CharacterString.$t", docKeywords[[k]]);
+			}
+			
+			// Language
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:language.gco:CharacterString.$t", "eng");
+			
+			// Category!!!
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:topicCategory.gmd:MD_TopicCategoryCode.$t", "geoscientificInformation");
+			
+			// Extent
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:westBoundingLongitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.WestBound"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:eastBoundingLongitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.EastBound"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:southBoundingLatitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.SouthBound"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:northBoundingLatitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.NorthBound"));
+			
+			/**********************************************************************************************
+			 * Distribution Info
+			 **********************************************************************************************/
+			
+			docDistributors = objGet(doc, "Distributors", []);
+			docLinks = objGet(doc, "Links", []), keeperLinks = [];
+			iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor", []);
+			
+			// Loop through doc distributors. If links identify a distributor, then add it the the MD_Distributor
+			for (d in docDistributors) {
+				writeContactInfo(docDistributors[d], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorContact", "distributor");
+				
+				var dl = 0;
+				for (l in docLinks) {
+					if (objGet(docLinks[l], "Distributor", "None") == objGet(docDistributors[d], "Name", null)) {
+						if (!objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", false)) {
+							iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", []);
+						}
+						writeLinkInfo(docLinks[l], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions." + dl);
+						dl++;											
+					} else {
+						keeperLinks.push(docLinks[l]);
+					}
+				}
+			}
+			
+			// Add remaining links where distributor was not specified explicitly
+			iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions", []);
+			for (kl in keeperLinks) {
+				writeLinkInfo(keeperLinks[l], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions." + kl);
+			}
+			
 			// Finished!!
 			emit(doc._id, iso);
 			//return iso;
