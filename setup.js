@@ -1,7 +1,8 @@
 var cradle = require("cradle"),
 	config = require("./config.js"),
 	output = require("./db-views/outputs/outputFormats.js"),
-	input = require("./db-views/inputs/inputFormats.js");
+	input = require("./db-views/inputs/inputFormats.js"),
+	indexes = require("./db-views/indexes.js");
 
 var metadb = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort);
 
@@ -40,6 +41,10 @@ function saveDesignDocs(db) {
 		db.save("_design/outputs", output.views, function(err, response) {
 			if (err) { console.log("Error creating output views in " + db.name + " database."); }
 			else { console.log("Output views up-to-date."); }
+		});
+		db.save("_design/indexes", indexes.views, function(err, response) {
+			if (err) { console.log("Error creating index views in " + db.name + " database."); }
+			else { console.log("Index views up-to-date."); }
 		});
 		break;
 	default:
