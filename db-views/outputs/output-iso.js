@@ -27,7 +27,7 @@ exports.views = {
 							obj = obj[props[p]];
 						} else {
 							if (parseInt(p) + 1 == props.length) {
-								obj[props[p]] = value;
+								obj[props[p]] = toXmlValidText(value);
 							} else {
 								obj[props[p]] = {};
 								obj = obj[props[p]];
@@ -36,6 +36,20 @@ exports.views = {
 					}
 				}
 			};
+			
+			///Convert text into valid text for XML docs
+			function toXmlValidText(strValue){
+				if (strValue) {
+					if(strValue.constructor.toString().indexOf("String") != -1){
+						strValue = strValue.replace(/&(?!(amp;|lt;|gt;|quot;|apos;))/g, "&amp;");
+						strValue = strValue.replace(/</g, "&lt;");
+						strValue = strValue.replace(/>/g, "&gt;");
+						strValue = strValue.replace(/"/g, "&quot;");
+						strValue = strValue.replace(/'/g, "&apos;");
+					}
+				}
+				return strValue;
+			}
 			
 			function writeContactInfo(contactObj, isoLocation, role) {
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", objGet(contactObj, "Name", "No Name Was Given"));

@@ -27,7 +27,7 @@ exports.views = {
 							obj = obj[props[p]];
 						} else {
 							if (parseInt(p) + 1 == props.length) {
-								obj[props[p]] = url2Text(value);
+								obj[props[p]] = toXmlValidText(value);
 								
 							} else {
 								obj[props[p]] = {};
@@ -38,8 +38,8 @@ exports.views = {
 				}
 			};
 			
-			///Convert url into the xml text which can be displayed by the browser
-			function url2Text(strValue){
+			///Convert text into valid text for XML docs
+			function toXmlValidText(strValue){
 				if (strValue) {
 					if(strValue.constructor.toString().indexOf("String") != -1){
 						strValue = strValue.replace(/&(?!(amp;|lt;|gt;|quot;|apos;))/g, "&amp;");
