@@ -33,7 +33,7 @@ _organizationInfo = {
  * Please do not adjust the following configurations
  */
 _searchInfo = {
-	searchUrl: _dbInfo.dbVersion >= 1.1 ? "/_fti/local/" + _dbInfo.dbRepoName + "/_design/indexes/" : "/" + _dbInfo.dbRepoName + "/_fti/_design/indexes/"
+	searchUrl: _dbInfo.dbVersion >= 1.1 ? "/_fti/local/" + _dbInfo.databases.dbRepoName + "/_design/indexes/" : "/" + _dbInfo.databases.dbRepoName + "/_fti/_design/indexes/"
 };
 
 _storageFormat = function() {

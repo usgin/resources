@@ -1,0 +1,11 @@
+extends ./base
+
+block scripts
+	script(type="application/javascript", src="/static/js/search.js")
+	script(type="application/javascript")
+		| searchUrl = "#{searchUrl}";
+
+block page-content
+	#full-text-container
+		input#search-terms
+		#search-button(onclick="performSearch()") Search

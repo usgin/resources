@@ -107,3 +107,38 @@ exports.harvestResource = function(req, res) {
 		errorPage.sendErrorPage(res, 200, "The URL that you entered was invalid. Please try again.");
 	});
 };
+
+// Search Page
+exports.searchPage = function(req, res) {
+	context = config.defaultContext;
+	context.searchUrl = config.searchInfo.searchUrl;
+	res.render ("search", context);
+};
+
+// Perform a search
+exports.doSearch = function(req, res) {
+	searchObj = req.body;
+	if (searchObj.hasOwnProperty("full")) {
+		searchOptions = {
+			host: config.dbInfo.dbHost,
+			port: config.dbInfo.dbPort,
+			path: config.searchInfo.searchUrl + "full?q=" + searchObj.full
+		};
+		
+		http.get(searchOptions, function(searchResponse) {
+			searchData = "";
+			searchResponse.on("data", function(chunk) { searchData += chunk; });
+			searchResponse.on("end", function() {
+				searchResults = JSON.parse(searchData);
+				ids = [];
+				for (var r in searchResults.rows) {
+					ids.push(searchResults.rows[r].id);
+				}
+				db.getMultipleRecords(ids, res);
+			});
+		}).on("error", function(err) {
+			errorPage.sendErrorPage(clientResponse, 500, "Error" + err.reason);
+		});
+		
+	}
+};

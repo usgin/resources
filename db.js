@@ -233,3 +233,11 @@ exports.saveHarvestedRecords = function(jsonData, clientResponse, format, harves
 		break;
 	}
 };
+
+// Get multiple records from the repository database given an array of ids
+exports.getMultipleRecords = function(ids, clientResponse) {
+	repository.get(ids, function(err, records) {
+		if (err) { clientResponse.json(err); }
+		else clientResponse.json(records);
+	});
+};

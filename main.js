@@ -31,6 +31,10 @@ server.get("/resource/:id/:format", routeFunctions.getFormattedResource);
 // Get all the records in some defined output format
 server.get("/resources/:format", routeFunctions.getAllRecords);
 
+// Search for records
+server.get("/search/", routeFunctions.searchPage);
+server.post("/search/", routeFunctions.doSearch);
+
 // All other requests should 404
 server.get("*", function(req, res) {
 	errorPage.sendErrorPage(res, 404, "Perhaps this page hasn't been created yet...");
