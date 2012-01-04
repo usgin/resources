@@ -112,7 +112,7 @@ exports.harvestResource = function(req, res) {
 exports.searchPage = function(req, res) {
 	context = config.defaultContext;
 	context.searchUrl = config.searchInfo.searchUrl;
-	res.render ("search", context);
+	res.render("search", context);
 };
 
 // Perform a search
@@ -139,6 +139,5 @@ exports.doSearch = function(req, res) {
 		}).on("error", function(err) {
 			errorPage.sendErrorPage(clientResponse, 500, "Error" + err.reason);
 		});
-		
 	}
 };
