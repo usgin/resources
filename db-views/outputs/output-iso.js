@@ -191,7 +191,9 @@ exports.views = {
 			 **********************************************************************************************/
 			
 			docDistributors = objGet(doc, "Distributors", []);
-			docLinks = objGet(doc, "Links", []), keeperLinks = [];
+			docLinks = objGet(doc, "Links", []), keeperLinks = {};
+			for (var fug in docLinks) { keeperLinks[docLinks[fug]["URL"]] = docLinks[fug]; }
+			
 			iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor", []);
 			
 			// Loop through doc distributors. If links identify a distributor, then add it the the MD_Distributor
@@ -205,22 +207,23 @@ exports.views = {
 							iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", []);
 						}
 						writeLinkInfo(docLinks[l], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions." + dl);
+						delete keeperLinks[docLinks[l]["URL"]];
 						dl++;											
-					} else {
-						keeperLinks.push(docLinks[l]);
 					}
 				}
 			}
 			
 			// Add remaining links where distributor was not specified explicitly
 			iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions", []);
+			damnCounter = 0;
 			for (kl in keeperLinks) {
-				writeLinkInfo(keeperLinks[l], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions." + kl);
+				writeLinkInfo(keeperLinks[kl], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions." + damnCounter);
+				damnCounter++;
 			}
 			
 			// Finished!!
 			emit(doc._id, iso);
-			//return iso;
+			return iso;
 		}
 	}	
 };
