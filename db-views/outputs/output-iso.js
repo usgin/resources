@@ -53,19 +53,19 @@ exports.views = {
 			
 			function writeContactInfo(contactObj, isoLocation, role) {
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", objGet(contactObj, "Name", "No Name Was Given"));
-				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Phone", "No Phone Number Was Given"));
-				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:electronicMailAddress.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.email", "No email Address Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Phone", "No Phone Number Was Given"));				
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:deliveryPoint.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.Street", "No Street Was Given"));
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:city.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.City", "No Street Was Given"));
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:administrativeArea.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.State", "No State Was Given"));
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:postalCode.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.Zip", "No Zip Code Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:electronicMailAddress.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.email", "No email Address Was Given"));
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#CI_RoleCode");
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeListValue", role);
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.$t", role);
 			}
 			
 			function writeLinkInfo(linkObj, isoLocation) {
-				iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:linkage.gmd:URL", objGet(linkObj, "URL", "No URL Was Given"));
+				iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:linkage.gmd:URL.$t", objGet(linkObj, "URL", "No URL Was Given"));
 				serviceType = objGet(linkObj, "ServiceType", false);
 				if (serviceType) {
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:protocol.gco:CharacterString.$t", serviceType);
@@ -111,24 +111,26 @@ exports.views = {
 			
 			// TODO: Collect Metadata Contact Information. Preferably through login information. 
 			// Metadata Contact Information -- I'm not collecting this yet! -- Using AZGS For now.
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "Arizona Geological Survey");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", "520-770-3500");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:facsimile.gco:CharacterString.$t", "520-770-3505");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:deliveryPoint.gco:CharacterString.$t", "416 W Congress St. Suite 100");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:city.gco:CharacterString.$t", "Tucson");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:postalCode.gco:CharacterString.$t", "85701");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:country.gco:CharacterString.$t", "USA");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:electronicMailAddress.gco:CharacterString.$t", "metadata@usgin.org");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:onlineResource.gmd:CI_OnlineResource.gmd:linkage.gmd:URL.$t", "http://azgs.az.gov/");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#CI_RoleCode");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeListValue", "pointOfContact");
-			iso.setProperty("gmd:MD_Metadata.gco:contact.gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.$t", "pointOfContact");
+			azgsContact = {
+		        Name: "Arizona Geological Survey",
+		        ContactInformation: {
+		            Phone: "520-770-3500",
+		            email: "metadata@usgin.org",
+		            Address: {
+		                Street: "416 W Congress St. Ste. 100",
+		                City: "Tucson",
+		                State: "AZ",
+		                Zip: "85701"
+		            }
+		        }
+		    };
+			writeContactInfo(azgsContact, "gmd:MD_Metadata.gmd:contact", "pointOfContact");
 			
 			// Metadata Modified Date
 			iso.setProperty("gmd:MD_Metadata.gmd:dateStamp.gco:DateTime.$t", objGet(doc, "ModifiedDate", "")); 
 			
 			// Metadata Standard Info
-			iso.setProperty("gmd:MD_Metadata.gmd:MetadataStandardName.gco:CharacterString.$t", "ISO-USGIN");
+			iso.setProperty("gmd:MD_Metadata.gmd:metadataStandardName.gco:CharacterString.$t", "ISO-USGIN");
 			iso.setProperty("gmd:MD_Metadata.gmd:metadataStandardVersion.gco:CharacterString.$t", "1.2");
 			
 			// Dataset URI -- if we have one...
@@ -140,13 +142,14 @@ exports.views = {
 			 **********************************************************************************************/
 			
 			// Title
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:title.gmd:CharacterString.$t", objGet(doc, "Title", "No Title Was Given"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:title.gco:CharacterString.$t", objGet(doc, "Title", "No Title Was Given"));
 			
 			// Publication Date
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:date.gco:DateTime.$t", objGet(doc, "PublicationDate", "No Publication Date Was Given"));
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:dateType.gmd:CI_DateTypeCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode");
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:dateType.gmd:CI_DateTypeCode.codeListValue", "publication");
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:dateType.gmd:CI_DateTypeCode.$t", "publication");
+			
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:date.gmd:CI_Date.gmd:date.gco:DateTime.$t", objGet(doc, "PublicationDate", "No Publication Date Was Given"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:date.gmd:CI_Date.gmd:dateType.gmd:CI_DateTypeCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:date.gmd:CI_Date.gmd:dateType.gmd:CI_DateTypeCode.codeListValue", "publication");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:citation.gmd:CI_Citation.gmd:date.gmd:CI_Date.gmd:dateType.gmd:CI_DateTypeCode.$t", "publication");
 			
 			// Authors
 			docAuthors = objGet(doc, "Authors", []);
@@ -159,32 +162,32 @@ exports.views = {
 			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:abstract.gco:CharacterString.$t", objGet(doc, "Description", "No Description Was Given"));
 			
 			// Status
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:status.gmd:MD_ProgressCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ProgressCode");
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:status.gmd:MD_ProgressCode.codeListValue", "completed");
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:status.gmd:MD_ProgressCode.$t", "completed");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:status.gmd:MD_ProgressCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ProgressCode");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:status.gmd:MD_ProgressCode.codeListValue", "completed");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:status.gmd:MD_ProgressCode.$t", "completed");
 			
 			// Keywords
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:keyword", []);
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:type.gmd:MD_KeywordTypeCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode");
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:type.gmd:MD_KeywordTypeCode.codeListValue", "theme");
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:type.gmd:MD_KeywordTypeCode.$t", "theme");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:keyword", []);
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:type.gmd:MD_KeywordTypeCode.codeList", "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:type.gmd:MD_KeywordTypeCode.codeListValue", "theme");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:type.gmd:MD_KeywordTypeCode.$t", "theme");
 			
 			docKeywords = objGet(doc, "Keywords", []);
 			for (k in docKeywords) {
-				iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:keyword." + k + ".gco:CharacterString.$t", docKeywords[[k]]);
+				iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:descriptiveKeywords.gmd:MD_Keywords.gmd:keyword." + k + ".gco:CharacterString.$t", docKeywords[[k]]);
 			}
 			
 			// Language
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:language.gco:CharacterString.$t", "eng");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:language.gco:CharacterString.$t", "eng");
 			
 			// Category!!!
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:topicCategory.gmd:MD_TopicCategoryCode.$t", "geoscientificInformation");
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:topicCategory.gmd:MD_TopicCategoryCode.$t", "geoscientificInformation");
 			
 			// Extent
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:westBoundingLongitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.WestBound"));
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:eastBoundingLongitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.EastBound"));
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:southBoundingLatitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.SouthBound"));
-			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:northBoundingLatitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.NorthBound"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:westBoundLongitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.WestBound"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:eastBoundLongitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.EastBound"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:southBoundLatitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.SouthBound"));
+			iso.setProperty("gmd:MD_Metadata.gmd:identificationInfo.gmd:MD_DataIdentification.gmd:extent.gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:northBoundLatitude.gco:Decimal.$t", objGet(doc, "GeographicExtent.NorthBound"));
 			
 			/**********************************************************************************************
 			 * Distribution Info
@@ -223,7 +226,7 @@ exports.views = {
 			
 			// Finished!!
 			emit(doc._id, iso);
-			return iso;
+			//return iso;
 		}
 	}	
 };
