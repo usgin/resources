@@ -194,8 +194,7 @@ exports.views = {
 			 **********************************************************************************************/
 			
 			docDistributors = objGet(doc, "Distributors", []);
-			docLinks = objGet(doc, "Links", []), keeperLinks = {};
-			for (var fug in docLinks) { keeperLinks[docLinks[fug]["URL"]] = docLinks[fug]; }
+			docLinks = objGet(doc, "Links", []); 
 			
 			iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor", []);
 			
@@ -204,24 +203,22 @@ exports.views = {
 				writeContactInfo(docDistributors[d], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorContact", "distributor");
 				
 				var dl = 0;
-				for (l in docLinks) {
+				for (var l = docLinks.length -1;l >= 0;l--) {
 					if (objGet(docLinks[l], "Distributor", "None") == objGet(docDistributors[d], "Name", null)) {
 						if (!objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", false)) {
 							iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", []);
 						}
 						writeLinkInfo(docLinks[l], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions." + dl);
-						delete keeperLinks[docLinks[l]["URL"]];
-						dl++;											
+						delete docLinks[l];
+						dl++;
 					}
 				}
 			}
 			
 			// Add remaining links where distributor was not specified explicitly
 			iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions", []);
-			damnCounter = 0;
-			for (kl in keeperLinks) {
-				writeLinkInfo(keeperLinks[kl], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions." + damnCounter);
-				damnCounter++;
+			for (var leftover in docLinks) {
+				writeLinkInfo(docLinks[leftover], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions." + leftover);
 			}
 			
 			// Finished!!
