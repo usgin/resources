@@ -72,39 +72,39 @@ exports.views = {
 
 			/**********************************************************************************************/
 			///Set title
-			doc.setProperty("Title", objGet(atom, "entry.title.$t", "No title found"));
+			doc.setProperty("Title", objGet(atom, "title.$t", "No title found"));
 			///Set summary
-			doc.setProperty("Description", objGet(atom, "entry.summary.$t", "No summary found"));
+			doc.setProperty("Description", objGet(atom, "summary.$t", "No summary found"));
 			///Set author infomation
-			thisAuthor = objGet(atom, "entry.author", "No author found");
+			thisAuthor = objGet(atom, "author", "No author found");
 			if(thisAuthor != "No author found"){
 				if(thisAuthor.constructor.toString().indexOf("Array") != -1){
 					atom.setProperty("Author", []);
 					for(a in thisAuthor){
 						thisAuthorPath = "Author." + a + ".";
-						doc.setProperty(thisAuthorPath + "Name", objGet(atom, "entry.author." + a + ".name.$t", "No name found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Phone", objGet(atom, "entry.author." + a + ".contactInformation.phone.$t", "No phone found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Email", objGet(atom, "entry.author." + a + ".contactInformation.email.$t", "No email found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Address.Street", objGet(atom, "entry.author." + a + ".contactInformation.address.street.$t", "No address found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Address.City", objGet(atom, "entry.author." + a + ".contactInformation.address.city.$t", "No city found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Address.State", objGet(atom, "entry.author." + a + ".contactInformation.address.state.$t", "No state found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Address.Zip", objGet(atom, "entry.author." + a + ".contactInformation.address.zip.$t", "No zip found"));
+						doc.setProperty(thisAuthorPath + "Name", objGet(atom, "author." + a + ".name.$t", "No name found"));
+						doc.setProperty(thisAuthorPath + "ContactInformation.Phone", objGet(atom, "author." + a + ".contactInformation.phone.$t", "No phone found"));
+						doc.setProperty(thisAuthorPath + "ContactInformation.Email", objGet(atom, "author." + a + ".contactInformation.email.$t", "No email found"));
+						doc.setProperty(thisAuthorPath + "ContactInformation.Address.Street", objGet(atom, "author." + a + ".contactInformation.address.street.$t", "No address found"));
+						doc.setProperty(thisAuthorPath + "ContactInformation.Address.City", objGet(atom, "author." + a + ".contactInformation.address.city.$t", "No city found"));
+						doc.setProperty(thisAuthorPath + "ContactInformation.Address.State", objGet(atom, "author." + a + ".contactInformation.address.state.$t", "No state found"));
+						doc.setProperty(thisAuthorPath + "ContactInformation.Address.Zip", objGet(atom, "author." + a + ".contactInformation.address.zip.$t", "No zip found"));
 					}					
 				}else{
-					doc.setProperty("Author.Name", objGet(atom, "entry.author.name", "No name found"));
-					doc.setProperty("Author.ContactInformation.Phone", objGet(atom, "entry.author.contactInformation.phone.$t", "No phone found"));
-					doc.setProperty("Author.ContactInformation.Email", objGet(atom, "entry.author.contactInformation.email.$t", "No email found"));
-					doc.setProperty("Author.ContactInformation.Address.Street", objGet(atom, "entry.author.contactInformation.address.street.$t", "No address found"));
-					doc.setProperty("Author.ContactInformation.Address.City", objGet(atom, "entry.author.contactInformation.address.city.$t", "No city found"));
-					doc.setProperty("Author.ContactInformation.Address.State", objGet(atom, "entry.author.contactInformation.address.state.$t", "No state found"));
-					doc.setProperty("Author.ContactInformation.Address.Zip", objGet(atom, "entry.author.contactInformation.address.zip.$t", "No zip found"));
+					doc.setProperty("Author.Name", objGet(atom, "author.name", "No name found"));
+					doc.setProperty("Author.ContactInformation.Phone", objGet(atom, "author.contactInformation.phone.$t", "No phone found"));
+					doc.setProperty("Author.ContactInformation.Email", objGet(atom, "author.contactInformation.email.$t", "No email found"));
+					doc.setProperty("Author.ContactInformation.Address.Street", objGet(atom, "author.contactInformation.address.street.$t", "No address found"));
+					doc.setProperty("Author.ContactInformation.Address.City", objGet(atom, "author.contactInformation.address.city.$t", "No city found"));
+					doc.setProperty("Author.ContactInformation.Address.State", objGet(atom, "author.contactInformation.address.state.$t", "No state found"));
+					doc.setProperty("Author.ContactInformation.Address.Zip", objGet(atom, "author.contactInformation.address.zip.$t", "No zip found"));
 				}
 			}else{
 				doc.setProperty("Author", thisAuthor);
 			}
 			
 			///Set geographic extent
-			thisGeoExt = objGet(atom, "entry.georss:box", "No geographic extent found");
+			thisGeoExt = objGet(atom, "georss:box", "No geographic extent found");
 			if(thisGeoExt != "No geographic extent found"){
 				rGeoExt = thisGeoExt.toString().split(" ");
 				if(rGeoExt.length == 4){
@@ -119,9 +119,9 @@ exports.views = {
 			
 
 			///Identify if this is a scast atom feed
-			thisLinks = objGet(atom, "entry.link", []);
+			thisLinks = objGet(atom, "link", []);
 			if (thisLinks.constructor.toString().indexOf("Array") == -1) { thisLinks = [ thisLinks ]; }
-			thisScastSemantics = objGet(atom, "entry.scast:serviceSemantics.$t", null);					
+			thisScastSemantics = objGet(atom, "scast:serviceSemantics.$t", null);					
 			
 			doc.setProperty("Links",[]);
 			
@@ -134,8 +134,8 @@ exports.views = {
 				}
 				
 				for(l in thisLinks){
-					thisRel = objGet(atom, "entry.link." + l + ".rel", "alternate");
-					thisUrl = objGet(atom, "entry.link." + l + ".href", "No URL found");
+					thisRel = objGet(atom, "link." + l + ".rel", "alternate");
+					thisUrl = objGet(atom, "link." + l + ".href", "No URL found");
 					doc.setProperty("Links." + l + ".URL", thisUrl);
 					if (thisRel == "scast:interfaceDescription" || thisRel == "scast:serviceInterface") {
 						doc.setProperty("Links." + l + ".ServiceType", thisServiceType);						
@@ -146,14 +146,14 @@ exports.views = {
 				}
 			} else { ///This is an atom feed without service casting namespace
 				for (l in thisLinks) {
-					thisUrl = objGet(atom, "entry.link." + l + ".href", "No Url Was Given");
+					thisUrl = objGet(atom, "link." + l + ".href", "No Url Was Given");
 					doc.setProperty("Links." + l + ".URL", thisUrl);
 					guessedServiceType = guessServiceType(thisUrl);
 					if (guessedServiceType) { doc.setProperty("Links." + l + ".ServiceType", guessedServiceType); }					
 				}
 			}
 
-			emit(doc._id, doc);
+			emit(atom._id, doc);
 			//return doc;
 		}
 	}
