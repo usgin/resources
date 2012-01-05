@@ -19,5 +19,8 @@ function writeResource() {
 		domChooser($(this), theResource);
 	});
 	
+	if (harvestInfo) {
+		theResource["HarvestInformation"] = harvestInfo;
+	}
 	$("#the-new-resource").val(JSON.stringify(theResource));
 }

@@ -45,6 +45,7 @@ block scripts
 	script(type="application/javascript", src="/static/js/editor/sidebar-functions.js")
 	script(type="application/javascript", src="/static/js/editor/editor.js")
 	script(type="application/javascript")
+		| harvestInfo = false;
 		| contactObj = !{contactTemplate};
 		| fileLinkObj = !{fileLinkTemplate};
 		| serviceLinkObj = !{serviceLinkTemplate};
@@ -62,7 +63,7 @@ block page-content
 		- } else {
 		h1#editor-title Create a New Resource
 		- }
-	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="return writeResource()")
+	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="writeResource()")
 		#resource-container
 			ul#theResource
 		input#the-new-resource(name="theResource")

@@ -15,7 +15,10 @@ function parentIdCleanup(parentId) {
 function typeChooser(obj, parentId) {
 	for (property in obj) {
 		if (property.indexOf("_") == 0) { continue; }
-		if (property.indexOf("HarvestInformation") == 0) { continue; }
+		if (property.indexOf("HarvestInformation") == 0) { 
+			harvestInfo = obj[property];
+			continue; 
+		}
 		switch ($.type(obj[property])) {
 		case "function":
 			break;
