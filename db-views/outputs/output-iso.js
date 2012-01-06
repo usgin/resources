@@ -79,10 +79,16 @@ exports.views = {
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:function.gmd:CI_OnLineFunctionCode.codeList","http://www.fgdc.gov/nap/metadata/register/registerItemClasses.html#IC_88");
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:function.gmd:CI_OnLineFunctionCode.$t", "download");
 				}
+				
+				descriptionString = objGet(linkObj, "Description", "");				
 				layerId = objGet(linkObj, "layerId", false);
 				if (layerId && serviceType) {
-					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:description.gco:CharacterString.$t", "This dataset is available as a layer or featuretype within this service. Look for " + layerId + ".");
+					descriptionString += " This dataset is available as a layer or featuretype within this service. Look for " + layerId + ".";
 				}
+				if (descriptionString != "") {
+					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:description.gco:CharacterString.$t", descriptionString);
+				}
+				
 			}
 			
 			// List of service type identifiers
