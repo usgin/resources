@@ -67,28 +67,28 @@ exports.views = {
 			function writeLinkInfo(linkObj, isoLocation) {
 				iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:linkage.gmd:URL.$t", objGet(linkObj, "URL", "No URL Was Given"));
 				serviceType = objGet(linkObj, "ServiceType", false);
+				descriptionString = objGet(linkObj, "Description", "");	
+				layerId = objGet(linkObj, "layerId", false);
+				
 				if (serviceType) {
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:protocol.gco:CharacterString.$t", serviceType);
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:name.gco:CharacterString.$t", "serviceDescription");
+					if (layerId) { descriptionString += " This dataset is available as a layer or featuretype within this service. Look for " + layerId + "."; }
+					if (descriptionString != "") {
+						iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:description.gco:CharacterString.$t", descriptionString);
+					}
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:function.gmd:CI_OnLineFunctionCode.codeListValue", "381");
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:function.gmd:CI_OnLineFunctionCode.codeList","http://www.fgdc.gov/nap/metadata/register/registerItemClasses.html#IC_88");
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:function.gmd:CI_OnLineFunctionCode.$t", "webService");
 				} else {
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:name.gco:CharacterString.$t", "downloadableFile");
+					if (descriptionString != "") {
+						iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:description.gco:CharacterString.$t", descriptionString);
+					}
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:function.gmd:CI_OnLineFunctionCode.codeListValue", "375");
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:function.gmd:CI_OnLineFunctionCode.codeList","http://www.fgdc.gov/nap/metadata/register/registerItemClasses.html#IC_88");
 					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:function.gmd:CI_OnLineFunctionCode.$t", "download");
-				}
-				
-				descriptionString = objGet(linkObj, "Description", "");				
-				layerId = objGet(linkObj, "layerId", false);
-				if (layerId && serviceType) {
-					descriptionString += " This dataset is available as a layer or featuretype within this service. Look for " + layerId + ".";
-				}
-				if (descriptionString != "") {
-					iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:description.gco:CharacterString.$t", descriptionString);
-				}
-				
+				}										
 			}
 			
 			// List of service type identifiers
@@ -237,8 +237,8 @@ exports.views = {
 			}
 			
 			// Finished!!
-			emit(doc._id, iso);
-			//return iso;
+			//emit(doc._id, iso);
+			return iso;
 		}
 	}	
 };
