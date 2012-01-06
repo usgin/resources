@@ -2,8 +2,9 @@ var cradle = require("cradle"),
 	config = require("./config.js"),
 	output = require("./db-views/outputs/outputFormats.js"),
 	input = require("./db-views/inputs/inputFormats.js"),
-	indexes = require("./db-views/indexes.js");
-
+	indexes = require("./db-views/indexes.js"),
+	contacts = require("./db-views/contacts.js");
+	
 var metadb = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort);
 
 function existsCheck(db) {
@@ -47,6 +48,11 @@ function saveDesignDocs(db) {
 			else { console.log("Index views up-to-date."); }
 		});
 		break;
+	case config.dbInfo.databases.dbContactsName:
+		db.save("_design/search", contacts.views, function(err, response) {
+			if (err) { console.log("Error creating index views in " + db.name + " database."); }
+			else { console.log("Contacts views up-to-date."); }
+		});
 	default:
 		break;
 	}

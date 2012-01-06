@@ -141,3 +141,7 @@ exports.doSearch = function(req, res) {
 		});
 	}
 };
+
+exports.getContacts = function(req, res) {
+	db.getContacts(res);
+};

@@ -7,6 +7,7 @@ var cradle = require("cradle"),
 repository = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbRepoName);
 collections = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbCollectionName);
 harvested = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbHarvestName);
+contacts = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbContactsName);
 
 exports.getMetadata = function(id, clientResponse) {
 	repository.get(id, function(err, doc) {
@@ -236,5 +237,19 @@ exports.getMultipleRecords = function(ids, clientResponse) {
 	repository.get(ids, function(err, records) {
 		if (err) { clientResponse.json(err); }
 		else clientResponse.json(records);
+	});
+};
+
+exports.getContacts = function(clientResponse) {
+	contacts.all(function(err, recordResponse) {
+		if (err) { errorPage.sendErrorPage(clientResponse, 500, "Error retrieving database records."); }
+		else {
+			ids = [];
+			for (var r in recordResponse.rows) { if (recordResponse.rows[r].id.indexOf("_") != 0) { ids.push(recordResponse.rows[r].id); } }
+			contacts.view("search/name", { keys: ids }, function(err, nameResponse) {
+				if (err) { errorPage.sendErrorPage(clientResponse, 500, "Error retrieving view records."); }
+				else { clientResponse.json(nameResponse.rows); }
+			});
+		}
 	});
 };

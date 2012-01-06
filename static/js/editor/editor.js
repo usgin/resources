@@ -11,6 +11,8 @@ $(document).ready(function() {
 	if (collectionList.children().length == 0) {
 		collectionList.append("<li class='included-collection nil-collection'>Not published in any collection</li>");
 	}
+	
+	setupContactDialog(); // defined in sidebar-functions.js
 });
 
 function writeResource() {

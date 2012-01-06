@@ -2,16 +2,19 @@ extends ./base
 
 block styles
 	link(rel="stylesheet", type="text/css", href="/static/css/edit.css")
-
+	link(rel="stylesheet", type="text/css", href="/static/css/jqueryui/jquery-ui-1.8.16.custom.css")
+	
 block sidebar-content
 	#standard-addition-block
 		h2#standard-addition-title.block-title Add Formal Content
 		#standard-addition-content.block-content
 			ul#standard-addition-menu.menu
 				li#standard-addition-author
-					a(href="#", onclick="addAuthor()") Add an Author
+					a(href="#", onclick="addAuthor()") Add a blank Author
 				li#standard-addition-distributor
-					a(href="#", onclick="addDistributor()") Add a Distributor
+					a(href="#", onclick="addDistributor()") Add a blank Distributor
+				li#standard-addition-contact
+					a(href="#", onclick="addContact()") Add a registered Contact
 				li#standard-addition-link
 					a(href="#", onclick="addLink()") Add a Link
 					
@@ -37,6 +40,7 @@ block sidebar-content
 	
 block scripts
 	script(type="application/javascript", src="/static/js/jade.js")
+	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
 	script(type="application/javascript", src="/static/js/editor/read-record.js")
 	script(type="application/javascript", src="/static/js/editor/write-record.js")
 	script(type="application/javascript", src="/static/js/editor/toolbar-template.js")
@@ -68,3 +72,12 @@ block page-content
 			ul#theResource
 		input#the-new-resource(name="theResource")
 		input#save-resource-button(type="submit", value="Save Your Resource")
+	#add-contact-dialog(title="Add a registered contact")
+		label(for="contact-type") Add:
+		select#new-contact-type
+			option(value="author") an Author...
+			option(value="distributor") a Distributor...
+		input#new-contact-selector
+		input#new-selected-contact(style="display:none;")
+		#new-contact-ready
+		

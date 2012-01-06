@@ -9,7 +9,8 @@ _dbInfo = {
 	databases: {
         dbRepoName: "repository",
         dbHarvestName: "harvested",
-        dbCollectionName: "collections"
+        dbCollectionName: "collections",
+        dbContactsName: "contacts"        	
 	},
 	dbVersion: 1.0
 };
