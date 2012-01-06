@@ -167,11 +167,14 @@ exports.views = {
 				
 				distributors.push(newDist);
 				
-				distOption = objGet(isoDistributors[iDist], "gmd:MD_Distributor.gmd:distributorTransferOptions.gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource", null);
-				if (distOption) {
+				
+				distOptions = objGet(isoDistributors[iDist], "gmd:MD_Distributor.gmd:distributorTransferOptions", []);
+				if (distOptions.hasOwnProperty("gmd:MD_DigitalTransferOptions")) { distOptions = [ distOptions ]; }
+				for (var dist in distOptions) {
+					thisDist = objGet(distOptions[dist], "gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource", {});
 					thisLink = {};
-					thisLink["URL"] = objGet(distOption, "gmd:linkage.gmd:URL.$t", "No URL Was Given");
 					
+					thisLink["URL"] = objGet(thisDist, "gmd:linkage.gmd:URL.$t", "No URL Was Given");
 					linkProtocol = objGet(thisDist, "gmd:protocol.gco:CharacterString.$t", "No Protocol Was Given");
 					ind = capServiceTypes.indexOf(linkProtocol.toUpperCase());
 					if (ind != -1) {
@@ -180,9 +183,9 @@ exports.views = {
 						guessedServiceType = guessServiceType(thisLink["URL"]);
 						if (guessedServiceType) { thisLink["ServiceType"] = guessedServiceType; }
 					}				
-									
-					links[thisLink["URL"]] = thisLink;
 					thisLink["Distributor"] = newDist.Name;
+					thisLink["Description"] = objGet(thisDist, "gmd:description.gco:CharacterString.$t", "No Description Was Given");
+					links[thisLink["URL"]] = thisLink;					
 				}
 			}
 			doc.Distributors = distributors;
@@ -204,6 +207,8 @@ exports.views = {
 					guessedServiceType = guessServiceType(thisLink["URL"]);
 					if (guessedServiceType) { thisLink["ServiceType"] = guessedServiceType; }
 				}
+				
+				thisLink["Description"] = objGet(thisDist, "gmd:description.gco:CharacterString.$t", "No Description Was Given");
 				
 				if (!(thisLink.URL in links)) {
 					links[thisLink.URL] = thisLink;
