@@ -137,7 +137,8 @@ exports.returnAllRecords = function(format, clientResponse) {
 						break;
 					case "atom":
 						///Define a feed
-						atomFeed = { "feed": {
+						atomFeed = { 
+							"feed": {
 								"xmlns": "http://www.w3.org/2005/Atom", 
 								"xmlns:georss": "http://www.georss.org/georss",
 								"xmlns:scast": "http://sciflo.jpl.nasa.gov/serviceCasting/2009v1",
@@ -154,19 +155,15 @@ exports.returnAllRecords = function(format, clientResponse) {
 						
 						///Integrate all the entries into a feed
 						for (var vr in viewResponse.rows){
-							var thisEntryList = viewResponse.rows[vr].value.entry;
-						
-							for(var e in thisEntryList){
-								thisEntry = thisEntryList[e];
-								///Delete the namespaces in each entry
-								delete thisEntry["xmlns"];
-								delete thisEntry["xmlns:georss"];
-								delete thisEntry["xmlns:opensearch"];
-								delete thisEntry["xmlns:scast"];
-								
-								atomFeed.feed.entry.push(thisEntry);
-							}
-													
+							var thisEntry = viewResponse.rows[vr].value.entry;
+							
+							///Delete the namespaces in each entry
+							delete thisEntry["xmlns"];
+							delete thisEntry["xmlns:georss"];
+							delete thisEntry["xmlns:opensearch"];
+							delete thisEntry["xmlns:scast"];
+							
+							atomFeed.feed.entry.push(thisEntry);													
 						}
 						
 						///Transform json format into xml format
