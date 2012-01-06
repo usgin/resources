@@ -237,8 +237,8 @@ exports.views = {
 			}
 			
 			// Finished!!
-			//emit(doc._id, iso);
-			return iso;
+			emit(doc._id, iso);
+			//return iso;
 		}
 	}	
 };
