@@ -14,7 +14,7 @@ function domChooser(ele, parentObj) {
 		}
 	} else {
 		propertyName = getArrayIndex(propertyName, parentObj);
-		parentObj[propertyName] = ele.find("div > div[ele='value']").html();
+		parentObj[propertyName] = (ele.find("div > div[ele='value']").html()).replace(/\<br\>/, " ");
 	}
 }
 
