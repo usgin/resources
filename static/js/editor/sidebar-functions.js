@@ -2,16 +2,18 @@ contactCounter = 0;
 
 function addAuthor() {
 	locateContactList("Authors");
-	writeTheDamnContact(contactObj, "Authors");
+	writeToArray(contactObj, "Authors");
 }
 
 function addDistributor() {
 	locateContactList("Distributors");
-	writeTheDamnContact(contactObj, "Distributors");
+	writeToArray(contactObj, "Distributors");
 }
 
-function addLink() {
-	
+function addLink(linkType) {
+	locateTypedList("Links");
+	if (linkType == "file") { writeToArray(fileLinkObj, "Links"); }
+	else { writeToArray(serviceLinkObj, "Links"); }
 }
 
 function addFile() {
@@ -22,29 +24,29 @@ function addContact() {
 	$("#add-contact-dialog").dialog("open");
 }
 
-function locateContactList(contactType) {
+function locateTypedList(listType) {
 	$(".object-header").each(function() {
 		header = $(this);
 		header.children().each(function() {
-			if ($(this).html() == contactType) {
-				header[0].id = contactType + "-container";
-				$("#" + contactType + "-container + ul")[0].id = contactType + "-list";				
+			if ($(this).html() == listType) {
+				header[0].id = listType + "-container";
+				$("#" + listType + "-container + ul")[0].id = listType + "-list";				
 			}
 		});
 	});
 }
 
-function writeTheDamnContact(doc, contactType) {
-	nextInArray = $("#" + contactType + "-list").children().length;
+function writeToArray(doc, listType) {
+	nextInArray = $("#" + listType + "-list").children().length;
 	newContact = {}; newContact[nextInArray] = doc;
-	typeChooser(newContact, contactType + "-list");
+	typeChooser(newContact, listType + "-list");
 	contactCounter++;
 }
 
 function appendContact(id, contactType) {
 	locateContactList(contactType);
 	$.get("/contact/" + id, function(response) {
-		writeTheDamnContact(response, contactType);
+		writeToArray(response, contactType);
 	});
 }
 

@@ -15,8 +15,10 @@ block sidebar-content
 					a(href="#", onclick="addDistributor()") Add a blank Distributor
 				li#standard-addition-contact
 					a(href="#", onclick="addContact()") Add a registered Contact
-				li#standard-addition-link
-					a(href="#", onclick="addLink()") Add a Link
+				li#standard-addition-file-link
+					a(href="#", onclick="addLink('file')") Add a File Link
+				li#standard-addition-service-link
+					a(href="#", onclick="addLink('service')") Add a Service Link
 					
 	#file-attachment-block
 		h2#file-attachment-title.block-title Manage File Attachments
