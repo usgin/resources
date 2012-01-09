@@ -76,6 +76,7 @@ function registerContact(id) {
 	});
 	
 	$.post("/new-contact/", theContact, function(response) {
+		$("#contact-message-container").empty();
 		if (!response.success) {
 			$("#contact-message-container").addClass("ui-state-error");
 			$("#contact-message-container").append("<span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span>");
