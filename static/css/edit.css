@@ -120,6 +120,13 @@ div[ele="attribute"] {
 	margin-right: 20px !important;	
 }
 
+.tb-button {
+	opacity: 0.35;
+}
+
+.tb-button:hover {
+	opacity: 1;
+}
 
 ul.collapsed {
 	display: none;

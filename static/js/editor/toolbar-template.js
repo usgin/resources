@@ -4,16 +4,16 @@ var controlList = [];
 
 controlList.push("ul.control-tools");
 controlList.push("\t" + "- if (canAddToContacts) {");
-controlList.push("\t" + "li.register-contact-button(onclick=contactFunction)");
+controlList.push("\t" + "li.register-contact-button.tb-button(onclick=contactFunction)");
 controlList.push("\t" + "- }");
-controlList.push("\t"+ "li.add-obj-button(onclick=addObjFunction)");
-controlList.push("\t"+ "li.add-arr-button(onclick=addArrFunction)");
-controlList.push("\t"+ "li.add-val-button(onclick=addValFunction)");
+controlList.push("\t"+ "li.add-obj-button.tb-button(onclick=addObjFunction)");
+controlList.push("\t"+ "li.add-arr-button.tb-button(onclick=addArrFunction)");
+controlList.push("\t"+ "li.add-val-button.tb-button(onclick=addValFunction)");
 controlList.push("\t" + "- if (canMinimize) {");
-controlList.push("\t" + "li.minimize-button(onclick=minimizeFunction)");
+controlList.push("\t" + "li.minimize-button.tb-button(onclick=minimizeFunction)");
 controlList.push("\t" + "- }");
 controlList.push("\t" + "- if (canDelete) {");
-controlList.push("\t" + "li.delete-button(onclick=deleteFunction)");
+controlList.push("\t" + "li.delete-button.tb-button(onclick=deleteFunction)");
 controlList.push("\t" + "- }");
 
 var controlStr = controlList.join("\n");
@@ -67,6 +67,10 @@ function minimize(id) {
 
 function deleteObj(id) {
 	$(id + "-container").remove();
+}
+
+function deleteVal(id) {
+	$(id).remove();
 }
 
 function registerContact(id) {
