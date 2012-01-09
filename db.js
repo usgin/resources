@@ -260,3 +260,10 @@ exports.getContactInfo = function(id, clientResponse) {
 		else { clientResponse.json(record); }
 	});
 };
+
+exports.saveNewContact = function(contactObj, clientResponse) {
+	contacts.save(contactObj, function(err, dbResponse) {
+		if (err) { clientResponse.send({ error: "Error saving database record", success: false }, { "Content-Type" : "application/json" }, 500); }
+		else { clientResponse.json({ success: true }); }
+	});
+};

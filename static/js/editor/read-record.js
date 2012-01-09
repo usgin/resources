@@ -36,9 +36,22 @@ function typeChooser(obj, parentId) {
 }
 
 function renderObject(obj, propertyName, type, parentId) {
-	thisId = getId();
+	switch (propertyName) {
+	case "Authors":
+		thisId = "Authors";
+		break;
+	case "Distributors":
+		thisId = "Distributors";
+		break;
+	case "Links":
+		thisId = "Links";
+		break;
+	default:
+		thisId = getId();
+	}
 	addHtml(objAsHtml(propertyName, type, thisId), parentId);
-	addHtml(controlToolbar(thisId, true, true), thisId + "-header", true);
+	addContactButton = parentId == "Authors" || parentId == "Distributors";
+	addHtml(controlToolbar(thisId, true, true, addContactButton), thisId + "-header", true);
 	typeChooser(obj, thisId);
 }
 

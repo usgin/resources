@@ -41,6 +41,9 @@ server.get("/contacts-by-name", routeFunctions.getContacts);
 // Get a single contact by ID
 server.get("/contact/:id", routeFunctions.getContactById);
 
+// Register a new contact
+server.post("/new-contact/", routeFunctions.newContact);
+
 // All other requests should 404
 server.get("*", function(req, res) {
 	errorPage.sendErrorPage(res, 404, "Perhaps this page hasn't been created yet...");

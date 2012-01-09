@@ -151,3 +151,28 @@ exports.getContactById = function(req, res) {
 	if (!id) { res.send({ error: "A valid contact ID was not provided" }, { "Content-Type": "application/json" }, 400); }
 	else { db.getContactInfo(id, res); }
 };
+
+exports.newContact = function(req, res) {
+	contactObj = req.body;
+	
+	// Validity checks
+	valid = true, message = "";
+	if (!contactObj.hasOwnProperty("Name")) { valid = false; message += "Name is missing.\n"; }
+	if (!contactObj.hasOwnProperty("ContactInformation")) {
+		message += "ContactInformation is missing.\n"; 
+		res.json({ error: message, success: false }); return;
+	}
+	if (!contactObj.ContactInformation.hasOwnProperty("Phone")) { valid = false; message += "Phone is missing.\n"; }
+	if (!contactObj.ContactInformation.hasOwnProperty("email")) { valid = false; message += "email is missing.\n"; }
+	if (!contactObj.ContactInformation.hasOwnProperty("Address")) {
+		message += "Address is missing.\n"; 
+		res.json({ error: message, success: false }); return;
+	}
+	if (!contactObj.ContactInformation.Address.hasOwnProperty("Street")) { valid = false; message += "Street is missing.\n"; }
+	if (!contactObj.ContactInformation.Address.hasOwnProperty("City")) { valid = false; message += "City is missing.\n"; }
+	if (!contactObj.ContactInformation.Address.hasOwnProperty("State")) { valid = false; message += "State is missing.\n"; }
+	if (!contactObj.ContactInformation.Address.hasOwnProperty("Zip")) { valid = false; message += "Zip is missing."; }
+	
+	if (!valid) { res.json({ error: message, success: false }); }
+	else { db.saveNewContact(contactObj, res); }	
+};

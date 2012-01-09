@@ -95,6 +95,10 @@ div[ele="attribute"] {
 	cursor: pointer;
 }
 
+.register-contact-button {
+	background-image: url("../img/user_add.png");
+}
+
 .minimize-button {	
 	background-image: url("../img/collapse.gif");
 }
@@ -134,4 +138,8 @@ ul.collapsed {
 /* Add a registered contact Dialog */
 #new-contact-selector {
 	width: 75%;
+}
+
+#contact-message-container {
+	padding: 4px;
 }

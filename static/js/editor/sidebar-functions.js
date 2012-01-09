@@ -1,17 +1,17 @@
 contactCounter = 0;
 
 function addAuthor() {
-	locateContactList("Authors");
+	//locateTypedList("Authors");
 	writeToArray(contactObj, "Authors");
 }
 
 function addDistributor() {
-	locateContactList("Distributors");
+	//locateTypedList("Distributors");
 	writeToArray(contactObj, "Distributors");
 }
 
 function addLink(linkType) {
-	locateTypedList("Links");
+	//locateTypedList("Links");
 	if (linkType == "file") { writeToArray(fileLinkObj, "Links"); }
 	else { writeToArray(serviceLinkObj, "Links"); }
 }
@@ -29,22 +29,21 @@ function locateTypedList(listType) {
 		header = $(this);
 		header.children().each(function() {
 			if ($(this).html() == listType) {
-				header[0].id = listType + "-container";
-				$("#" + listType + "-container + ul")[0].id = listType + "-list";				
+				header[0].id = listType + "-container";			
 			}
 		});
 	});
 }
 
 function writeToArray(doc, listType) {
-	nextInArray = $("#" + listType + "-list").children().length;
+	nextInArray = $("#" + listType).children().length;
 	newContact = {}; newContact[nextInArray] = doc;
-	typeChooser(newContact, listType + "-list");
+	typeChooser(newContact, listType);
 	contactCounter++;
 }
 
 function appendContact(id, contactType) {
-	locateContactList(contactType);
+	locateTypedList(contactType);
 	$.get("/contact/" + id, function(response) {
 		writeToArray(response, contactType);
 	});
@@ -71,6 +70,10 @@ function setupContactDialog() {
 		}
 	});
 	
+	refreshContactOptions();
+}
+
+function refreshContactOptions() {
 	$.get("/contacts-by-name/", function(response) {
 		contacts = [];
 		for (var r in response) { contacts.push({ id: response[r].id, value: response[r].value.name }); }
