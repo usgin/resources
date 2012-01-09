@@ -1,23 +1,13 @@
+contactCounter = 0;
+
 function addAuthor() {
-	authorsFound = false;
-	$(".object-header").each(function() {
-		header = $(this);
-		header.children().each(function() {
-			if ($(this).html() == "Authors") {
-				header[0].id = "authors-container";
-				authorsFound = true;
-			}
-		});
-	});
-	if (authorsFound) {
-		$("#authors-container + ul")[0].id = "authors-list";
-		newAuthor = { "NewProperty": contactObj };
-		typeChooser(newAuthor, "authors-list");
-	}
+	locateContactList("Authors");
+	writeTheDamnContact(contactObj, "Authors");
 }
 
 function addDistributor() {
-	
+	locateContactList("Distributors");
+	writeTheDamnContact(contactObj, "Distributors");
 }
 
 function addLink() {
@@ -29,22 +19,54 @@ function addFile() {
 }
 
 function addContact() {
-	/**
-	 * Popup dialog to select contacts from a list
-	 * 	Dialog specifies if contact should be added as an author or distributor
-	 */
 	$("#add-contact-dialog").dialog("open");
-	
-	/**
-	 * Add the contact to either the distributor or author section -- have to check that
-	 * 	it exists first, though
-	 */
+}
+
+function locateContactList(contactType) {
+	$(".object-header").each(function() {
+		header = $(this);
+		header.children().each(function() {
+			if ($(this).html() == contactType) {
+				header[0].id = contactType + "-container";
+				$("#" + contactType + "-container + ul")[0].id = contactType + "-list";				
+			}
+		});
+	});
+}
+
+function writeTheDamnContact(doc, contactType) {
+	nextInArray = $("#" + contactType + "-list").children().length;
+	newContact = {}; newContact[nextInArray] = doc;
+	typeChooser(newContact, contactType + "-list");
+	contactCounter++;
+}
+
+function appendContact(id, contactType) {
+	locateContactList(contactType);
+	$.get("/contact/" + id, function(response) {
+		writeTheDamnContact(response, contactType);
+	});
 }
 
 function setupContactDialog() {
 	$("#add-contact-dialog").dialog({
 		autoOpen: false,
-		modal: true
+		modal: true,
+		resizable: false,
+		width: 500,
+		buttons: {
+			"Add as Author": function() {
+				appendContact($("#new-selected-contact").val(), "Authors");
+				$(this).dialog("close");
+			},
+			"Add as Distributor": function() {
+				appendContact($("#new-selected-contact").val(), "Distributors");
+				$(this).dialog("close");
+			},
+			Cancel: function() {
+				$(this).dialog("close");
+			}
+		}
 	});
 	
 	$.get("/contacts-by-name/", function(response) {
@@ -56,9 +78,7 @@ function setupContactDialog() {
 				$("#new-selected-contact").val(ui.item.id);
 				$(this).val(ui.item.value);
 				return false;
-			}
+			}			
 		});
-	});
-	
-	
+	});	
 }

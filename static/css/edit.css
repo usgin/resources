@@ -130,3 +130,8 @@ ul.collapsed {
 	list-style-type: none !important;
 	padding-left: 15px;
 }
+
+/* Add a registered contact Dialog */
+#new-contact-selector {
+	width: 75%;
+}

@@ -253,3 +253,10 @@ exports.getContacts = function(clientResponse) {
 		}
 	});
 };
+
+exports.getContactInfo = function(id, clientResponse) {
+	contacts.get(id, function(err, record) {
+		if (err) { clientResponse.json(err); }
+		else { clientResponse.json(record); }
+	});
+};

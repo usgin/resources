@@ -145,3 +145,9 @@ exports.doSearch = function(req, res) {
 exports.getContacts = function(req, res) {
 	db.getContacts(res);
 };
+
+exports.getContactById = function(req, res) {
+	id = req.param("id", false);
+	if (!id) { res.send({ error: "A valid contact ID was not provided" }, { "Content-Type": "application/json" }, 400); }
+	else { db.getContactInfo(id, res); }
+};

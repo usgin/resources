@@ -38,6 +38,9 @@ server.post("/search/", routeFunctions.doSearch);
 // Get a list of registered contacts sorted by name
 server.get("/contacts-by-name", routeFunctions.getContacts);
 
+// Get a single contact by ID
+server.get("/contact/:id", routeFunctions.getContactById);
+
 // All other requests should 404
 server.get("*", function(req, res) {
 	errorPage.sendErrorPage(res, 404, "Perhaps this page hasn't been created yet...");
