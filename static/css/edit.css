@@ -95,6 +95,10 @@ div[ele="attribute"] {
 	cursor: pointer;
 }
 
+.register-contact-button {
+	background-image: url("../img/user_add.png");
+}
+
 .minimize-button {	
 	background-image: url("../img/collapse.gif");
 }
@@ -116,6 +120,13 @@ div[ele="attribute"] {
 	margin-right: 20px !important;	
 }
 
+.tb-button {
+	opacity: 0.35;
+}
+
+.tb-button:hover {
+	opacity: 1;
+}
 
 ul.collapsed {
 	display: none;
@@ -129,4 +140,13 @@ ul.collapsed {
 	list-style-image: none !important;
 	list-style-type: none !important;
 	padding-left: 15px;
+}
+
+/* Add a registered contact Dialog */
+#new-contact-selector {
+	width: 75%;
+}
+
+#contact-message-container {
+	padding: 4px;
 }

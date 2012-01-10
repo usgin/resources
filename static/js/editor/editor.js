@@ -13,6 +13,16 @@ $(document).ready(function() {
 	}
 	
 	setupContactDialog(); // defined in sidebar-functions.js
+	$("#saved-contact-dialog").dialog({
+		autoOpen: false,
+		modal: true,
+		resizable: false,		
+		buttons: {			
+			"OK": function() {
+				$(this).dialog("close");
+			}
+		}
+	});
 });
 
 function writeResource() {

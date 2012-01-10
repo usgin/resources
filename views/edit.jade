@@ -10,13 +10,15 @@ block sidebar-content
 		#standard-addition-content.block-content
 			ul#standard-addition-menu.menu
 				li#standard-addition-author
-					a(href="#", onclick="addAuthor()") Add a blank Author
+					a(href="#", onclick="addAuthor()") Add a blank author
 				li#standard-addition-distributor
-					a(href="#", onclick="addDistributor()") Add a blank Distributor
+					a(href="#", onclick="addDistributor()") Add a blank distributor
 				li#standard-addition-contact
-					a(href="#", onclick="addContact()") Add a registered Contact
-				li#standard-addition-link
-					a(href="#", onclick="addLink()") Add a Link
+					a(href="#", onclick="addContact()") Add a registered contact
+				li#standard-addition-file-link
+					a(href="#", onclick="addLink('file')") Add a file link
+				li#standard-addition-service-link
+					a(href="#", onclick="addLink('service')") Add a service link
 					
 	#file-attachment-block
 		h2#file-attachment-title.block-title Manage File Attachments
@@ -73,11 +75,8 @@ block page-content
 		input#the-new-resource(name="theResource")
 		input#save-resource-button(type="submit", value="Save Your Resource")
 	#add-contact-dialog(title="Add a registered contact")
-		label(for="contact-type") Add:
-		select#new-contact-type
-			option(value="author") an Author...
-			option(value="distributor") a Distributor...
+		label(for="new-contact-selector") Type a name: 
 		input#new-contact-selector
 		input#new-selected-contact(style="display:none;")
-		#new-contact-ready
-		
+	#saved-contact-dialog(title="Register a contact")
+		#contact-message-container.ui-corner-all

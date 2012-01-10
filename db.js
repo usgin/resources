@@ -253,3 +253,17 @@ exports.getContacts = function(clientResponse) {
 		}
 	});
 };
+
+exports.getContactInfo = function(id, clientResponse) {
+	contacts.get(id, function(err, record) {
+		if (err) { clientResponse.json(err); }
+		else { clientResponse.json(record); }
+	});
+};
+
+exports.saveNewContact = function(contactObj, clientResponse) {
+	contacts.save(contactObj, function(err, dbResponse) {
+		if (err) { clientResponse.send({ error: "Error saving database record", success: false }, { "Content-Type" : "application/json" }, 500); }
+		else { clientResponse.json({ success: true }); }
+	});
+};
