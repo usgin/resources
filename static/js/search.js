@@ -132,7 +132,6 @@ function parseValue(type, value) {
 /////types - the property type array
 /////values - the property value array
 function parseValues(types, values) {
-	var isDash = false;
 	var valueString = "";
 	for(iTy = 0; iTy < types.length; iTy ++){
 		var type = types[iTy];
@@ -141,10 +140,9 @@ function parseValues(types, values) {
 		if(value) {
 			
 			///Set connection symbol between different kinds of information
-			if(isDash){
+			if(valueString){
 				valueString += " - ";
 			}
-			isDash = true;
 			
 			///Parse different information using different way
 			switch (type){
