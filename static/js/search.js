@@ -1,3 +1,23 @@
+var key;
+
+function enterPressed(evt) {
+	var keyCode;
+	if(window.event){
+		keyCode = evt.keyCode;
+	}else if(evt.which){
+		keyCode = evt.which;
+	}else{
+		return true;
+	}
+	
+	if(keyCode == 13){
+		performSearch();
+		return false;
+	}else{
+		return true;
+	}
+}
+
 function performSearch() {
 	searchObj = { full: escape($("#search-terms").val()) }; ///Get the value from the edit-box
 	
@@ -37,7 +57,7 @@ function eachResult(containerId, thisRespObj) {
 /////id - this result object's id
 /////title - this result object's title
 function getResultTitleDt(id, title) {
-	var hLink = "http://localhost:3005/resource/" + id +"/html"; ///Define the link to metadata
+	var hLink = "/resource/" + id +"/html"; ///Define the link to metadata
 	
 	var titleString = "<dt>";
 	titleString += "<a href=" + hLink + " class='search-results-title'>";
