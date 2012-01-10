@@ -1,24 +1,13 @@
-.search-result-title a{
+.search-results {
 	background-color: transparent;
 	background-image: none;
-	color: #006891;
-	cursor: auto;
-	display: inline;
 	font-family: Arial, Helvetica, 'Bitstream Vera Sans', sans-serif;
-	font-size: 13px;
-	height: 0px;
-	line-height: 16px;
-	text-decoration: underline;
 }
 
-.search-result-detail p{
-	background-color: transparent;
-	background-image: none;
-	color: #323232;
+.search-results dt {
 	display: block;
-	font-family: Arial, Helvetica, 'Bitstream Vera Sans', sans-serif;
 	font-size: 13px;
-	height: 16px;
+	height: 20px;
 	line-height: 16px;
 	margin-bottom: 0px;
 	margin-left: 0px;
@@ -27,5 +16,38 @@
 	padding-bottom: 0px;
 	padding-left: 0px;
 	padding-right: 0px;
-	padding-top: 0px;
+	padding-top: 10px;	
 }
+
+.search-results-title {
+	color: #006891;
+	cursor: auto;
+	display: inline;
+	font-size: 13px;
+	text-decoration: none;
+}
+
+.search-results dd {
+	color: #323232;
+	display: block;
+	line-height: 16px;
+	margin-bottom: 12px;
+	margin-left: 24px;
+	margin-right: 0px;
+	margin-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;	
+}
+
+.search-results-description {
+	font-size: 12px;
+	padding-bottom: 10px;
+}
+
+.search-results-info {
+	font-size: 10px;
+}
+
+
