@@ -1,21 +1,20 @@
 var key;
 
-function enterPressed(evt) {
-	var keyCode;
-	if(window.event){
-		keyCode = evt.keyCode;
-	}else if(evt.which){
-		keyCode = evt.which;
-	}else{
-		return true;
-	}
-	
-	if(keyCode == 13){
-		performSearch();
-		return false;
-	}else{
-		return true;
-	}
+function registerEvent(id) {
+	$(id).keypress(
+		function(evt){
+			var keyNum;
+			if(window.event){
+				keyNum = evt.keyCode;
+			}else{
+				keyNum = evt.which;
+			}
+			
+			if(keyNum == 13) {
+				performSearch();
+			}
+		}
+	)
 }
 
 function performSearch() {
