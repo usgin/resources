@@ -11,8 +11,10 @@ block scripts
 		| searchUrl = "#{searchUrl}";
 
 block page-content
+	h1#search-title Search
 	#full-text-container
-		input#search-terms
-		button#search-button(onclick="performSearch()") Search
-		
+		label Enter your keywords:
+		#container-inline
+			input#search-terms
+			button#search-button(onclick="performSearch()") Search	
 	#results-container

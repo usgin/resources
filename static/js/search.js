@@ -13,6 +13,9 @@ function performSearch() {
 /////response - search results object
 function listSearchResults(response) {
 	$("#results-container").empty(); ///Clear the previous search results
+	///Set number of results found
+	$("#results-container").append("<h2>You found " + response.length + " results</h2>");
+	///List the search results
 	$("#results-container").append("<dl id='results' class='search-results'></dl>");
 
 	///Parse each search result object
