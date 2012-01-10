@@ -1,17 +1,21 @@
-var str;
-
 function performSearch() {
-	searchObj = { full: escape($("#search-terms").val()) };
+	searchObj = { full: escape($("#search-terms").val()) }; ///Get the value from the edit-box
+	
+	///Send request to get the search results
 	$.post(document.url, searchObj, function(response) {
-		console.log(response);
+		console.log(response); ///For debug purpose, to monitor the response object
 		listSearchResults(response);		
 	});
 }
 
+///List the search results in "results-container" element
+///Parameters:
+/////response - search results object
 function listSearchResults(response) {
-	$("#results-container").empty();
+	$("#results-container").empty(); ///Clear the previous search results
 	$("#results-container").append("<dl id='results' class='search-results'></dl>");
 
+	///Parse each search result object
 	for( iObj = 0; iObj < response.length; iObj++) {
 		eachResult("#results", response[iObj]);
 	}
@@ -20,13 +24,15 @@ function listSearchResults(response) {
 function eachResult(containerId, thisRespObj) {
 	///Set title item
 	$(containerId).append(getResultTitleDt(thisRespObj.id, thisRespObj.doc.Title));
-	
+	///Set description and other information
 	$(containerId).append(getResultDetailDd(thisRespObj));
 	
 }
 
-///Get the title element
-///id, title: the id and title properties for this result
+///Return the string of the title element
+///Parameters:
+/////id - this result object's id
+/////title - this result object's title
 function getResultTitleDt(id, title) {
 	var hLink = "http://localhost:3005/resource/" + id +"/html"; ///Define the link to metadata
 	
@@ -39,10 +45,15 @@ function getResultTitleDt(id, title) {
 	return titleString;
 }
 
+///Return the string of other information element
+///Parameters:
+/////thisResp - this search result object
 function getResultDetailDd(thisResp) {
-	var detailString = "<dd>";	
-	detailString += getProps("Description", thisResp.doc.Description, "search-results-description");
+	var detailString = "<dd>";
 	
+	///Get description string	
+	detailString += getProps("Description", thisResp.doc.Description, "search-results-description");
+	///Get author and date information string
 	rInfoTypes = ["Authors", "PublishDate", "ModifyDate"];
 	rInfoValues = [thisResp.doc.Authors, thisResp.doc.PublicationDate, thisResp.doc.ModifiedDate];	
 	detailString += getProps(rInfoTypes, rInfoValues, "search-results-info");
@@ -52,6 +63,11 @@ function getResultDetailDd(thisResp) {
 	return detailString;
 }
 
+///Return the string of the search result information elements
+///Parameters:
+/////propType - the type/type array for this property
+/////propValue - the value/value array for this property
+/////idClass - the id used to apply css for those element(s) 
 function getProps(propType, propValue, idClass){
 	if(!propValue) {return "";}
 
@@ -70,11 +86,13 @@ function getProps(propType, propValue, idClass){
 	propString += "</p>";
 
 	return propString;
-		
-
 
 }
 
+///Return the string of a single property element
+///Parameters:
+/////type - a single property type
+/////value - a single property value
 function parseValue(type, value) {
 	switch (type){
 		case "Description":
@@ -86,6 +104,11 @@ function parseValue(type, value) {
 	}	
 }
 
+
+///Return the string of property array elements
+///Parameters:
+/////types - the property type array
+/////values - the property value array
 function parseValues(types, values) {
 	var isDash = false;
 	var valueString = "";
@@ -95,11 +118,13 @@ function parseValues(types, values) {
 		
 		if(value) {
 			
+			///Set connection symbol between different kinds of information
 			if(isDash){
 				valueString += " - ";
 			}
 			isDash = true;
 			
+			///Parse different information using different way
 			switch (type){
 				case "Authors":
 					var authors = "";
