@@ -1,7 +1,5 @@
-var key;
-
-function registerEvent(id) {
-	$(id).keypress(
+$(document).ready(function(){
+	$("#search-terms").keypress(
 		function(evt){
 			var keyNum;
 			if(window.event){
@@ -14,8 +12,8 @@ function registerEvent(id) {
 				performSearch();
 			}
 		}
-	)
-}
+	)	
+})
 
 function performSearch() {
 	searchObj = { full: escape($("#search-terms").val()) }; ///Get the value from the edit-box
