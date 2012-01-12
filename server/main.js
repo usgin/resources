@@ -3,9 +3,10 @@ var express = require("express"),
 	authStrat = require("./authentication/authStrat.js"),
 	config = require("./configuration/config.js"),
 	utils = require("./configuration/utils.js"),
-	repository = require("./db-access/repository.js");
-	//routeFunctions = require("./routeFunctions.js"),
-	//errorPage = require("./error.js");
+	retrieval = require("./db-access/retrieval.js"),
+	views = require("./db-access/views.js"),
+	formatting = require("./db-access/formatting.js"),
+	search = require("./db-access/search.js");
 
 var server = express.createServer(config.serverInfo.localListenAddress);
 
@@ -35,23 +36,23 @@ server.get("/", function(req, res) {
 server.get("/search/", function(req, res) {
 	utils.renderToResponse(req, res, "search", { searchUrl: utils.searchUrl });
 });
-server.post("/search/", repository.doSearch, repository.getMultipleResources, function(req, res) {
+server.post("/search/", search.doSearch, retrieval.getMultipleResources, function(req, res) {
 	res.json(req.resources);
 });
 
 // Get a single record in some defined output format
-server.get("/resource/:id/:format", repository.getResource, repository.viewResource, repository.formatResource, function(req, res) {
+server.get("/resource/:id/:format", retrieval.getResource, views.viewResource, formatting.formatResource, function(req, res) {
 	res.send(req.formatResource);
 });
 
 // Get all records in some defined output format
-server.get("/resources/:format", function(req, res) {
-	
+server.get("/resources/:format", retrieval.getAllResources, views.viewMultipleResources, formatting.formatMultipleResources, function(req, res) {
+	res.send(req.formatResources);
 });
 
 /** ROUTES THAT **DO** REQUIRE AUTHENTICATION **/
 // Edit a resource
-//server.get("/resource/:id", requireAuth, repository.getResource, function(req, res) {
+//server.get("/resource/:id", requireAuth, retrieval.getResource, function(req, res) {
 //	console.log(req.resource);
 //	utils.renderToResponse(req, res, "edit");
 //});
@@ -60,11 +61,6 @@ server.get("/resources/:format", function(req, res) {
  * Things that deal with individual resources
  * 	new resource - /new-resource/ -- get, post, auth
  * 	edit resource - /resource/:id -- get, post, auth
- *	view resource - /resource/:id/:format -- get
- *
- * Things that deal with multiple records
- * 	view all resources - /resources/:format -- get
- * 	search resources - /search/ -- get, post
  *
  * Things that deal with contacts
  * 	get contact names - /contacts-by-name -- get, auth
