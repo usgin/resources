@@ -23,7 +23,7 @@ server.get("/", function(req, res) {
 
 // All other requests should 404
 server.get("*", function(req, res) {
-	utils.renderToResponse(req, res, "errorResponse", { message: "What you're looking for cannot be found." });
+	utils.renderToResponse(req, res, "errorResponse", { message: "What you're looking for cannot be found. Perhaps it has not yet been created..." , status: 404 });
 });
 
 // Listen to the port specified in the configuration file.

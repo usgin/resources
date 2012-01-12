@@ -11,8 +11,10 @@ html(lang="en")
 			ul#sub-navigation.horiz-list
 				li#contact-link
 					a.orange-link(href="/contact/") Contact
+				- if (!authenticated) {
 				li#login-link
 					a.orange-link(href="/login/") Login
+				- }
 				li#register-link
 					a.orange-link(href="/register/") Register
 			#title-banner.clear-block
@@ -27,16 +29,18 @@ html(lang="en")
 				li#home-link
 					a(href="/") Home
 				li#browse-link
-					a(href="/browse/") Browse Collections
+					a(href="/browse/") Browse Collections				
 				li#search-link
-					a(href="/search/") Find Resources
+					a(href="/search/") Find Resources				
 				block extra-navigation
+				- if (authenticated) {
 				li#new-resource-link
 					a(href="/new-resource/") Create a New Resource
 				li#new-harvest-link
 					a(href="/new-harvest/") Harvest a Resource
 				li#manage-collections-link
 					a(href="/manage-collections/") Manage Collections
+				- }
 		#content.clear-block
 			#sidebar
 				block site-info-sidebar
