@@ -3,18 +3,21 @@ var cradle = require("cradle"),
 	utils = require("../configuration/utils.js"),
 	exports = module.exports;
 
-var repository = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbRepoName);
+var repository = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort, { cache: false }).database(config.dbInfo.databases.dbRepoName);
 
 /** MIDDLEWARE FOR RETREIVING A SINGLE RESOURCE **/
 exports.getResource = function(req, res, next) {
-	id = req.param("id", null);
-	repository.get(id, function(err, doc) {
-		if (err) { utils.renderToResponse(req, res, "errorResponse", { searchedId: id, status: 404 }); } 
-		else {
-			req.resource = doc;
-			next();
-		}
-	});
+	id = req.param("id", false);
+	if (!id) { req.resource = null; next(); }
+	else {
+		repository.get(id, function(err, doc) {
+			if (err) { utils.renderToResponse(req, res, "errorResponse", { searchedId: id, status: 404 }); } 
+			else {
+				req.resource = doc;
+				next();
+			}
+		});
+	}
 };
 
 /** MIDDLEWARE FOR RETREIVING MULTIPLE RESOURCES **/

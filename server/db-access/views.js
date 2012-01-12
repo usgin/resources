@@ -4,7 +4,8 @@ var cradle = require("cradle"),
 	output = require("../db-views/outputs/outputFormats.js"),
 	exports = module.exports;
 
-var repository = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort).database(config.dbInfo.databases.dbRepoName);
+var repository = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort, { cache: false }).database(config.dbInfo.databases.dbRepoName);
+var harvested = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort, { cache: false }).database(config.dbInfo.databases.dbHarvestName);
 
 function invalidFormatRequested(req, res) {
 	formatsAvailable = [];

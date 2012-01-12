@@ -6,7 +6,11 @@ var express = require("express"),
 	retrieval = require("./db-access/retrieval.js"),
 	views = require("./db-access/views.js"),
 	formatting = require("./db-access/formatting.js"),
-	search = require("./db-access/search.js");
+	search = require("./db-access/search.js"),
+	contacts = require("./db-access/contacts.js"),
+	editing = require("./db-access/editing.js"),
+	harvest = require("./db-access/harvest.js"),
+	input = require("./db-views/inputs/inputFormats.js");
 
 var server = express.createServer(config.serverInfo.localListenAddress);
 
@@ -21,7 +25,7 @@ server.use(auth( authStrat() ));
 /** MIDDLEWARE FOR ROUTES REQUIRING AUTHENTICATION **/
 function requireAuth(req, res, next) {
 	req.authenticate(["authorizeMe"], function(err, authenticated) {
-		if (err || !authenticated) { utils.renderToResponse(req, res, "errorResponse", { message: err.Reason || "error", status: 500 }); }
+		if (err) { utils.renderToResponse(req, res, "errorResponse", { message: err.Reason || "error", status: 500 }); }
 		else { next(); }
 	});
 }
@@ -51,22 +55,51 @@ server.get("/resources/:format", retrieval.getAllResources, views.viewMultipleRe
 });
 
 /** ROUTES THAT **DO** REQUIRE AUTHENTICATION **/
-// Edit a resource
-//server.get("/resource/:id", requireAuth, retrieval.getResource, function(req, res) {
-//	console.log(req.resource);
-//	utils.renderToResponse(req, res, "edit");
-//});
+// Get contact names
+server.get("/contacts-by-name", requireAuth, contacts.getContactNames, function(req, res) {
+	res.json(req.contactNames);
+});
 
-/**
- * Things that deal with individual resources
- * 	new resource - /new-resource/ -- get, post, auth
- * 	edit resource - /resource/:id -- get, post, auth
- *
- * Things that deal with contacts
- * 	get contact names - /contacts-by-name -- get, auth
- *	get a single contact - /contact/:id -- get, auth
- *	new contact - /new-contact -- post, auth
- */
+// Get details of a single contact
+server.get("/contact/:id", requireAuth, contacts.getContact, function(req, res) {
+	res.json(req.contact);
+});
+
+// Make a new contact
+server.post("/new-contact/", requireAuth, contacts.saveNewContact, function(req, res) {
+	res.json(req.saveResponse);
+});
+
+// Make a new resource
+server.get("/new-resource/", requireAuth, retrieval.getResource, editing.editResource, function(req, res) {
+	utils.renderToResponse(req, res, "edit", req.editContext);
+});
+server.post("/new-resource/", requireAuth, editing.saveResource, function(req, res) {
+	res.redirect("/resource/" + req.saveResponse.id);
+});
+
+// Edit a resource
+server.get("/resource/:id", requireAuth, retrieval.getResource, editing.editResource, function(req, res) {
+	utils.renderToResponse(req, res, "edit", req.editContext);
+});
+server.post("/resource/:id", requireAuth, editing.saveResource, function(req, res) {
+	res.redirect("/resource/" + req.saveResponse.id);
+});
+
+// Harvest a new resource
+server.get("/new-harvest/", requireAuth, function(req, res) {
+	utils.renderToResponse(req, res, "harvest", { inputFormats: input.stdFormatsHarvestable });
+});
+server.post("/new-harvest/", 
+		requireAuth, 
+		harvest.harvestResource, 
+		harvest.saveHarvestedResource, 
+		harvest.viewHarvestedResource, 
+		editing.saveMultipleResources, 
+		function(req, res) {
+			utils.renderToResponse(req, res, "harvestResponse", { saveResponses: req.saveResponses });
+		}
+);
 
 // All other requests should 404
 server.get("*", function(req, res) {
