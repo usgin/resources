@@ -18,9 +18,9 @@ server.use(express.bodyParser());
 server.use(auth( authStrat() ));
 
 /** MIDDLEWARE FOR ROUTES REQUIRING AUTHENTICATION **/
-function requiresAuthentication(req, res, next) {
+function requireAuth(req, res, next) {
 	req.authenticate(["authorizeMe"], function(err, authenticated) {
-		if (err) { utils.renderToResponse(req, res, "errorResponse", { message: err.Reason || "error", status: 500 }); }
+		if (err || !authenticated) { utils.renderToResponse(req, res, "errorResponse", { message: err.Reason || "error", status: 500 }); }
 		else { next(); }
 	});
 }
@@ -39,12 +39,19 @@ server.post("/search/", repository.doSearch, repository.getMultipleResources, fu
 	res.json(req.resources);
 });
 
-//Get a single record in some defined output format
-//server.get("/resource/:id/:format", routeFunctions.getFormattedResource);
+// Get a single record in some defined output format
+server.get("/resource/:id/:format", repository.getResource, repository.viewResource, repository.formatResource, function(req, res) {
+	res.send(req.formatResource);
+});
 
-/** ROUTES THAT ** DO ** REQUIRE AUTHENTICATION **/
+// Get all records in some defined output format
+server.get("/resources/:format", function(req, res) {
+	
+});
+
+/** ROUTES THAT **DO** REQUIRE AUTHENTICATION **/
 // Edit a resource
-//server.get("/resource/:id", requiresAuthentication, repository.getResource, function(req, res) {
+//server.get("/resource/:id", requireAuth, repository.getResource, function(req, res) {
 //	console.log(req.resource);
 //	utils.renderToResponse(req, res, "edit");
 //});
