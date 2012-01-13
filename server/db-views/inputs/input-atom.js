@@ -142,7 +142,7 @@ exports.views = {
 				}
 			} else { ///This is an atom feed without service casting namespace
 				for (l in thisLinks) {
-					thisUrl = objGet(atom, "link." + l + ".href", "No Url Was Given");
+					thisUrl = objGet(thisLinks[l], "href", "No Url Was Given");
 					doc.setProperty("Links." + l + ".URL", thisUrl);
 					guessedServiceType = guessServiceType(thisUrl);
 					if (guessedServiceType) { doc.setProperty("Links." + l + ".ServiceType", guessedServiceType); }					
