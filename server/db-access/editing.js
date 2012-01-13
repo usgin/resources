@@ -39,20 +39,14 @@ exports.saveResource = function(req, res, next) {
 /** MIDDLEWARE FOR SAVING MULTIPLE RESOURCES **/
 // req.resources must have already been set by prior middleware.
 exports.saveMultipleResources = function(req, res, next) {
-	function completionCheck() {
-		if (req.saveResponses.length == req.resources.length) { next(); }
+	for (var r = req.resources.length -1; r >= 0; r--) {
+		if (req.resources[r] == null) { req.resources.splice(r, 1); }
 	}
-	
-	req.saveResponses = [];
-	for (var r in req.resources) {
-		if (!req.resources[r]) { 
-			req.saveResponses.push(null); 
-			completionCheck();
-			continue;
+	repository.save(req.resources, function(err, dbRes) {
+		if (err) { utils.renderToResponse(req, res, "errorResponse", { message: "Error saving your resources.", status: 500 }); }
+		else {
+			req.saveResponses = dbRes;
+			next();
 		}
-		repository.save(req.resources[r], function(err, dbRes) {
-			req.saveResponses.push(dbRes);
-			completionCheck();
-		});
-	}
+	});
 };
