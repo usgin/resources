@@ -113,7 +113,10 @@ exports.views = {
 				doc.setProperty("GeographicExtent", thisGeoExt);
 			}
 			
-
+			///Use the first author as a Distributor, because what else are we supposed to do?
+			doc.setProperty("Distributors", []);
+			doc.setProperty("Distributors.0", outAuthors[0]);
+			
 			///Identify if this is a scast atom feed
 			thisLinks = objGet(atom, "link", []);
 			if (thisLinks.constructor.toString().indexOf("Array") == -1) { thisLinks = [ thisLinks ]; }
