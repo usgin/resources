@@ -1,5 +1,5 @@
 var cradle = require("cradle"),
-	config = require("./config.js"),
+	config = require("./configuration/config.js"),
 	output = require("./db-views/outputs/outputFormats.js"),
 	input = require("./db-views/inputs/inputFormats.js"),
 	indexes = require("./db-views/indexes.js"),

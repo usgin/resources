@@ -1,7 +1,7 @@
 .settings/
 .project
 node_modules/
-config.js
-db-views/view-debug/test-files/*.xml
-db-views/view-debug/test-files/*.json
+server/configuration/config.js
+server/db-views/view-debug/test-files/*.xml
+server/db-views/view-debug/test-files/*.json
 *.DS_Store

@@ -52,26 +52,21 @@ exports.views = {
 				return strValue;
 			}
 			
-			/**********************************************************************************************/
-			
-			///Namespaces
-			atom.setProperty("entry.xmlns", "http://www.w3.org/2005/Atom");
-			atom.setProperty("entry.xmlns:georss", "http://www.georss.org/georss");
-			atom.setProperty("entry.xmlns:opensearch", "http://a9.com/-/spec/opensearch/1.1/");
+			/**********************************************************************************************/			
 			
 			///Entry
-			atom.setProperty("entry.title.$t", objGet(doc, "Title", "No title given"));
+			atom.setProperty("feed.entry.title.$t", objGet(doc, "Title", "No title given"));
 			
 			///Id element
-			atom.setProperty("entry.id.$t", doc._id);
+			atom.setProperty("feed.entry.id.$t", doc._id);
 			
 			///Author elements
-			atom.setProperty("entry.author", []);
+			atom.setProperty("feed.entry.author", []);
 			theAuthors = objGet(doc, "Authors", "");
 			if(theAuthors){
 				for(var a in theAuthors) {
 					thisAuthor = theAuthors[a];
-					thisPath ="entry.author." + a;
+					thisPath ="feed.entry.author." + a;
 					atom.setProperty(thisPath + ".name.$t", objGet(thisAuthor, "Name", ""));
 					atom.setProperty(thisPath + ".contactInformation.phone.$t", objGet(thisAuthor, "ContactInformation.Phone", ""));
 					atom.setProperty(thisPath + ".contactInformation.email.$t", objGet(thisAuthor, "ContactInformation.Email", ""));
@@ -83,10 +78,10 @@ exports.views = {
 			}
 			
 			///Link
-			atom.setProperty("entry.link", []);
+			atom.setProperty("feed.entry.link", []);
 			
 			for (var l in doc.Links || []) {
-				thisLinkPath = "entry.link." + l + ".";
+				thisLinkPath = "feed.entry.link." + l + ".";
 				thisLink = doc.Links[l];
 				atom.setProperty(thisLinkPath + "href", objGet(thisLink, "URL", ""));
 				if (thisLink.hasOwnProperty("ServiceType")) { atom.setProperty(thisLinkPath + "serviceType", objGet(thisLink, "ServiceType", "")); }
@@ -94,17 +89,17 @@ exports.views = {
 			}
 			
 			///Date
-			atom.setProperty("entry.updated.$t", doc.ModifiedDate);
+			atom.setProperty("feed.entry.updated.$t", doc.ModifiedDate);
 			
 			///Summary
-			atom.setProperty("entry.summary.$t", objGet(doc, "Description", "No description found"));			
+			atom.setProperty("feed.entry.summary.$t", objGet(doc, "Description", "No description found"));			
 			
 			///Bounding box
 			n = objGet(doc, "GeographicExtent.NorthBound", 89);
 			s = objGet(doc, "GeographicExtent.SouthBound", -89);
 			e = objGet(doc, "GeographicExtent.EastBound", 179);
 			w = objGet(doc, "GeographicExtent.WestBound", -179);
-			atom.setProperty("entry.georss:box.$t", [w, s, e, n].join(" "));					
+			atom.setProperty("feed.entry.georss:box.$t", [w, s, e, n].join(" "));					
 				
 			emit(doc._id, atom);
 			//return atom;
