@@ -12,7 +12,24 @@ block sidebar-content
 	#file-attachment-block
 		h2#file-attachment-title.block-title Available Files
 		#file-attachment-content.block-content
-			ul#file-attachment-menu.menu								
+			ul#file-attachment-menu.menu
+				- if(!doc.hasOwnProperty("Links"))
+					#links-info-container No Links Were Provided
+				- else
+					div.sidebar-links
+					- doc.Links.forEach(function(link) {
+							- if (link.hasOwnProperty("ServiceType") && link.hasOwnProperty("URL")) {
+								li
+									a(href=link.URL)= link.ServiceType
+							- }
+					- })
+					div.sidebar-links
+					- doc.Links.forEach(function(link) {
+							- if ((!link.hasOwnProperty("ServiceType")) && link.hasOwnProperty("URL")) {
+								li
+									a(href=link.URL)= link.URL
+							- }
+					- })								
 				
 	#map-block
 		h2#map-title.block-title Resource Location
@@ -148,18 +165,6 @@ block page-content
 						- }
 					- }					
 				- })
-		#links-container.box-container
-			strong Online Availability
-			div.box-subcontainer
-				- if(!doc.hasOwnProperty("Links"))
-					#links-info-container No Links Were Provided
-				- else
-					- doc.Links.forEach(function(link) {
-					- prefix = "link-" + doc.Links.indexOf(link) + "-"
-							- if (link.hasOwnProperty("ServiceType") && link.hasOwnProperty("URL")) {
-								a(id=prefix, class="service-link", href=link.URL)= link.ServiceType
-							- }
-					- })
 		fieldset#geo-extent.box-container
 			legend#geo-extent-title.box-container-title Geographic Extent
 			if !doc.hasOwnProperty("GeographicExtent")
