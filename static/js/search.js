@@ -12,7 +12,11 @@ $(document).ready(function(){
 				performSearch();
 			}
 		}
-	)	
+	)
+	
+	if($("#search-terms").val()){
+		performSearch();
+	}	
 })
 
 function performSearch() {

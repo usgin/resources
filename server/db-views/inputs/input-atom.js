@@ -73,38 +73,34 @@ exports.views = {
 			/**********************************************************************************************/
 			///Set title
 			doc.setProperty("Title", objGet(atom, "title.$t", "No title found"));
+			
 			///Set summary
 			doc.setProperty("Description", objGet(atom, "summary.$t", "No summary found"));
-			///Set author infomation
-			thisAuthor = objGet(atom, "author", "No author found");
-			if(thisAuthor != "No author found"){
-				if(thisAuthor.constructor.toString().indexOf("Array") != -1){
-					atom.setProperty("Author", []);
-					for(a in thisAuthor){
-						thisAuthorPath = "Author." + a + ".";
-						doc.setProperty(thisAuthorPath + "Name", objGet(atom, "author." + a + ".name.$t", "No name found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Phone", objGet(atom, "author." + a + ".contactInformation.phone.$t", "No phone found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Email", objGet(atom, "author." + a + ".contactInformation.email.$t", "No email found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Address.Street", objGet(atom, "author." + a + ".contactInformation.address.street.$t", "No address found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Address.City", objGet(atom, "author." + a + ".contactInformation.address.city.$t", "No city found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Address.State", objGet(atom, "author." + a + ".contactInformation.address.state.$t", "No state found"));
-						doc.setProperty(thisAuthorPath + "ContactInformation.Address.Zip", objGet(atom, "author." + a + ".contactInformation.address.zip.$t", "No zip found"));
-					}					
-				}else{
-					doc.setProperty("Author.Name", objGet(atom, "author.name", "No name found"));
-					doc.setProperty("Author.ContactInformation.Phone", objGet(atom, "author.contactInformation.phone.$t", "No phone found"));
-					doc.setProperty("Author.ContactInformation.Email", objGet(atom, "author.contactInformation.email.$t", "No email found"));
-					doc.setProperty("Author.ContactInformation.Address.Street", objGet(atom, "author.contactInformation.address.street.$t", "No address found"));
-					doc.setProperty("Author.ContactInformation.Address.City", objGet(atom, "author.contactInformation.address.city.$t", "No city found"));
-					doc.setProperty("Author.ContactInformation.Address.State", objGet(atom, "author.contactInformation.address.state.$t", "No state found"));
-					doc.setProperty("Author.ContactInformation.Address.Zip", objGet(atom, "author.contactInformation.address.zip.$t", "No zip found"));
-				}
-			}else{
-				doc.setProperty("Author", thisAuthor);
+			
+			///Set author information
+			docAuthors = objGet(atom, "author", []);
+			if (docAuthors.hasOwnProperty("name")) { docAuthors = [ docAuthors ]; }
+			outAuthors = [];
+			for (a in docAuthors) {
+				outAuthors.push({
+					Name: objGet(docAuthors[a], "name.$t", "No name found"),
+					ContactInformation: {
+						Phone: objGet(docAuthors[a], "contactInformation.phone.$t", "No phone found"),
+						email: objGet(docAuthors[a], "contactInformation.email.$t", "No email found"),
+						Address: {
+							Street: objGet(docAuthors[a], "contactInformation.address.street.$t", "No address found"),
+							City: objGet(docAuthors[a], "contactInformation.address.city.$t", "No city found"),
+							State: objGet(docAuthors[a], "contactInformation.address.state.$t", "No state found"),
+							Zip: objGet(docAuthors[a], "contactInformation.address.zip.$t", "No zip found")
+						}
+					}
+				});
 			}
 			
+			doc.setProperty("Author", outAuthors);
+			
 			///Set geographic extent
-			thisGeoExt = objGet(atom, "georss:box", "No geographic extent found");
+			thisGeoExt = objGet(atom, "georss:box.$t", "No geographic extent found");
 			if(thisGeoExt != "No geographic extent found"){
 				rGeoExt = thisGeoExt.toString().split(" ");
 				if(rGeoExt.length == 4){
@@ -117,7 +113,10 @@ exports.views = {
 				doc.setProperty("GeographicExtent", thisGeoExt);
 			}
 			
-
+			///Use the first author as a Distributor, because what else are we supposed to do?
+			doc.setProperty("Distributors", []);
+			doc.setProperty("Distributors.0", outAuthors[0]);
+			
 			///Identify if this is a scast atom feed
 			thisLinks = objGet(atom, "link", []);
 			if (thisLinks.constructor.toString().indexOf("Array") == -1) { thisLinks = [ thisLinks ]; }
@@ -146,7 +145,7 @@ exports.views = {
 				}
 			} else { ///This is an atom feed without service casting namespace
 				for (l in thisLinks) {
-					thisUrl = objGet(atom, "link." + l + ".href", "No Url Was Given");
+					thisUrl = objGet(thisLinks[l], "href", "No Url Was Given");
 					doc.setProperty("Links." + l + ".URL", thisUrl);
 					guessedServiceType = guessServiceType(thisUrl);
 					if (guessedServiceType) { doc.setProperty("Links." + l + ".ServiceType", guessedServiceType); }					

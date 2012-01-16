@@ -12,7 +12,24 @@ block sidebar-content
 	#file-attachment-block
 		h2#file-attachment-title.block-title Available Files
 		#file-attachment-content.block-content
-			ul#file-attachment-menu.menu								
+			ul#file-attachment-menu.menu
+				- if(!doc.hasOwnProperty("Links"))
+					#links-info-container No Links Were Provided
+				- else
+					div.sidebar-links
+					- doc.Links.forEach(function(link) {
+							- if (link.hasOwnProperty("ServiceType") && link.hasOwnProperty("URL")) {
+								li
+									a(href=link.URL)= link.ServiceType
+							- }
+					- })
+					div.sidebar-links
+					- doc.Links.forEach(function(link) {
+							- if ((!link.hasOwnProperty("ServiceType")) && link.hasOwnProperty("URL")) {
+								li
+									a(href=link.URL)= link.URL
+							- }
+					- })								
 				
 	#map-block
 		h2#map-title.block-title Resource Location
@@ -22,7 +39,7 @@ block sidebar-content
 block page-content
 	#record-container
 		#title-container
-			h2#record-title #{doc.Title || "No Title Was Given"}
+			h1#record-title #{doc.Title || "No Title Was Given"}
 		#keywords-container
 			- if (doc.hasOwnProperty("Keywords")) {
 			ul#keywords-list.horizontal-list
@@ -30,157 +47,147 @@ block page-content
 				li= keyword
 				- })
 			- }
-		#basic-information.box-container
-			#basic-info-title.box-container-title Basic Information
-			#basic-info-container
+		fieldset#basic-information.box-container
+			legend Basic Information
+			#basic-info-container.box-subcontainer
 				#author-container											
-					#author-title.attr-name Author:	
-					if !doc.hasOwnProperty("Authors")
+					strong Author:	
+					- if(!doc.hasOwnProperty("Authors"))
 						#author-content.attr-content No Authors Specified
-					else
+					- else
 						- var names = []
 						- for (var a in doc.Authors) { names.push(doc.Authors[a].Name || "No Name") }
-						#author-content.attr-content #{names.join(", ")}
+						| #{names.join(", ")}
 				#description-container
-					#description-title.attr-name Description:
-					#description-content.attr-content #{doc.Description || "No Description Given"}
+					strong Description: 
+					| #{doc.Description || "No Description Given"}
 				#pub-date-container
-					#pub-date-title.attr-name Publication Date:
-					#pub-date-content.attr-content #{doc.PublicationDate || "No Publication Date Given"}
-		#int-originator.box-container.can-collapse.start-collapsed
-			#int-originator-title.box-container-title Author Contact Information
-			if (!doc.hasOwnProperty("Authors"))
+					strong Publication Date: 
+					- var pubDate = doc.PublicationDate.replace('T', " ")
+					- pubDate = pubDate.replace('Z', " ")
+					| #{pubDate || "No Publication Date Given"}
+		fieldset#int-originator.box-container
+			legend Author Contact Information
+			- if (!doc.hasOwnProperty("Authors"))
 				#int-originator-info-container No Authors Specified
-			else
+			- else
 				#int-originator-info-container
 					- doc.Authors.forEach(function(author) {
 					- 	var prefix = "int-originator-" + doc.Authors.indexOf(author) + "-"
-						div(id=prefix + "container")
+						div(id=prefix + "container", class="box-subcontainer")
 							- if (author.hasOwnProperty("Name")) {
-							div(id=prefix + "name-container")
-								div(id=prefix + "name-title").attr-name Name:
-								div(id=prefix + "name-content").attr-content= author.Name
+							div
+								strong Name: 
+								| #{author.Name}
 							- }
 							- if (author.hasOwnProperty("ContactInformation")) {
 							div(id=prefix + "contact-container")
 								- if (author.ContactInformation.hasOwnProperty("Address")) {
-								div(id=prefix + "address-container")
+								div
 									- if (author.ContactInformation.Address.hasOwnProperty("Street")) {
-									div(id=prefix + "street-container")
-										div(id=prefix + "street-title").attr-name Street:
-										div(id=prefix + "street-content").attr-content= author.ContactInformation.Address.Street
+									div
+										strong Street: 
+										| #{author.ContactInformation.Address.Street}
 									- }
 									- if (author.ContactInformation.Address.hasOwnProperty("City")) {
-									div(id=prefix + "city-container")
-										div(id=prefix + "city-title").attr-name City:
-										div(id=prefix + "ciry-content").attr-content= author.ContactInformation.Address.City
+									div
+										strong City: 
+										| #{author.ContactInformation.Address.City}
 									- }
 									- if (author.ContactInformation.Address.hasOwnProperty("State")) {
-									div(id=prefix + "state-container")
-										div(id=prefix + "state-title").attr-name State:
-										div(id=prefix + "state-content").attr-content= author.ContactInformation.Address.State
+									div
+										strong State: 
+										| #{author.ContactInformation.Address.State}
 									- }
 									- if (author.ContactInformation.Address.hasOwnProperty("Zip")) {
-									div(id=prefix + "zip-container")
-										div(id=prefix + "zip-title").attr-name Zip:
-										div(id=prefix + "zip-content").attr-content= author.ContactInformation.Address.Zip
+									div
+										strong Zip: 
+										| #{author.ContactInformation.Address.Zip}
 									- }
 								- }
 								- if (author.ContactInformation.hasOwnProperty("Phone")) {
-								div(id=prefix + "phone-container")
-									div(id=prefix + "phone-title").attr-name Phone:
-									div(id=prefix + "phone-content").attr-content= author.ContactInformation.Phone
+								div
+									strong Phone: 
+									| #{author.ContactInformation.Phone}
 								- }
 								- if (author.ContactInformation.hasOwnProperty("email")) {
-								div(id=prefix + "email-container")
-									div(id=prefix + "email-title").attr-name email:
-									div(id=prefix + "email-content").attr-content= author.ContactInformation.email
+								div#email
+									strong Email: 
+									a(href="mailto:"+author.ContactInformation.email+"?Subject="+doc.Title)
+										| #{author.ContactInformation.email}
 								- }
 							- }
 					- })
-		#links-container.box-container
-			#links-title.box-container-title Online Availability
-			if !doc.hasOwnProperty("Links")
-				#links-info-container No Links Were Provided
+		fieldset#dist-originator.box-container
+			legend Distributor Contact Information
+			if (!doc.hasOwnProperty("Distributors"))
+				No Distributors Specified
 			else
-				- doc.Links.forEach(function(link) {
-				-	prefix = "link-" + doc.Links.indexOf(link) + "-"
-					div(id=prefix + "container")
-						- if (link.hasOwnProperty("Type") && link.hasOwnProperty("URL")) {
-						div(id=prefix + "link-container")
-							a(href=link.URL)= link.Type
+				- doc.Distributors.forEach(function(dist){
+				div.box-subcontainer
+					- if (dist.hasOwnProperty("Name")) {
+						div
+							strong Name:
+							| #{dist.Name}
+					- }
+					- if (dist.hasOwnProperty("ContactInformation")) {
+						- if (dist.ContactInformation.hasOwnProperty("Address")) {
+							- if (dist.ContactInformation.Address.hasOwnProperty("Street")) {
+								div
+									strong Street:
+									| #{dist.ContactInformation.Address.Street}
+							- }
+							- if (dist.ContactInformation.Address.hasOwnProperty("City")) {
+								div
+									strong City:
+									| #{dist.ContactInformation.Address.City}
+							- }
+							- if (dist.ContactInformation.Address.hasOwnProperty("State")) {
+								div
+									strong State:
+									| #{dist.ContactInformation.Address.State}
+							- }
+							- if (dist.ContactInformation.Address.hasOwnProperty("Zip")) {
+								div
+									strong Zip:
+									| #{dist.ContactInformation.Address.Zip}
+							- }
 						- }
+						- if (dist.ContactInformation.hasOwnProperty("Phone")) {
+							div
+								strong Phone:
+								| #{dist.ContactInformation.Phone}
+						- }
+						- if (dist.ContactInformation.hasOwnProperty("email")) {
+							div
+								strong Email:
+								| #{dist.ContactInformation.email}
+						- }
+					- }					
 				- })
-		#dist-originator.box-container.can-collapse.start-collapsed
-			#dist-originator-title.box-container-title Distributor Contact Information
-			if (!doc.hasOwnProperty("Distributor"))
-				#dist-originator-info-container No Distributors Specified
-			else
-				#dist-originator-info-container
-					- if (doc.Distributor.hasOwnProperty("Name")) {
-					#dist-originator-name-container
-						#dist-originator-name-title.attr-name Name:
-						#dist-originator-name-content.attr-content= doc.Distributor.Name
-					- }
-					- if (doc.Distributor.hasOwnProperty("ContactInformation")) {
-					#dist-originator-contact-container
-						- if (doc.Distributor.ContactInformation.hasOwnProperty("Address")) {
-						#dist-originator-address-container
-							- if (doc.Distributor.ContactInformation.Address.hasOwnProperty("Street")) {
-							#dist-originator-street-container
-								#dist-originator-street-title.attr-name Street:
-								#dist-originator-street-content.attr-content= doc.Distributor.ContactInformation.Address.Street
-							- }
-							- if (doc.Distributor.ContactInformation.Address.hasOwnProperty("City")) {
-							#dist-originator-city-container
-								#dist-originator-city-title.attr-name City:
-								#dist-originator-city-content.attr-content= doc.Distributor.ContactInformation.Address.City
-							- }
-							- if (doc.Distributor.ContactInformation.Address.hasOwnProperty("State")) {
-							#dist-originator-state-container
-								#dist-originator-state-title.attr-name State:
-								#dist-originator-state-content.attr-content= doc.Distributor.ContactInformation.Address.State
-							- }
-							- if (doc.Distributor.ContactInformation.Address.hasOwnProperty("Zip")) {
-							#dist-originator-zip-container
-								#dist-originator-zip-title.attr-name Zip:
-								#dist-originator-zip-content.attr-content= doc.Distributor.ContactInformation.Address.Zip
-							- }
-						- }
-						- if (doc.Distributor.ContactInformation.hasOwnProperty("Phone")) {
-						#dist-originator-phone-container
-							#dist-originator-phone-title.attr-name Phone:
-							#dist-originator-phone-content.attr-content= doc.Distributor.ContactInformation.Phone
-						- }
-						- if (doc.Distributor.ContactInformation.hasOwnProperty("email")) {
-						#dist-originator-email-container
-							#dist-originator-email-title.attr-name email:
-							#dist-originator-email-content.attr-content= doc.Distributor.ContactInformation.email
-						- }
-					- }
-		#geo-extent.box-container.can-collapse.start-collapsed
-			#geo-extent-title.box-container-title Geographic Extent
+		fieldset#geo-extent.box-container
+			legend#geo-extent-title.box-container-title Geographic Extent
 			if !doc.hasOwnProperty("GeographicExtent")
-				#geo-extent-info-container No Geographic Extent Was Specified
+				#geo-extent-info-container.box-subcontainer No Geographic Extent Was Specified
 			else
-				#geo-extent-info-container
+				#geo-extent-info-container.box-subcontainer
 					- if (doc.GeographicExtent.hasOwnProperty("NorthBound")) {
-					#geo-extent-north-container
-						#geo-extent-north-title.attr-name North Bounding Latitude:
-						#geo-extent-north-content.attr-content= doc.GeographicExtent.NorthBound
+						div
+							strong North Bounding Latitude:  
+							| #{doc.GeographicExtent.NorthBound}
 					- }						
 					- if (doc.GeographicExtent.hasOwnProperty("SouthBound")) {
-					#geo-extent-south-container
-						#geo-extent-south-title.attr-name South Bounding Latitude:
-						#geo-extent-south-content.attr-content= doc.GeographicExtent.SouthBound
+						div
+							strong South Bounding Latitude: 
+							| #{doc.GeographicExtent.SouthBound}
 					- }
 					- if (doc.GeographicExtent.hasOwnProperty("EastBound")) {
-					#geo-extent-east-container
-						#geo-extent-east-title.attr-name East Bounding Longitude:
-						#geo-extent-east-content.attr-content= doc.GeographicExtent.EastBound
+						div	
+							strong East Bounding Longitude: 
+							| #{doc.GeographicExtent.EastBound}
 					- }
 					- if (doc.GeographicExtent.hasOwnProperty("WestBound")) {
-					#geo-extent-west-container
-						#geo-extent-west-title.attr-name West Bounding Longitude:
-						#geo-extent-west-content.attr-content= doc.GeographicExtent.WestBound
+						div
+							strong West Bounding Longitude: 
+							| #{doc.GeographicExtent.WestBound}
 					- }			
