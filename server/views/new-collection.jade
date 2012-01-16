@@ -1,0 +1,9 @@
+extends ./base
+
+block page-content
+	form#new-collection(name="collectionForm", method="post")
+		label(for="collectionTitle") Collection Name: 
+		input#collectionTitle(name="collectionTitle")
+		label(for="collectionDescription") Description:
+		textarea#collectionDescription(name="collectionDescription")
+		input#save-collection(type="submit")
