@@ -2,6 +2,10 @@ extends ./base
 
 block scripts
 	link(rel="stylesheet", type="text/css", href="/static/css/html-record.css")
+	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
+	script(type="application/javascript", src="/static/js/html-record.js")
+	script(type="application/javascript")
+		| links = !{JSON.stringify(doc.Links)}
 	
 block sidebar-content
 	#collections-block
@@ -10,9 +14,10 @@ block sidebar-content
 			ul#collections-menu.menu
 
 	#file-attachment-block
-		h2#file-attachment-title.block-title Available Files
+		h2#file-attachment-title.block-title Online Available
 		#file-attachment-content.block-content
 			ul#file-attachment-menu.menu
+			//
 				- if(!doc.hasOwnProperty("Links"))
 					#links-info-container No Links Were Provided
 				- else
@@ -62,10 +67,11 @@ block page-content
 					strong Description: 
 					| #{doc.Description || "No Description Given"}
 				#pub-date-container
-					strong Publication Date: 
-					- var pubDate = doc.PublicationDate.replace('T', " ")
+					strong Publication Date:
+					- var pubDate = doc.PublicationDate || "No Publication Date Given" 
+					- pubDate = pubDate.replace('T', " ")
 					- pubDate = pubDate.replace('Z', " ")
-					| #{pubDate || "No Publication Date Given"}
+					| #{pubDate}
 		fieldset#int-originator.box-container
 			legend Author Contact Information
 			- if (!doc.hasOwnProperty("Authors"))
