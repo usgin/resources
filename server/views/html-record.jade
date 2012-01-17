@@ -10,6 +10,7 @@ block scripts
 	script(type="application/javascript", src="http://openlayers.org/dev/OpenLayers.js")
 	script(type="application/javascript")
 		| links = !{JSON.stringify(doc.Links)}
+		| geoExtent = !{JSON.stringify(doc.GeographicExtent)}
 	
 block sidebar-content
 	#collections-block
