@@ -30,7 +30,9 @@ exports.formatResource = function(req, res, next) {
 	format = req.param("format", null);
 	switch(format) {
 	case "html":
-		utils.renderToResponse(req, res, "html-record", { doc: req.resource });
+		utils.renderToResponse(req, res, "html-record", { 
+				doc: req.resource
+			});
 		break;
 	case "geojson":
 		res.contentType("application/json");
