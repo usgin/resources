@@ -24,3 +24,31 @@ exports.saveCollection = function(req, res, next) {
 		collections.save(collection, saveResponse);
 	}
 };
+
+/** MIDDLEWARE FOR RETREIVING A SINGLE COLLECTION **/
+exports.getCollection = function(req, res, next) {
+	id = req.param("id", false);
+	if (!id) { req.collection = null; next(); }
+	else {
+		collections.get(id, function(err, doc) {
+			if (err) { utils.renderToResponse(req, res, "errorResponse", { searchedId: id, status: 404 }); } 
+			else {
+				req.collection = doc;
+				next();
+			}
+		});
+	}
+};
+
+/** MIDDLEWARE FOR RETREIVING THE NAMES OF A SET OF COLLECTIONS **/
+exports.getCollectionNames = function(req, res, next) {
+	if (!req.body.hasOwnProperty("ids")) { req.body.ids = "all"; }
+	keyObj = req.body.ids == "all" ? {} : { keys: req.body.ids };
+	collections.view("search/title", keyObj, function(err, viewResponse) {
+		if (err) { res.json({ error: "Error retrieving view of collections" }); }
+		else {
+			req.collectionNames = viewResponse.rows;
+			next();
+		}
+	});
+};

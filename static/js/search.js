@@ -1,29 +1,27 @@
 $(document).ready(function(){
-	$("#search-terms").keypress(
-		function(evt){
-			var keyNum;
-			if(window.event){
-				keyNum = evt.keyCode;
-			}else{
-				keyNum = evt.which;
+	if (!collectionId) {
+		$("#search-terms").keypress(
+			function(evt){
+				var keyNum;
+				if (window.event) { keyNum = evt.keyCode; }
+				else { keyNum = evt.which; }
+				
+				if(keyNum == 13) { performSearch("full", $("#search-terms").val()); }
 			}
-			
-			if(keyNum == 13) {
-				performSearch();
-			}
-		}
-	)
+		);
+		
+		if($("#search-terms").val()){ performSearch("full", $("#search-terms").val()); }	
+	} else {
+		performSearch("collection", collectionId, "/search/");
+	}
 	
-	if($("#search-terms").val()){
-		performSearch();
-	}	
-})
+});
 
-function performSearch() {
-	searchObj = { full: escape($("#search-terms").val()) }; ///Get the value from the edit-box
+function performSearch(index, terms, url) {
+	searchObj = { index: index, terms: escape(terms) };
 	
 	///Send request to get the search results
-	$.post(document.url, searchObj, function(response) {
+	$.post(url || document.url, searchObj, function(response) {
 		console.log(response); ///For debug purpose, to monitor the response object
 		listSearchResults(response);		
 	});
@@ -40,7 +38,7 @@ function listSearchResults(response) {
 	$("#results-container").append("<dl id='results' class='search-results'></dl>");
 
 	///Parse each search result object
-	for( iObj = 0; iObj < response.length; iObj++) {
+	for( var iObj = 0; iObj < response.length; iObj++) {
 		eachResult("#results", response[iObj]);
 	}
 }
@@ -63,7 +61,7 @@ function getResultTitleDt(id, title) {
 	var titleString = "<dt>";
 	titleString += "<a href=" + hLink + " class='search-results-title'>";
 	titleString += title; ///Define the title content
-	titleString += "</a>"
+	titleString += "</a>";
 	titleString += "</dt>";
 
 	return titleString;
@@ -135,7 +133,7 @@ function parseValue(type, value) {
 /////values - the property value array
 function parseValues(types, values) {
 	var valueString = "";
-	for(iTy = 0; iTy < types.length; iTy ++){
+	for(var iTy = 0; iTy < types.length; iTy ++){
 		var type = types[iTy];
 		var value = values[iTy];
 		
@@ -150,7 +148,7 @@ function parseValues(types, values) {
 			switch (type){
 				case "Authors":
 					var authors = "";
-					for(iAu = 0; iAu < value.length; iAu ++){
+					for(var iAu = 0; iAu < value.length; iAu ++){
 						if(iAu == 0){
 							authors = value[iAu].Name;
 						}else{

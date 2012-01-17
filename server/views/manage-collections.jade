@@ -1,0 +1,11 @@
+extends ./base
+
+block page-content
+	p
+		a(href="/new-collection/") Create a new Collection
+	#collections-container
+		ul#collections-list
+			- for (c in collections) {
+			li
+				a(href="/collection/" + collections[c].id)= collections[c].value.title
+			- }

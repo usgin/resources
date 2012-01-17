@@ -56,9 +56,14 @@ server.get("/resources/:format", retrieval.getAllResources, views.viewMultipleRe
 });
 
 // View a collection page
-//server.get("/collection/:id", collection.getCollection, function(req, res) {
-//	utils.renderToResponse(req, res, "collection", { collectionId: req.collectionId });
-//});
+server.get("/collection/:id", collection.getCollection, function(req, res) {
+	utils.renderToResponse(req, res, "collection", { collection: req.collection });
+});
+
+// Get some collection names
+server.post("/collection-names", collection.getCollectionNames, function(req, res) {
+	res.json(req.collectionNames);
+});
 
 /** ROUTES THAT **DO** REQUIRE AUTHENTICATION **/
 // Get contact names
@@ -107,12 +112,17 @@ server.post("/new-harvest/",
 		}
 );
 
+// Manage collections page
+server.get("/manage-collections/", requireAuth, collection.getCollectionNames, function(req, res) {
+	utils.renderToResponse(req, res, "manage-collections", { collections: req.collectionNames });
+});
+
 // Create a new collection
 server.get("/new-collection/", requireAuth, function(req, res) {
 	utils.renderToResponse(req, res, "new-collection");
 });
 server.post("/new-collection/", requireAuth, collection.saveCollection, function(req, res) {
-	utils.redirect("/collection/" + req.saveResponse.id);
+	res.redirect("/collection/" + req.saveResponse.id);
 });
 
 // All other requests should 404

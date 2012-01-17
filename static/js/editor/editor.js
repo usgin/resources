@@ -6,13 +6,25 @@ $(document).ready(function() {
 	$("ul[eletype='array'] > li > div > div[ele='attribute']").removeAttr("contenteditable");
 	//	Then, move the site information block below the other blocks
 	$("#site-info-block").insertAfter("#map-block");
-	// If the document is in no collections, indicate this
-	collectionList = $("#collections-current-list");
-	if (collectionList.children().length == 0) {
-		collectionList.append("<li class='included-collection nil-collection'>Not published in any collection</li>");
+	
+	// Fill in collection information
+	if (collectionsList.length > 0) {
+		$.post("/collection-names", { ids: collectionsList }, function(response) {
+			for (r in response) {
+				$("#collections-current-list").prepend("<li><a href='/collection/" + response[r].id + "'>" + response[r].value.title + "</a></li>");
+			}
+		});
+	} else {
+		$("#collections-current-list").prepend("<li id='nil-collection' class='nil-collection'>Not published in any collection</li>");
 	}
 	
+	// Setup the dialog box for selecting a contact
 	setupContactDialog(); // defined in sidebar-functions.js
+	
+	// Setup the dialog box for selecting a collection
+	setupCollectionDialog(); // defined in sidebar-functions.js
+	
+	// Setup the response for saving a new contact
 	$("#saved-contact-dialog").dialog({
 		autoOpen: false,
 		modal: true,
@@ -30,7 +42,7 @@ function writeResource() {
 	$("#theResource").children().each(function(index, ele) {
 		domChooser($(this), theResource);
 	});
-	
+	theResource["Collections"] = collectionsList;
 	if (harvestInfo) {
 		theResource["HarvestInformation"] = harvestInfo;
 	}

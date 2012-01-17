@@ -3,7 +3,8 @@ var cradle = require("cradle"),
 	output = require("./db-views/outputs/outputFormats.js"),
 	input = require("./db-views/inputs/inputFormats.js"),
 	indexes = require("./db-views/indexes.js"),
-	contacts = require("./db-views/contacts.js");
+	contacts = require("./db-views/contacts.js"),
+	collections = require("./db-views/collections.js");
 	
 var metadb = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort);
 
@@ -31,6 +32,10 @@ function existsCheck(db) {
 function saveDesignDocs(db) {
 	switch (db.name) {
 	case config.dbInfo.databases.dbCollectionName:
+		db.save("_design/search", collections.views, function(err, response) {
+			if (err) { console.log("Error creating index views in " + db.name + " database."); }
+			else { console.log("Collections views up-to-date."); }
+		});
 		break;
 	case config.dbInfo.databases.dbHarvestName:
 		db.save("_design/inputs", input.views, function(err, response) {

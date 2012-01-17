@@ -28,6 +28,20 @@ exports.views = {
 
 				return ret;
 			}
+		},
+		collection: {
+			index: function(doc) {
+				if (doc._id.indexOf("_design/") == 0) { return null; }
+
+				var ret = new Document();
+				if (doc.hasOwnProperty("Collections")) {
+					for (c in doc.Collections) {
+						ret.add(doc.Collections[c]);
+					}
+				}
+				
+				return ret;
+			}
 		}
 	}
 };
