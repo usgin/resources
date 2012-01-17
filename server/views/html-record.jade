@@ -17,25 +17,7 @@ block sidebar-content
 		h2#file-attachment-title.block-title Online Available
 		#file-attachment-content.block-content
 			ul#file-attachment-menu.menu
-			//
-				- if(!doc.hasOwnProperty("Links"))
-					#links-info-container No Links Were Provided
-				- else
-					div.sidebar-links
-					- doc.Links.forEach(function(link) {
-							- if (link.hasOwnProperty("ServiceType") && link.hasOwnProperty("URL")) {
-								li
-									a(href=link.URL)= link.ServiceType
-							- }
-					- })
-					div.sidebar-links
-					- doc.Links.forEach(function(link) {
-							- if ((!link.hasOwnProperty("ServiceType")) && link.hasOwnProperty("URL")) {
-								li
-									a(href=link.URL)= link.URL
-							- }
-					- })								
-				
+											
 	#map-block
 		h2#map-title.block-title Resource Location
 		#map-content.block-content
