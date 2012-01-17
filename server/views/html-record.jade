@@ -1,7 +1,9 @@
 extends ./base
 
-block scripts
+block styles
 	link(rel="stylesheet", type="text/css", href="/static/css/html-record.css")
+	
+block scripts
 	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
 	script(type="application/javascript", src="/static/js/html-record.js")
 	script(type="application/javascript", src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false")
@@ -17,7 +19,7 @@ block sidebar-content
 			ul#collections-menu.menu
 
 	#file-attachment-block
-		h2#file-attachment-title.block-title Online Available
+		h2#file-attachment-title.block-title Online Availability
 		#file-attachment-content.block-content
 			ul#file-attachment-menu.menu
 											
