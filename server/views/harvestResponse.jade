@@ -8,6 +8,6 @@ block page-content
 			ul#edit-links.menu
 				- for (r in saveResponses) {
 				li 
-					a(href="/resources/" + saveResponses[r].id) Record #{new Number(r) + 1}
+					a(href="/resource/" + saveResponses[r].id) Record #{new Number(r) + 1}
 				- }
 		
