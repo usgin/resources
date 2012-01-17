@@ -1,17 +1,14 @@
 contactCounter = 0;
 
 function addAuthor() {
-	//locateTypedList("Authors");
 	writeToArray(contactObj, "Authors");
 }
 
 function addDistributor() {
-	//locateTypedList("Distributors");
 	writeToArray(contactObj, "Distributors");
 }
 
 function addLink(linkType) {
-	//locateTypedList("Links");
 	if (linkType == "file") { writeToArray(fileLinkObj, "Links"); }
 	else { writeToArray(serviceLinkObj, "Links"); }
 }
@@ -22,6 +19,10 @@ function addFile() {
 
 function addContact() {
 	$("#add-contact-dialog").dialog("open");
+}
+
+function addCollection() {
+	$("#add-collection-dialog").dialog("open");
 }
 
 function locateTypedList(listType) {
@@ -86,4 +87,39 @@ function refreshContactOptions() {
 			}			
 		});
 	});	
+}
+
+function setupCollectionDialog() {
+	$("#add-collection-dialog").dialog({
+		autoOpen: false,
+		modal: true,
+		resizeable: false,
+		width: 500,
+		buttons: {
+			"Add to selected collection": function() {
+				id = $("#new-selected-collection").val();
+				title = $("#new-collection-selector").val();
+				$("#collections-current-list").prepend("<li><a href='/collection/" + id + "'>" + title + "</a></li>");
+				$("#nil-collection").remove();
+				collectionsList.push(id);
+				$(this).dialog("close");
+			},
+			Cancel: function() {
+				$(this).dialog("close");
+			}
+		}
+	});
+	
+	$.post("/collection-names", { ids: "all" }, function(response) {
+		collections = [];
+		for (var r in response) { collections.push({ id: response[r].id, value: response[r].value.title }); }
+		$("#new-collection-selector").autocomplete({
+			source: collections,
+			select: function(event, ui) {
+				$("#new-selected-collection").val(ui.item.id);
+				$(this).val(ui.item.value);
+				return false;
+			}
+		});
+	});
 }

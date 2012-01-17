@@ -19,6 +19,10 @@ function typeChooser(obj, parentId) {
 			harvestInfo = obj[property];
 			continue; 
 		}
+		if (property.indexOf("Collections") == 0) {
+			collectionsList = obj[property];
+			continue;
+		}
 		switch ($.type(obj[property])) {
 		case "function":
 			break;

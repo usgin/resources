@@ -10,6 +10,7 @@ var express = require("express"),
 	contacts = require("./db-access/contacts.js"),
 	editing = require("./db-access/editing.js"),
 	harvest = require("./db-access/harvest.js"),
+	collection = require("./db-access/collection.js");
 	input = require("./db-views/inputs/inputFormats.js");
 
 var server = express.createServer(config.serverInfo.localListenAddress);
@@ -52,6 +53,16 @@ server.get("/resource/:id/:format", retrieval.getResource, views.viewResource, f
 // Get all records in some defined output format
 server.get("/resources/:format", retrieval.getAllResources, views.viewMultipleResources, formatting.formatMultipleResources, function(req, res) {
 	res.send(req.formatResources);
+});
+
+// View a collection page
+server.get("/collection/:id", collection.getCollection, function(req, res) {
+	utils.renderToResponse(req, res, "collection", { collection: req.collection });
+});
+
+// Get some collection names
+server.post("/collection-names", collection.getCollectionNames, function(req, res) {
+	res.json(req.collectionNames);
 });
 
 /** ROUTES THAT **DO** REQUIRE AUTHENTICATION **/
@@ -100,6 +111,19 @@ server.post("/new-harvest/",
 			utils.renderToResponse(req, res, "harvestResponse", { saveResponses: req.saveResponses });
 		}
 );
+
+// Manage collections page
+server.get("/manage-collections/", requireAuth, collection.getCollectionNames, function(req, res) {
+	utils.renderToResponse(req, res, "manage-collections", { collections: req.collectionNames });
+});
+
+// Create a new collection
+server.get("/new-collection/", requireAuth, function(req, res) {
+	utils.renderToResponse(req, res, "new-collection");
+});
+server.post("/new-collection/", requireAuth, collection.saveCollection, function(req, res) {
+	res.redirect("/collection/" + req.saveResponse.id);
+});
 
 // All other requests should 404
 server.get("*", function(req, res) {
