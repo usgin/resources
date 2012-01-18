@@ -1,11 +1,16 @@
 extends ./base
 
+block styles
+	link(rel="stylesheet", type="text/css", href="/static/css/search-results.css")
+	link(rel="stylesheet", type="text/css", href="/static/css/collection.css")
+	
 block scripts
 	script(type="application/javascript", src="/static/js/search.js")
 	script(type="application/javascript")
 		| collectionId = "#{collection.id}";
 
 block page-content
-	h2= collection.Title
-	p= collection.Description
+	#collection-block
+		#collection-title.block-title= collection.Title
+		#collection-description.block-content= collection.Description
 	#results-container

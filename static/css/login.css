@@ -1,0 +1,25 @@
+.login-row {
+    padding: 3px;
+}
+.label {
+    text-align: right;
+    font-size: 14px;
+    color: #006891;
+}
+input[type="text"], input[type="password"]{
+    width: 280px;
+}
+#login-form-block {
+    width: 400px;
+}
+.submit-button {
+    width:400px;
+    text-align: center;
+}
+input, textarea {
+    border: 3px solid #F08B6F;
+    padding: 5px;
+}
+input[type="submit"] {
+    background-color: #EDCFC7;
+}

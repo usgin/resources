@@ -1,9 +1,25 @@
 extends ./base
 
+block styles
+	link(rel="stylesheet", type="text/css", href="/static/css/new-collection.css")
+	
 block page-content
-	form#new-collection(name="collectionForm", method="post")
-		label(for="collectionTitle") Collection Name: 
-		input#collectionTitle(name="collectionTitle")
-		label(for="collectionDescription") Description:
-		textarea#collectionDescription(name="collectionDescription")
-		input#save-collection(type="submit")
+	#new-collection-block
+		#new-collection-block-title.block-title Create a new collection
+		#new-collection-block-content.block-content
+			form#new-collection(name="collectionForm", method="post")
+				table
+					tr
+						td.input-label
+							label(for="collectionTitle") Collection Name: 
+						td.input-column
+							input#collectionTitle(name="collectionTitle")
+					tr
+						td.input-label
+							label(for="collectionDescription") Description:
+						td.input-column
+							textarea#collectionDescription(name="collectionDescription")
+				table#submit-table
+					tr
+						td
+							input#save-collection(type="submit")
