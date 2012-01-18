@@ -1,6 +1,7 @@
 ///Variables from html-record.jade
 ////links - links array
-
+////geoExtent - the geographic extent for ths record
+////collIds - collection ids array for this record
 var service_types = {
 		"OGC:WMS": "WMS Capabilities",
 		"OGC:WFS": "WFS Capabilities",
@@ -9,13 +10,39 @@ var service_types = {
 		"OPENDAP": "OPeNDap Service"
 };
 
+var resp;
+
 $(document).ready(function(){
-	for(var iLink = 0; iLink < links.length; iLink ++){
-		addOnlineFile(links[iLink]);
+	if(links){
+		for(var iLink = 0; iLink < links.length; iLink ++){
+			addOnlineFile(links[iLink]);
+		}		
 	}
-	
+
+	if(collIds){
+		$.post("/collection-names", { ids: collIds }, function(response) {
+			resp = response;
+			for(iColl = 0; iColl < response.length; iColl ++){
+				addCollection(response[iColl]);
+			}
+		});		
+	}
+		
 	addMap("map");
 });
+
+function addCollection(collection){	
+	var strMenuItem = "<li>";
+	strMenuItem += "<a href=";
+	strMenuItem += "/collection/" + collection.id;
+	strMenuItem += ">";
+	strMenuItem += collection.value.title;
+	strMenuItem += "</a>";
+	strMenuItem += "</li>";
+	
+	$("#collections-menu").append(strMenuItem);
+		
+}
 
 function addOnlineFile(link){	
 	var link_url = objGet(link, "URL", "Nothing");
