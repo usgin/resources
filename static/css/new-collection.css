@@ -1,0 +1,27 @@
+#new-collection-block-content {
+    font-size: 14px;
+    color: #006891;
+}
+#collectionTitle, #collectionDescription {
+    width: 100%
+}
+.input-column {
+    width: 550px;
+}
+.input-label {
+    text-align: right;
+}
+#collectionDescription {
+    height: 100px;
+}
+input, textarea {
+    border: 3px solid #F08B6F;
+    padding: 5px;
+}
+input[type="submit"] {
+    background-color: #EDCFC7;
+}
+#submit-table {
+    width: 700px;
+    text-align: center;
+}
