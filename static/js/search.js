@@ -14,20 +14,15 @@ $(document).ready(function(){
 			performSearch("full", $("#search-terms").val()); 
 		}	
 	} else {
-		performSearch("collection", collectionId, "/search/");
+		performSearch("collection", collectionId);
 	}	
 });
 
-function performSearch(index, terms, url) {
+function performSearch(index, terms) {
 	searchObj = { index: index, terms: escape(terms) };
 	
 	///Send request to get the search results
-	if(keyword){
-		url = document.URL.replace(keyword, "");
-	}else{
-		url = document.URL;
-	}
-	$.post(url, searchObj, function(response) {
+	$.post("/search/", searchObj, function(response) {
 		console.log(response); ///For debug purpose, to monitor the response object
 		listSearchResults(response);		
 	});
