@@ -35,18 +35,12 @@
 
 #full-text-container #container-inline input {
 	margin-right: 6px;
-	padding-bottom: 1px;
-	padding-top: 1px;
 	width: 300px;
 }
 
 #full-text-container #container-inline button{
 	margin-left: 6px;
 	margin-right: 6px;
-	padding-bottom: 1px;
-	padding-left: 6px;
-	padding-right: 6px;
-	padding-top: 1px;
 	text-align: center;		
 }
 
@@ -99,6 +93,13 @@
 .search-results-info {
 	font-size: 10px;
 	padding-top: 5px;
+}
+input, textarea, button {
+    border: 3px solid #F08B6F;
+    padding: 5px;
+}
+#search-button {
+    background-color: #EDCFC7;
 }
 
 
