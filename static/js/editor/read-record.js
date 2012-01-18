@@ -50,6 +50,9 @@ function renderObject(obj, propertyName, type, parentId) {
 	case "Links":
 		thisId = "Links";
 		break;
+	case "GeographicExtent":
+		thisId = "GeographicExtent";
+		break;
 	default:
 		thisId = getId();
 	}

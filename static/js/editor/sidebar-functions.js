@@ -13,6 +13,12 @@ function addLink(linkType) {
 	else { writeToArray(serviceLinkObj, "Links"); }
 }
 
+function addGeographicExtent() {
+	if ($("#GeographicExtent").length == 0) {
+		typeChooser(metadataObj.GeographicExtent, "theResource");
+	}
+}
+
 function addFile() {
 	
 }
