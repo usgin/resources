@@ -10,18 +10,24 @@ $(document).ready(function(){
 			}
 		);
 		
-		if($("#search-terms").val()){ performSearch("full", $("#search-terms").val()); }	
+		if($("#search-terms").val()){ 
+			performSearch("full", $("#search-terms").val()); 
+		}	
 	} else {
 		performSearch("collection", collectionId, "/search/");
-	}
-	
+	}	
 });
 
 function performSearch(index, terms, url) {
 	searchObj = { index: index, terms: escape(terms) };
 	
 	///Send request to get the search results
-	$.post(url || document.url, searchObj, function(response) {
+	if(keyword){
+		url = document.URL.replace(keyword, "");
+	}else{
+		url = document.URL;
+	}
+	$.post(url, searchObj, function(response) {
 		console.log(response); ///For debug purpose, to monitor the response object
 		listSearchResults(response);		
 	});

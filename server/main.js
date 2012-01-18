@@ -38,8 +38,12 @@ server.get("/", function(req, res) {
 });
 
 // Search for resources
-server.get("/search/", function(req, res) {
-	utils.renderToResponse(req, res, "search", { searchUrl: utils.searchUrl });
+//server.get("/search/", function(req, res) {
+//	utils.renderToResponse(req, res, "search", { searchUrl: utils.searchUrl });
+//});
+server.get("/search/:keyword?", function(req, res) {
+	keyword = req.param("keyword");
+	utils.renderToResponse(req, res, "search", { keyword: keyword });
 });
 server.post("/search/", search.doSearch, retrieval.getMultipleResources, function(req, res) {
 	res.json(req.resources);

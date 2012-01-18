@@ -35,8 +35,9 @@ block page-content
 		#keywords-container
 			- if (doc.hasOwnProperty("Keywords")) {
 			ul#keywords-list.horizontal-list
-				- doc.Keywords.forEach(function(keyword) {
-				li= keyword
+				li
+				- doc.Keywords.forEach(function(keyword) { 
+					a(href ="/search/"+"#{keyword}") #{keyword}
 				- })
 			- }
 		fieldset#basic-information.box-container

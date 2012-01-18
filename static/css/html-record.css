@@ -24,13 +24,19 @@
 }
 
 #keywords-list li{
-	color: #D8633C;
-	cursor: auto;
 	display: inline;
 	font-size: 11px;
+	text-decoration: none;
+}
+#keywords-list a{
+	color: #D8633C;
+	cursor: auto;
 	padding-left: 7px;
 	padding-right: 7px;
-	text-decoration: none;
+	text-decoration: none;	
+}
+#keywords-list a:hover{
+	text-decoration: underline;	
 }
 
 .box-container{
