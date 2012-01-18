@@ -68,10 +68,20 @@ function addMap(idMap){
     );
     map.addLayer(gphy);
     
-    var extent = getExtent(geoExtent);
-    
-    addBoundsGeometry(map, extent);
-    map.zoomToExtent(extent);
+    if(geoExtent){
+	     if(Math.abs(geoExtent.WestBound) < 180
+	    	|| Math.abs(geoExtent.SouthBound) < 180
+	    	|| Math.abs(geoExtent.EastBound) < 180
+	    	|| Math.abs(geoExtent.NorthBound) < 180
+	    	) {
+		    var extent = getExtent(geoExtent);
+		    addBoundsGeometry(map, extent);
+		    map.zoomToExtent(extent);	
+	    }else{
+	    	map.zoomToMaxExtent();
+	    }   	
+    }
+
 }
 
 
