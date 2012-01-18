@@ -5,7 +5,7 @@ block styles
 	
 block page-content
 	#harvest-form-block
-		#harvest-form-title.block-title Harvest a remote resource
+		#harvest-form-title.block-title Harvest remote metadata
 		#harvest-form-content.block-content
 			form#new-harvest(name="harvestForm", method="post")
 				#input-type-container.input-container
@@ -17,7 +17,7 @@ block page-content
 							label(for=format) #{"  " + inputFormats[format]}
 						- }
 				#input-url-container.input-container
-					#input-url-title.input-title Enter the resource URL
+					#input-url-title.input-title Enter the metadata URL
 					input#input-url(name="url")
 				#harvest-button-container
 					input#harvest-button(type="submit", value="Harvest")

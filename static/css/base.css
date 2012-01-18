@@ -170,7 +170,7 @@ h1 {
 .menu li a {
 	color: #006891;
 	text-decoration: none;
-	word-wrap: break-word;
+    /*word-wrap: break-word;*/
 }
 
 .menu li a:hover {
