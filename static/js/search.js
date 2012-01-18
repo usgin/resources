@@ -10,18 +10,19 @@ $(document).ready(function(){
 			}
 		);
 		
-		if($("#search-terms").val()){ performSearch("full", $("#search-terms").val()); }	
+		if($("#search-terms").val()){ 
+			performSearch("full", $("#search-terms").val()); 
+		}	
 	} else {
-		performSearch("collection", collectionId, "/search/");
-	}
-	
+		performSearch("collection", collectionId);
+	}	
 });
 
-function performSearch(index, terms, url) {
+function performSearch(index, terms) {
 	searchObj = { index: index, terms: escape(terms) };
 	
 	///Send request to get the search results
-	$.post(url || document.url, searchObj, function(response) {
+	$.post("/search/", searchObj, function(response) {
 		console.log(response); ///For debug purpose, to monitor the response object
 		listSearchResults(response);		
 	});

@@ -20,8 +20,8 @@ $(document).ready(function(){
 function addOnlineFile(link){	
 	var link_url = objGet(link, "URL", "Nothing");
 	
-	var link_type = objGet(link, "Name", "Downloadable");
-	if(link_type == "Downloadable"){
+	var link_type = objGet(link, "Name", "Downloadable Files");
+	if(link_type == "Downloadable Files"){
 		var service_type = objGet(link, "ServiceType", "");
 		if(service_type){
 			link_type = service_types[service_type];
