@@ -1,9 +1,26 @@
 extends ./base
 
+block styles
+	link(rel="stylesheet", type="text/css", href="/static/css/login.css")
+	
 block page-content
-	form(action="/login" + redirectUrl, method="post")
-		label(for="user") Name
-		input(type="text", name="user", id="user")
-		label(for="password") Password
-		input(type="password", name="password", id="password")
-		input(type="submit")
+	#login-form-block
+		#form-title.block-title Login
+		#form-content.block-content
+			form(action="/login" + redirectUrl, method="post")
+				table
+					tr.login-row
+						td.label
+							label(for="user") Name: 
+						td
+							input(type="text", name="user", id="user")
+					
+					tr.login-row
+						td.label
+							label(for="password") Password: 
+						td
+							input(type="password", name="password", id="password")
+				table.submit-button
+					tr
+						td
+							input(type="submit")
