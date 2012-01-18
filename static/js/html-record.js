@@ -5,7 +5,7 @@ var service_types = {
 		"OGC:WMS": "WMS GetCapabilities",
 		"OGC:WFS": "WFS GetCapabilities",
 		"OGC_WCS": "WCS GetCapabilities",
-		"esri": "ESRI Service",
+		"ESRI": "ESRI Service",
 		"opendap": "OPeNDap Service"
 };
 
@@ -24,7 +24,9 @@ function addOnlineFile(link){
 	if(link_type == "Downloadable Files"){
 		var service_type = objGet(link, "ServiceType", "");
 		if(service_type){
-			link_type = service_types[service_type];
+			if(service_types.hasOwnProperty(service_type)){
+				link_type = service_types[service_type];
+			}
 		}
 	}
 
