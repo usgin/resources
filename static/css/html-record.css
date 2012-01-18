@@ -61,3 +61,29 @@
 	padding-bottom: 5px;
 }
 
+/****************Change css for zoom panel*******************/
+
+.olControlZoomPanel div {
+    background-image:url(/static/img/tool-sprites.gif) !important;
+    height:15px !important;
+    width:15px !important;
+    /* workaround for button height in IE */
+    font-size:0px;
+}
+
+.olControlZoomPanel .olControlZoomToMaxExtentItemInactive {
+    display: none;
+}
+
+.olControlZoomPanel .olControlZoomInItemInactive {
+    background-position:15px -240px !important;
+    top: -65px !important;
+    left: -7px !important;
+}
+
+.olControlZoomPanel .olControlZoomOutItemInactive {
+    background-position:15px -255px !important;
+    top: -48px !important;
+    left: -7px !important;
+}
+

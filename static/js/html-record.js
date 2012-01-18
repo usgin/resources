@@ -51,6 +51,10 @@ function objGet(obj, prop, defVal){
 	}
 }
 
+///*********************Add map to the sidebar********************************/
+///Create a map and add this map to the sidebar
+///Parameters:
+////idMap - the element id where the map is
 function addMap(idMap){
 	var map = new OpenLayers.Map(idMap, {
 		controls: [
@@ -64,36 +68,38 @@ function addMap(idMap){
     );
     map.addLayer(gphy);
     
-    var extent = getExtent(geoExtent.WestBound, geoExtent.SouthBound, geoExtent.EastBound, geoExtent.NorthBound);
+    var extent = getExtent(geoExtent);
     
     addBoundsGeometry(map, extent);
     map.zoomToExtent(extent);
 }
 
-function getExtent(left, bottom, right, top){
-	var tbPt = new OpenLayers.Geometry.Point(left, bottom);
+
+///Return the spherical mercator extent
+///Parameters:
+////geoExtent - the WGS84 geographic extent
+function getExtent(geoExtent){
+	var tbPt = new OpenLayers.Geometry.Point(geoExtent.WestBound, geoExtent.SouthBound);
 	var lbMerc = OpenLayers.Layer.SphericalMercator.forwardMercator(tbPt.x, tbPt.y);
-	var rtPt = new OpenLayers.Geometry.Point(right, top);
+	var rtPt = new OpenLayers.Geometry.Point(geoExtent.EastBound, geoExtent.NorthBound);
 	var rtMerc = OpenLayers.Layer.SphericalMercator.forwardMercator(rtPt.x, rtPt.y);
 	return new OpenLayers.Bounds(lbMerc.lon, lbMerc.lat, rtMerc.lon, rtMerc.lat);
 }
 
-var styleBounds = new OpenLayers.StyleMap({
-	"default" : new OpenLayers.Style({
-		fillColor : "#ffcc66",
-		strokeColor : "#ff9933",
-		strokeWidth : 2,
-		graphicZIndex : 1
-	})
-
-});
-
-
-var vector;
+///Add the bounding box geometry into the map
+///Parameters:
+////map - the map where the geometry should be added into
+////bounds - the spherical mercator bounding box
 function addBoundsGeometry(map, bounds){
 	var poly = bounds.toGeometry();
-	vector = new OpenLayers.Layer.Vector({
-		styleMap: styleBounds
+	var vector = new OpenLayers.Layer.Vector();
+	vector.styleMap = new OpenLayers.StyleMap({
+		"default" : new OpenLayers.Style({
+			fillOpacity: 0.2,
+			fillColor: "#F08B6F",
+			strokeColor : "#F08B6F",
+			strokeWidth : 2
+		})	
 	});
 	vector.addFeatures([new OpenLayers.Feature.Vector(poly)]);
 	map.addLayer(vector);	
