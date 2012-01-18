@@ -1,0 +1,28 @@
+#harvest-form-content {
+    color: #006891;
+    font-size: 14px;
+}
+#input-type-list {
+    list-style: none;
+    color: #F08B6F;
+}
+#input-type-list li {
+    margin-left: 20px;
+}
+.input-container {
+    margin: 8px;
+}
+.input-title {
+    font-size: 16px;
+    padding-bottom: 4px;
+}
+#harvest-button-container {
+    width: 500px;
+    text-align: center;
+}
+#harvest-form-block {
+    width: 500px;
+}
+#input-url {
+    width: 460px;
+}

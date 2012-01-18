@@ -1,12 +1,23 @@
 extends ./base
 
+block styles
+	link(rel="stylesheet", type="text/css", href="/static/css/harvest.css")
+	
 block page-content
-	form#new-harvest(name="harvestForm", method="post")
-		p Input Format
-		- for (format in inputFormats) {
-		input(id=format, type="radio", name="harvestFormat", value=format)
-		#{inputFormats[format]}
-		- }
-		p Input URL
-		input#input-url(name="url")
-		input#harvest-button(type="submit", value="Harvest")
+	#harvest-form-block
+		#harvest-form-title.block-title Harvest a remote resource
+		#harvest-form-content.block-content
+			form#new-harvest(name="harvestForm", method="post")
+				#input-type-container.input-container
+					#input-type-title.input-title Select an input format
+					ul#input-type-list
+						- for (format in inputFormats) {
+						li
+							input(id=format, type="radio", name="harvestFormat", value=format) 
+							label(for=format) #{"  " + inputFormats[format]}
+						- }
+				#input-url-container.input-container
+					#input-url-title.input-title Enter the resource URL
+					input#input-url(name="url")
+				#harvest-button-container
+					input#harvest-button(type="submit", value="Harvest")
