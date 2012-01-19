@@ -40,6 +40,20 @@ exports.getCollection = function(req, res, next) {
 	}
 };
 
+/** MIDDLEWARE FOR RETREIVING ALL COLLECTIONS **/
+exports.getAllCollections = function(req, res, next) {
+	collections.all({ include_docs: true }, function(err, dbRes) {
+		if (err) { utils.renderToResponse(req, res, "errorResponse", { message: "Error retrieving collections", status: 500 }); }
+		else {
+			req.collections = [];
+			for (r in dbRes.rows) {
+				if (dbRes.rows[r].id.indexOf("_") != 0) { req.collections.push(dbRes.rows[r]); }
+			}
+			next();
+		}
+	});
+};
+
 /** MIDDLEWARE FOR RETREIVING THE NAMES OF A SET OF COLLECTIONS **/
 exports.getCollectionNames = function(req, res, next) {
 	if (!req.body.hasOwnProperty("ids")) { req.body.ids = "all"; }

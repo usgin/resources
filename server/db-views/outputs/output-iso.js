@@ -219,12 +219,12 @@ exports.views = {
 				
 				var dl = 0;
 				for (var l = docLinks.length -1;l >= 0;l--) {
-					if (objGet(docLinks[l], "Distributor", "None") == objGet(docDistributors[d], "Name", null)) {
+					if (objGet(docLinks[l], "Distributor", "None").trim() == objGet(docDistributors[d], "Name", null)) {
 						if (!objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", false)) {
 							iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", []);
 						}
 						writeLinkInfo(docLinks[l], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions." + dl);
-						delete docLinks[l];
+						docLinks.splice(l, 1);
 						dl++;
 					}
 				}

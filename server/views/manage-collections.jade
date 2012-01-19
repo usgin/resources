@@ -1,11 +1,27 @@
 extends ./base
 
+block styles
+	link(rel="stylesheet", type="text/css", href="/static/css/jqueryui/jquery-ui-1.8.16.custom.css")
+	link(rel="stylesheet", type="text/css", href="/static/css/collections-lists.css")
+
+block scripts
+	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
+	script(type="application/javascript", src="/static/js/collections-lists.js")
+
 block page-content
-	p
-		a(href="/new-collection/") Create a new Collection
-	#collections-container
-		ul#collections-list
-			- for (c in collections) {
-			li
-				a(href="/collection/" + collections[c].id)= collections[c].value.title
-			- }
+	#collections-list-container
+		#collections-list-title.block-title Available collections
+		#collections-list-content.block-content
+			#collection-list
+				- for (c in collections) {
+				div(id=collections[c].id + "-container")
+					div.collection-title-bar.clear-block.block-title
+						ul(id=collections[c].id + "-toolbar").collection-tools
+							li(id=collections[c].id + "-edit", onclick="editCollection('#{collections[c].id}')").collection-edit-button							
+							li(id=collections[c].id + "-records", onclick="editRecords('#{collections[c].id}')").collection-records-button
+							li(id=collections[c].id + "-remove", onclick="removeCollection('#{collections[c].id}')").collection-remove-button
+						div(id=collections[c].id + "-title")= collections[c].doc.Title
+					div(id=collections[c].id + "-content").block-content.collection-content
+						div(id=collections[c].id + "-description")= collections[c].doc.Description
+						div(id=collections[c].id + "-record-list").record-list
+				- }

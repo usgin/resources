@@ -23,3 +23,12 @@
     top: -48px !important;
     left: -7px !important;
 }
+
+/****************Change css for the editor tool*******************/
+#map-edit-tool{
+	width: 24px;
+	height: 16px;
+	float: right;
+}
+
+

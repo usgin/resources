@@ -38,11 +38,8 @@ server.get("/", function(req, res) {
 });
 
 // Search for resources
-//server.get("/search/", function(req, res) {
-//	utils.renderToResponse(req, res, "search", { searchUrl: utils.searchUrl });
-//});
 server.get("/search/:keyword?", function(req, res) {
-	keyword = req.param("keyword");
+	keyword = req.param("keyword", null);
 	utils.renderToResponse(req, res, "search", { keyword: keyword });
 });
 server.post("/search/", search.doSearch, retrieval.getMultipleResources, function(req, res) {
@@ -117,8 +114,8 @@ server.post("/new-harvest/",
 );
 
 // Manage collections page
-server.get("/manage-collections/", requireAuth, collection.getCollectionNames, function(req, res) {
-	utils.renderToResponse(req, res, "manage-collections", { collections: req.collectionNames });
+server.get("/manage-collections/", requireAuth, collection.getAllCollections, function(req, res) {
+	utils.renderToResponse(req, res, "manage-collections", { collections: req.collections });
 });
 
 // Create a new collection
@@ -133,6 +130,28 @@ server.post("/new-collection/", requireAuth, collection.saveCollection, function
 server.get("*", function(req, res) {
 	utils.renderToResponse(req, res, "errorResponse", { message: "What you're looking for cannot be found. Perhaps it has not yet been created..." , status: 404 });
 });
+
+/** ROUTES THAT STILL NEED TO BE BUILT **/
+// Browse collections
+// server.get("/browse/", function(req, res) {});
+
+// Contact webmaster
+// server.get("/contact/", function(req, res) {});
+
+// About the repository
+// server.get("/about/", function(req, res) {});
+
+// Terms of use
+// server.get("/terms/", function(req, res) {});
+
+// Metadata "rant"?
+// server.get("/on-metadata/", function(req, res) {});
+
+// Sitemap
+// server.get("/resources/sitemap", function(req, res) {});
+
+// Register as a user
+// server.get("/register/", function(req, res) {});
 
 // Listen to the port specified in the configuration file.
 server.listen(config.serverInfo.localListenPort);

@@ -63,3 +63,15 @@ function addBoundsGeometry(map, bounds){
 	vector.addFeatures([new OpenLayers.Feature.Vector(poly)]);
 	map.addLayer(vector);	
 }
+
+///*********************Add toolbar above the map********************************/
+
+function addMapToolbar(idMapToolbar){
+	$("#map-edit-tool").button({
+		icons:{
+			primary: "ui-icon-pencil"
+		},
+		text: false
+	})
+	
+}
