@@ -5,6 +5,7 @@ exports.link = {
 	type: "object",
 	properties: {
 		URL: { type: "string", format: "uri", required: true },
+		Name: { type: "string", required: false },
 		Description: { type: "string", required: false }, 
 		Distributor: { type: "string", required: false }
 	}
