@@ -136,10 +136,21 @@ exports.views = {
 			
 			// Extent Information
 			theExtent = objGet(ident, "gmd:extent", objGet(ident, "srv:extent", {}));
-			doc.setProperty("GeographicExtent.NorthBound", objGet(theExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:northBoundLatitude.gco:Decimal.$t", 89));
-			doc.setProperty("GeographicExtent.SouthBound", objGet(theExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:southBoundLatitude.gco:Decimal.$t", -89));
-			doc.setProperty("GeographicExtent.EastBound", objGet(theExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:eastBoundLongitude.gco:Decimal.$t", 179));
-			doc.setProperty("GeographicExtent.WestBound", objGet(theExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:westBoundLongitude.gco:Decimal.$t", -179));
+			var geoExtent = {};
+			if (theExtent.hasOwnProperty("0")) { 
+				for (var e in theExtent) {
+					if (objGet(theExtent[e], "gmd:EX_Extent.gmd:geographicElement", false)) {
+						geoExtent = theExtent[e];					
+					}
+				}
+			} else {
+				geoExtent = theExtent;
+			}
+			
+			doc.setProperty("GeographicExtent.NorthBound", objGet(geoExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:northBoundLatitude.gco:Decimal.$t", 89));
+			doc.setProperty("GeographicExtent.SouthBound", objGet(geoExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:southBoundLatitude.gco:Decimal.$t", -89));
+			doc.setProperty("GeographicExtent.EastBound", objGet(geoExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:eastBoundLongitude.gco:Decimal.$t", 179));
+			doc.setProperty("GeographicExtent.WestBound", objGet(geoExtent, "gmd:EX_Extent.gmd:geographicElement.gmd:EX_GeographicBoundingBox.gmd:westBoundLongitude.gco:Decimal.$t", -179));
 			
 			// Distribution -- Get distributors as a list
 			isoDistributors = objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor", []);
