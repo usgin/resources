@@ -1,0 +1,54 @@
+/* Control Toolbar */
+.collection-tools {
+	float: right;
+	margin-top: 2px;
+	list-style: none;
+}
+
+.collection-tools li {
+	height: 16px;
+	width: 16px;
+	float: left;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.collection-edit-button {
+	background-image: url("../img/edit.png");
+}
+
+.collection-remove-button {
+	background-image: url("../img/cancel.png");
+}
+
+.collection-records-button {
+	background-image: url("../img/add-arr.png");
+}
+
+.collection-content {
+	font-size: 14px;
+    color: #006891;
+    background-color: white !important;
+}
+
+.list-separator {
+	border-top: 1px solid #DEE7EA;
+	margin-top: 8px;
+}
+
+.record-list {
+    padding-left: 25px;
+}
+
+.record-list a {
+	color: #006891;
+	text-decoration: none;
+}
+
+.record-list a:hover {
+	text-decoration: underline;
+}
+
+.record-container {
+	padding-top: 5px;
+}
