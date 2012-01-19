@@ -15,7 +15,7 @@ function addLink(linkType) {
 
 function addGeographicExtent() {
 	if ($("#GeographicExtent").length == 0) {
-		typeChooser(metadataObj.GeographicExtent, "theResource");
+		typeChooser({ GeographicExtent: metadataObj.GeographicExtent }, "theResource");
 	}
 }
 
