@@ -1,12 +1,7 @@
+User-agent:*
 Allow /
-Disallow /*
-Allow /about/
-Allow /terms/
-Allow /on-metadata/
-Allow /contact/
-Allow /browse/
-Allow /search/
 Disallow /search/*
-Allow /collection/*
+Disallow /resource/*
 Allow /resource/*/html
+Disallow /resources/*
 Allow /resources/sitemap.xml
