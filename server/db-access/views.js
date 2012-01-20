@@ -46,6 +46,13 @@ exports.viewMultipleResources = function(req, res, next) {
 			addContext = { recordUrls: [] };
 			for (var i in req.resourceIds) { addContext.recordUrls.push("/resource/" + req.resourceIds[i] + "/" + format); }
 			utils.renderToResponse(req, res, "waf", addContext);
+		} 
+		// sitemap.xml is another special case that does not require any db-views
+		else if (format == "sitemap.xml") {
+			addContext = { recordUrls: [] };
+			for (var i in req.resourceIds) { addContext.recordUrls.push("http://" + req.headers.host + "/resource/" + req.resourceIds[i] + "/html"); }
+			res.contentType("application/xml");
+			utils.renderToResponse(req, res, "sitemap", addContext);
 		} else {
 			repository.view("outputs/" + format, { keys: req.resourceIds }, function(err, viewResponse) {
 				if (err) { utils.renderToResponse(req, res, "errorResponse", { message: "Error retrieving views from the database", status: 500 }); }

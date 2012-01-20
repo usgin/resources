@@ -18,5 +18,6 @@ for (var f in _stdFormatsAvailable) {
 	}
 }
 
+_stdFormatsAvailable["sitemap.xml"] = "XML Sitemap";
 exports.stdFormatsAvailable = _stdFormatsAvailable;
 exports.views = _outputViews;
