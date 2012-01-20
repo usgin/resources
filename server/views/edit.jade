@@ -4,6 +4,35 @@ block styles
 	link(rel="stylesheet", type="text/css", href="/static/css/edit.css")
 	link(rel="stylesheet", type="text/css", href="/static/css/jqueryui/jquery-ui-1.8.16.custom.css")
 	link(rel="stylesheet", type="text/css", href="/static/css/map.css")
+
+block scripts
+	script(type="application/javascript", src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false")
+	script(type="application/javascript", src="http://openlayers.org/dev/OpenLayers.js")
+	script(type="application/javascript", src="/static/js/jade.js")
+	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
+	script(type="application/javascript", src="/static/js/editor/read-record.js")
+	script(type="application/javascript", src="/static/js/editor/write-record.js")
+	script(type="application/javascript", src="/static/js/editor/toolbar-template.js")
+	script(type="application/javascript", src="/static/js/editor/obj-template.js")
+	script(type="application/javascript", src="/static/js/editor/value-template.js")
+	script(type="application/javascript", src="/static/js/editor/sidebar-functions.js")
+	script(type="application/javascript", src="/static/js/editor/editor.js")
+	script(type="application/javascript", src="/static/js/map.js")
+	script(type="application/javascript", src="/static/js/editor/add-map-editor.js")
+
+
+	script(type="application/javascript")
+		| collectionsList = [];
+		| harvestInfo = false;
+		| contactObj = !{contactTemplate};
+		| fileLinkObj = !{fileLinkTemplate};
+		| serviceLinkObj = !{serviceLinkTemplate};
+		| metadataObj = !{metadataTemplate};
+		- if (existingResource) {
+		| startObj = !{existingResource};
+		- } else {
+		| startObj = metadataObj;
+		- }
 	
 block sidebar-content
 	#standard-addition-block
@@ -38,38 +67,12 @@ block sidebar-content
 				
 	#map-block
 		h2#map-title.block-title Resource Location
-			button#map-edit-tool
+			#map-edit-tool
+				button#modify-box
+				button#add-box
 		#map-content.block-content
 			#map
 	
-block scripts
-	script(type="application/javascript", src="/static/js/jade.js")
-	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
-	script(type="application/javascript", src="/static/js/editor/read-record.js")
-	script(type="application/javascript", src="/static/js/editor/write-record.js")
-	script(type="application/javascript", src="/static/js/editor/toolbar-template.js")
-	script(type="application/javascript", src="/static/js/editor/obj-template.js")
-	script(type="application/javascript", src="/static/js/editor/value-template.js")
-	script(type="application/javascript", src="/static/js/editor/sidebar-functions.js")
-	script(type="application/javascript", src="/static/js/editor/editor.js")
-	script(type="application/javascript", src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false")
-	script(type="application/javascript", src="http://openlayers.org/dev/OpenLayers.js")
-	script(type="application/javascript", src="/static/js/map.js")
-	script(type="application/javascript", src="/static/js/editor/add-map-editor.js")
-
-
-	script(type="application/javascript")
-		| collectionsList = [];
-		| harvestInfo = false;
-		| contactObj = !{contactTemplate};
-		| fileLinkObj = !{fileLinkTemplate};
-		| serviceLinkObj = !{serviceLinkTemplate};
-		| metadataObj = !{metadataTemplate};
-		- if (existingResource) {
-		| startObj = !{existingResource};
-		- } else {
-		| startObj = metadataObj;
-		- }
 		
 block page-content
 	#editor-header

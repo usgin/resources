@@ -4,6 +4,7 @@ var map;
 ///Create a map and add this map to the sidebar
 ///Parameters:
 ////idMap - the element id where the map is
+var vector;
 function addMap(idMap, geoExtent){
 	map = new OpenLayers.Map(idMap, {
 		controls: [
@@ -11,16 +12,21 @@ function addMap(idMap, geoExtent){
 				new OpenLayers.Control.ZoomPanel()
 			]
 	});
+	
+	///Add google basemap
     var gphy = new OpenLayers.Layer.Google(
         "Google Physical",
         {type: google.maps.MapTypeId.TERRAIN}
     );
     map.addLayer(gphy);
     
-	var vector = new OpenLayers.Layer.Vector();
-	vector.styleMap = getLayerStyle();
+    ///Add a vector layer
+	vector = new OpenLayers.Layer.Vector();
+	//vector.styleMap = getLayerStyle();
 	map.addLayer(vector);
 	
+	///Add bounding box feature to the vector layer, and zoom to this extent
+	///If the bounding box is invalid, zoom to the world extent
     if(geoExtent){
 	     if(Math.abs(geoExtent.WestBound) < 180
 	    	|| Math.abs(geoExtent.SouthBound) < 180
@@ -40,6 +46,12 @@ function addMap(idMap, geoExtent){
 function getLayerStyle(){
 	var styleMap = new OpenLayers.StyleMap({
 		"default": new OpenLayers.Style({
+			fillOpacity: 0.2,
+			fillColor: "#F08B6F",
+			strokeColor : "#F08B6F",
+			strokeWidth : 2
+		}),
+		"select": new OpenLayers.Style({
 			fillOpacity: 0.2,
 			fillColor: "#F08B6F",
 			strokeColor : "#F08B6F",
@@ -78,40 +90,100 @@ function addBoundsGeometry(map, vector, bounds){
 }
 
 ///*********************Add toolbar above the map********************************/
+function getControlDrawBox(){
+	var controlDrawBox = new OpenLayers.Control({
+		draw: function(){
+			this.box = new OpenLayers.Handler.Box(controlDrawBox,{
+				"start" : this.start,
+				"done" : this.done
+			});
+			this.box.activate();
+		},
+		start: function(){
+			vector.removeAllFeatures();
+		},
+		done: function(bounds){
+			var lt = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.top));
+			var rb = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.bottom));
+			var ptLt = new OpenLayers.Geometry.Point(lt.lon, lt.lat);
+			var ptRt = new OpenLayers.Geometry.Point(rb.lon, lt.lat);
+			var ptRb = new OpenLayers.Geometry.Point(rb.lon, rb.lat);
+			var ptLb = new OpenLayers.Geometry.Point(lt.lon, rb.lat);
+			var lRing = new OpenLayers.Geometry.LinearRing([ptLt, ptRt, ptRb, ptLb]);
+			var bbox = new OpenLayers.Geometry.Polygon([lRing]);
+			var featBbox = new OpenLayers.Feature.Vector(bbox);
+			vector.addFeatures([featBbox]);
+		}
+	});
+	
+	return controlDrawBox;	
+}
 
-var controlDrawBox = new OpenLayers.Control({
-	draw : function() {
-		this.box = new OpenLayers.Handler.Box(controlDrawBox, {
-			"done" : this.notice
-		})
-		this.box.activate();
-	},
-	notice : function(bounds) {
-		//alert(bounds);
-	}
-});
+function getControlModify(){
+	var controlModify = new OpenLayers.Control.ModifyFeature(vector, {
+		mode: OpenLayers.Control.ModifyFeature.RESIZE | OpenLayers.Control.ModifyFeature.DRAG
+	});
+	
+	return controlModify;
+}
 
+function showGeographicExtent(){
+	
+}
 
-
+var controlDrawBox;
+var controlModify;
 function addMapEditorTool(idMapToolbar){
-	map.addControl(controlDrawBox);
-	$("#map-edit-tool").button({
+	controlDrawBox = getControlDrawBox();
+	controlModify = getControlModify();
+	
+	$("#map-edit-tool button:first").button({
 		icons:{
 			primary: "ui-icon-pencil"
 		},
 		text: false
+	}).next().button({
+		icons:{
+			primary: "ui-icon-plus"
+		},
+		text: false
 	});
 	
-	$("#map-edit-tool").toggle(
+	var isAddBoxOn, isModifyBoxOn;
+	
+	$("#add-box").toggle(
 		function() {
-			controlDrawBox.activate();
-			map.controls[0].deactivate();
-			$("#map-edit-tool").addClass("ui-state-press");
+			isAddBoxOn = true;
+			
+			if(isModifyBoxOn){$("#modify-box").click();}
+			
+			map.addControl(controlDrawBox);
+			map.controls[0].deactivate();			
+			$("#add-box").addClass("ui-state-press");
 		}, function() {
-			controlDrawBox.deactivate();
+			isAddBoxOn = false;
+			map.removeControl(controlDrawBox);
 			map.controls[0].activate();
-			$("#map-edit-tool").removeClass("ui-state-press");
+			$("#add-box").removeClass("ui-state-press");
 		}
-	)
+	);
+	
+	$("#modify-box").toggle(
+		function() {
+			isModifyBoxOn = true;
+			
+			if(isAddBoxOn){$("#add-box").click();}
+			
+			map.addControl(controlModify);
+			controlModify.activate();			
+			$("#modify-box").addClass("ui-state-press");
+		}, function() {
+			isModifyBoxOn = false;
+			controlModify.deactivate();
+			map.removeControl(controlModify);
+			$("#modify-box").removeClass("ui-state-press");
+		}
+	);
 }
+
 

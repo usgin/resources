@@ -26,10 +26,18 @@
 
 /****************Change css for the editor tool*******************/
 #map-edit-tool{
+	width: 50px;
+	height: 16px;
+	float: right;
+	padding-bottom: 5px;
+}
+
+#map-edit-tool button{
 	width: 24px;
 	height: 16px;
 	float: right;
 }
+
 
 .ui-state-press{
     background: url("images/ui-bg_glass_50_f08b6f_1x400.png") repeat-x scroll 50% 50% #F08B6F;
@@ -38,4 +46,13 @@
     font-weight: normal;	
 }
 
+.olDrawBox {
+    cursor: crosshair !important;
+}
+
+#zoomBox {
+    background-color: rgba(240,139,111, 0.2) !important;
+    border: 2px solid #F08B6F !important;
+    opacity: 1 !important;
+}
 
