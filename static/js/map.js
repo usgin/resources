@@ -17,6 +17,10 @@ function addMap(idMap, geoExtent){
     );
     map.addLayer(gphy);
     
+	var vector = new OpenLayers.Layer.Vector();
+	vector.styleMap = getLayerStyle();
+	map.addLayer(vector);
+	
     if(geoExtent){
 	     if(Math.abs(geoExtent.WestBound) < 180
 	    	|| Math.abs(geoExtent.SouthBound) < 180
@@ -24,7 +28,7 @@ function addMap(idMap, geoExtent){
 	    	|| Math.abs(geoExtent.NorthBound) < 180
 	    	) {
 		    var extent = getExtent(geoExtent);
-		    addBoundsGeometry(map, extent);
+		    addBoundsGeometry(map, vector, extent);
 		    map.zoomToExtent(extent);	
 	    }else{
 	    	map.zoomToMaxExtent();
@@ -33,6 +37,24 @@ function addMap(idMap, geoExtent){
 
 }
 
+function getLayerStyle(){
+	var styleMap = new OpenLayers.StyleMap({
+		"default": new OpenLayers.Style({
+			fillOpacity: 0.2,
+			fillColor: "#F08B6F",
+			strokeColor : "#F08B6F",
+			strokeWidth : 2
+		}),
+		"temporary": new OpenLayers.Style({
+			fillOpacity: 0.2,
+			fillColor: "#F08B6F",
+			strokeColor : "#F08B6F",
+			strokeWidth : 2
+		})	
+	});
+	
+	return styleMap;
+}
 
 ///Return the spherical mercator extent
 ///Parameters:
@@ -48,30 +70,48 @@ function getExtent(geoExtent){
 ///Add the bounding box geometry into the map
 ///Parameters:
 ////map - the map where the geometry should be added into
+////vector - the layer where the bounding box is added
 ////bounds - the spherical mercator bounding box
-function addBoundsGeometry(map, bounds){
+function addBoundsGeometry(map, vector, bounds){
 	var poly = bounds.toGeometry();
-	var vector = new OpenLayers.Layer.Vector();
-	vector.styleMap = new OpenLayers.StyleMap({
-		"default" : new OpenLayers.Style({
-			fillOpacity: 0.2,
-			fillColor: "#F08B6F",
-			strokeColor : "#F08B6F",
-			strokeWidth : 2
-		})	
-	});
-	vector.addFeatures([new OpenLayers.Feature.Vector(poly)]);
-	map.addLayer(vector);	
+	vector.addFeatures([new OpenLayers.Feature.Vector(poly)]);	
 }
 
 ///*********************Add toolbar above the map********************************/
 
-function addMapToolbar(idMapToolbar){
+var controlDrawBox = new OpenLayers.Control({
+	draw : function() {
+		this.box = new OpenLayers.Handler.Box(controlDrawBox, {
+			"done" : this.notice
+		})
+		this.box.activate();
+	},
+	notice : function(bounds) {
+		//alert(bounds);
+	}
+});
+
+
+
+function addMapEditorTool(idMapToolbar){
+	map.addControl(controlDrawBox);
 	$("#map-edit-tool").button({
 		icons:{
 			primary: "ui-icon-pencil"
 		},
 		text: false
-	})
+	});
 	
+	$("#map-edit-tool").toggle(
+		function() {
+			controlDrawBox.activate();
+			map.controls[0].deactivate();
+			$("#map-edit-tool").addClass("ui-state-press");
+		}, function() {
+			controlDrawBox.deactivate();
+			map.controls[0].activate();
+			$("#map-edit-tool").removeClass("ui-state-press");
+		}
+	)
 }
+

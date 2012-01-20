@@ -31,4 +31,11 @@
 	float: right;
 }
 
+.ui-state-press{
+    background: url("images/ui-bg_glass_50_f08b6f_1x400.png") repeat-x scroll 50% 50% #F08B6F;
+    border: 1px solid #FFFFFF;
+    color: #FFFFFF;
+    font-weight: normal;	
+}
+
 
