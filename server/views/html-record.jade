@@ -30,7 +30,18 @@ block sidebar-content
 		h2#map-title.block-title Resource Location
 		#map-content.block-content
 			#map
-			
+	
+	#formal-metadata-block
+		h2#formal-metadata-title.block-title Standard Metadata
+		#formal-metadata-content.block-content
+			ul#formal-metadata-list.menu
+				- for (var f in outputFormats) {
+				-	if (f != "html" && f != "sitemap.xml") {
+				li
+					a(href="/resource/" +  doc.id + "/" + f)= outputFormats[f]
+				-	}
+				- }
+				
 block page-content
 	#record-container
 		#title-container

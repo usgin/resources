@@ -1,6 +1,7 @@
 var xmlParser = require("xml2json"),
 	utils = require("../configuration/utils.js"),
 	config = require("../configuration/config.js"),
+	output = require("../db-views/outputs/outputFormats.js"),
 	exports = module.exports;
 
 function configXmlResponse(req, res, propName, json) {
@@ -31,7 +32,8 @@ exports.formatResource = function(req, res, next) {
 	switch(format) {
 	case "html":
 		utils.renderToResponse(req, res, "html-record", { 
-				doc: req.resource
+				doc: req.resource,
+				outputFormats: output.stdFormatsAvailable
 			});
 		break;
 	case "geojson":
