@@ -71,18 +71,19 @@ block scripts
 		| startObj = metadataObj;
 		- }
 		
-block page-content
-	#editor-header
-		- if (existingResource) {
-		h1#editor-title Edit an Existing Resource
-		- } else {
-		h1#editor-title Create a New Resource
-		- }
-	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="writeResource()")
-		#resource-container
+block page-content	
+	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="writeResource()")	
+		#editor-header.clear-block
+			input.save-resource-button(type="submit", value="Save Your Resource")
+			- if (existingResource) {
+			h1#editor-title Edit an Existing Resource
+			- } else {
+			h1#editor-title Create a New Resource
+			- }	
+		#resource-container		
 			ul#theResource
 		input#the-new-resource(name="theResource")
-		input#save-resource-button(type="submit", value="Save Your Resource")
+		input.save-resource-button(type="submit", value="Save Your Resource")
 	#add-contact-dialog(title="Add a registered contact")
 		label(for="new-contact-selector") Type a name: 
 		input#new-contact-selector
