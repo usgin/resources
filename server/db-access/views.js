@@ -50,7 +50,7 @@ exports.viewMultipleResources = function(req, res, next) {
 		// sitemap.xml is another special case that does not require any db-views
 		else if (format == "sitemap.xml") {
 			addContext = { recordUrls: [] };
-			for (var i in req.resourceIds) { addContext.recordUrls.push("http://" + req.headers.host + "/resource/" + req.resourceIds[i] + "/html"); }
+			for (var i in req.resourceIds) { addContext.recordUrls.push("http://" + config.serverInfo.serverHostname + "/resource/" + req.resourceIds[i] + "/html"); }
 			res.contentType("application/xml");
 			utils.renderToResponse(req, res, "sitemap", addContext);
 		} else {

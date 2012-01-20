@@ -16,6 +16,7 @@ exports.serverInfo = {
 	serverTitle: "USGIN Resource Repository",
 	serverSubTitle: "document archiving, metadata management and resource discovery",
 	serverLogoLocation: "/static/img/usgin.png",
+	serverHostname: "localhost:3005",
 	localListenAddress: "localhost",
 	localListenPort: 3005,
 	googleAnalyticsAccountNumber: "UA-12345678-9"
