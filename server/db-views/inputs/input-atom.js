@@ -99,6 +99,9 @@ exports.views = {
 			
 			doc.setProperty("Author", outAuthors);
 			
+			///Atom feed does not contain publication date, but we need one
+			doc.setProperty("PublicationDate", "1900-01-01T00:00:00");
+			
 			///Set geographic extent
 			thisGeoExt = objGet(atom, "georss:box.$t", "No geographic extent found");
 			if(thisGeoExt != "No geographic extent found"){

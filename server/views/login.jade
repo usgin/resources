@@ -6,9 +6,16 @@ block styles
 block page-content
 	#login-form-block
 		#form-title.block-title Login
-		#form-content.block-content
+		#form-content.block-content			
 			form(action="/login" + redirectUrl, method="post")
 				table
+					- if (failed) {
+					tr
+						td
+						td
+							#failed-message 
+								strong PLEASE TRY AGAIN
+					- }
 					tr.login-row
 						td.label
 							label(for="user") Name: 

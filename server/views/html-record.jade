@@ -3,6 +3,7 @@ extends ./base
 block styles
 	link(rel="stylesheet", type="text/css", href="/static/css/html-record.css")
 	link(rel="stylesheet", type="text/css", href="/static/css/map.css")
+	link(rel="stylesheet", type="text/css", href="/static/css/jqueryui/jquery-ui-1.8.16.custom.css")
 	
 block scripts
 	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
@@ -30,11 +31,25 @@ block sidebar-content
 		h2#map-title.block-title Resource Location
 		#map-content.block-content
 			#map
-			
+	
+	#formal-metadata-block
+		h2#formal-metadata-title.block-title Standard Metadata
+		#formal-metadata-content.block-content
+			ul#formal-metadata-list.menu
+				- for (var f in outputFormats) {
+				-	if (f != "html" && f != "sitemap.xml") {
+				li
+					a(href="/resource/" +  doc.id + "/" + f)= outputFormats[f]
+				-	}
+				- }
+				
 block page-content
 	#record-container
-		#title-container
+		#title-container.clear-block
 			h1#record-title #{doc.Title || "No Title Was Given"}
+			- if (authenticated) {
+			a#edit-button(href="/resource/" + doc.id) Edit this resource
+			- }
 		#keywords-container
 			- if (doc.hasOwnProperty("Keywords")) {
 			ul#keywords-list.horizontal-list

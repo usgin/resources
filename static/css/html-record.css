@@ -2,6 +2,14 @@
 	font-family: Arial, Helvetica, 'Bitstream Vera Sans', sans-serif;	
 }
 
+#title-container a {
+    float: right;
+}
+
+#title-container h1 {
+    float: left;
+}
+
 #title-container h1{
 	color: #444;
 	display: block;
