@@ -1,7 +1,7 @@
 var exports = module.exports;
 
 exports.views = {
-	fgdc: {
+	"fgdc.xml": {
 		map: function(doc) {
 			
 		}

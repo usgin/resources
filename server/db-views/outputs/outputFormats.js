@@ -1,10 +1,10 @@
 var exports = module.exports;
 
 _stdFormatsAvailable = {
-	iso: "USGIN-ISO 19139",
-	//fgdc: "FGDC XML",
+	"iso.xml": "USGIN-ISO 19139",
+	//"fgdc.xml": "FGDC XML",
 	geojson: "GeoJSON",
-	atom: "Atom Feed",
+	"atom.xml": "Atom Feed",
 	html: "HTML"
 };
 

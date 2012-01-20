@@ -42,9 +42,9 @@ exports.viewMultipleResources = function(req, res, next) {
 	format = req.param("format", null);
 	if (format in output.stdFormatsAvailable) {
 		// ISO is a special case that does not require any db-views
-		if (format == "iso") {
+		if (format == "iso.xml") {
 			addContext = { recordUrls: [] };
-			for (var i in req.resourceIds) { addContext.recordUrls.push("/resource/" + req.resourceIds[i] + "/iso"); }
+			for (var i in req.resourceIds) { addContext.recordUrls.push("/resource/" + req.resourceIds[i] + "/" + format); }
 			utils.renderToResponse(req, res, "waf", addContext);
 		} else {
 			repository.view("outputs/" + format, { keys: req.resourceIds }, function(err, viewResponse) {

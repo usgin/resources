@@ -39,11 +39,11 @@ exports.formatResource = function(req, res, next) {
 		req.formatResource = req.viewResource;
 		next();
 		break;
-	case "iso":
+	case "iso.xml":
 		configXmlResponse(req, res, "formatResource", req.viewResource);
 		next();
 		break;
-	case "atom":
+	case "atom.xml":
 		applyFeedSettings(req.viewResource);
 		configXmlResponse(req, res, "formatResource", req.viewResource);
 		next();
@@ -68,7 +68,7 @@ exports.formatMultipleResources = function(req, res, next) {
 		}
 		next();
 		break;
-	case "atom":
+	case "atom.xml":
 		atomFeed = { feed: { entry: [] } };
 		for (var vr in req.viewResources){
 			var thisEntry = req.viewResources[vr].value.feed.entry;

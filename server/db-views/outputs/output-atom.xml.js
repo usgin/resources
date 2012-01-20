@@ -1,7 +1,7 @@
 var exports = module.exports;
 
 exports.views = {
-	atom: {
+	"atom.xml": {
 		map: function(doc) {
 			objGet = function(obj, prop, defVal) {
 				if (!obj) { return defVal; }
