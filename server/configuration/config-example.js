@@ -18,6 +18,7 @@ exports.serverInfo = {
 	serverLogoLocation: "/static/img/usgin.png",
 	localListenAddress: "localhost",
 	localListenPort: 3005,
+	googleAnalyticsAccountNumber: "UA-12345678-9"
 };
 
 exports.organizationInfo = {

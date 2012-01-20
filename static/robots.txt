@@ -1,0 +1,12 @@
+Allow /
+Disallow /*
+Allow /about/
+Allow /terms/
+Allow /on-metadata/
+Allow /contact/
+Allow /browse/
+Allow /search/
+Disallow /search/*
+Allow /collection/*
+Allow /resource/*/html
+Allow /resources/sitemap.xml

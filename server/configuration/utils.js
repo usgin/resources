@@ -86,6 +86,7 @@ exports.renderToResponse = function(request, response, viewName, extra) {
 		orgUrl: config.organizationInfo.orgUrl,
 		orgYear: config.organizationInfo.orgYear,
 		helpEmail: config.organizationInfo.orgEmail,
+		gaNumber: config.serverInfo.googleAnalyticsAccountNumber
 	};
 	
 	// Check if the request is authenticated

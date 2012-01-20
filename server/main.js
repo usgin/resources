@@ -66,6 +66,10 @@ server.post("/collection-names", collection.getCollectionNames, function(req, re
 	res.json(req.collectionNames);
 });
 
+server.get("/robots.txt", express.static("../static/"));
+server.get("/favicon.ico", express.static("../static/"));
+server.get("/google*.html", express.static("../static/"));
+
 /** ROUTES THAT **DO** REQUIRE AUTHENTICATION **/
 // Get contact names
 server.get("/contacts-by-name", requireAuth, contacts.getContactNames, function(req, res) {
