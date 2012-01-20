@@ -29,8 +29,9 @@ $(document).ready(function(){
 	} else {
 		$("#collections-menu").append("<li>Not included in any collections</li>");
 	}
-		
-	addMap("map", geoExtent);
+	
+	$("#edit-button").button();
+	addMap("map", geoExtent);	
 });
 
 function addCollection(collection){	
