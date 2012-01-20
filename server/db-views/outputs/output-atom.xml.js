@@ -78,15 +78,17 @@ exports.views = {
 			}
 			
 			///Link
-			atom.setProperty("feed.entry.link", []);
+			atomLinks = [{ "href": "/resource/" + doc._id + "/html", "rel": "alternate" }];
 			
 			for (var l in doc.Links || []) {
-				thisLinkPath = "feed.entry.link." + l + ".";
 				thisLink = doc.Links[l];
-				atom.setProperty(thisLinkPath + "href", objGet(thisLink, "URL", ""));
-				if (thisLink.hasOwnProperty("ServiceType")) { atom.setProperty(thisLinkPath + "serviceType", objGet(thisLink, "ServiceType", "")); }
-				if (thisLink.hasOwnProperty("LayerId")) { atom.setProperty(thisLinkPath + "layerId", objGet(thisLink, "LayerId", "")); }
+				atomLink = { "href": objGet(thisLink, "URL", "") };
+				if (thisLink.hasOwnProperty("ServiceType")) { atomLink["serviceType"] = objGet(thisLink, "ServiceType", ""); }
+				if (thisLink.hasOwnProperty("LayerId")) { atomLink["layerId"] = objGet(thisLink, "LayerId", ""); }
+				atomLinks.push(atomLink);
 			}
+			
+			atom.setProperty("feed.entry.link", atomLinks);
 			
 			///Date
 			atom.setProperty("feed.entry.updated.$t", doc.ModifiedDate);
