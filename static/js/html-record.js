@@ -19,13 +19,15 @@ $(document).ready(function(){
 		}		
 	}
 
-	if(collIds){
+	if(collIds && collIds.length > 0){
 		$.post("/collection-names", { ids: collIds }, function(response) {
 			resp = response;
-			for(iColl = 0; iColl < response.length; iColl ++){
+			for(var iColl = 0; iColl < response.length; iColl ++){
 				addCollection(response[iColl]);
 			}
 		});		
+	} else {
+		$("#collections-menu").append("<li>Not included in any collections</li>");
 	}
 		
 	addMap("map", geoExtent);
