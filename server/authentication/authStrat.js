@@ -46,22 +46,26 @@ module.exports = function(options) {
 			app.post("/login", function(req, res) {
 				req.authenticate([authObj.name], function(err, authenticated) {
 					var redirectUrl = "/";
-					var parsedUrl = url.parse(req.url, true);
+					if (!authenticated) { redirectUrl = "/login/failed"; }
+					var parsedUrl = url.parse(req.url, true);															
 					if (parsedUrl.query && parsedUrl.query.redirect_url) {
-						redirectUrl = parsedUrl.query.redirect_url;
+						if (authenticated) { redirectUrl = parsedUrl.query.redirect_url; }
+						else { redirectUrl += "?redirect_url=" + parsedUrl.query.redirect_url; }
 					}
 					res.redirect(redirectUrl, 303);
+								
 				});
 			});
 			
-			app.get("/login", function(req, res) {
+			app.get("/login/:failed?", function(req, res) {
 				var parsedUrl = url.parse(req.url, true);
 				var redirectUrl = "";
 				if (parsedUrl.query && parsedUrl.query.redirect_url) {
 					redirectUrl = "?redirect_url=" + parsedUrl.query.redirect_url;
 				}
-				
-				utils.renderToResponse(req, res, "login", { redirectUrl: redirectUrl });			
+				context = { redirectUrl: redirectUrl, failed: false };
+				if (req.param("failed", "") == "failed") { context.failed = true; }
+				utils.renderToResponse(req, res, "login", context);			
 			});
 		}));
 	};
