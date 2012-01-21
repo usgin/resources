@@ -26,16 +26,16 @@
 
 /****************Change css for the editor tool*******************/
 #map-edit-tool{
-	width: 50px;
+	width: 80px;
 	height: 16px;
 	float: right;
-	padding-bottom: 5px;
 }
 
 #map-edit-tool button{
 	width: 24px;
 	height: 16px;
 	float: right;
+	padding-bottom: 5px;
 }
 
 

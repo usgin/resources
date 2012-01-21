@@ -33,7 +33,7 @@ function addMap(idMap, geoExtent){
 	    	|| Math.abs(geoExtent.EastBound) < 180
 	    	|| Math.abs(geoExtent.NorthBound) < 180
 	    	) {
-		    var extent = getExtent(geoExtent);
+		    var extent = getMercatorExtent(geoExtent);
 		    addBoundsGeometry(map, vector, extent);
 		    map.zoomToExtent(extent);	
 	    }else{
@@ -71,14 +71,21 @@ function getLayerStyle(){
 ///Return the spherical mercator extent
 ///Parameters:
 ////geoExtent - the WGS84 geographic extent
-function getExtent(geoExtent){
-	var tbPt = new OpenLayers.Geometry.Point(geoExtent.WestBound, geoExtent.SouthBound);
-	var lbMerc = OpenLayers.Layer.SphericalMercator.forwardMercator(tbPt.x, tbPt.y);
+function getMercatorExtent(geoExtent){
+	var lbPt = new OpenLayers.Geometry.Point(geoExtent.WestBound, geoExtent.SouthBound);
+	var lbMerc = OpenLayers.Layer.SphericalMercator.forwardMercator(lbPt.x, lbPt.y);
 	var rtPt = new OpenLayers.Geometry.Point(geoExtent.EastBound, geoExtent.NorthBound);
 	var rtMerc = OpenLayers.Layer.SphericalMercator.forwardMercator(rtPt.x, rtPt.y);
 	return new OpenLayers.Bounds(lbMerc.lon, lbMerc.lat, rtMerc.lon, rtMerc.lat);
 }
 
+function getGeographicalExtent(mercExtent){
+	var lbPt = new OpenLayers.Geometry.Point(mercExtent.left, mercExtent.bottom);
+	var lbGeo = OpenLayers.Layer.SphericalMercator.inverseMercator(lbPt.x, lbPt.y);
+	var rtPt = new OpenLayers.Geometry.Point(mercExtent.right, mercExtent.top);
+	var rtGeo = OpenLayers.Layer.SphericalMercator.inverseMercator(rtPt.x, rtPt.y);
+	return new OpenLayers.Bounds(lbGeo.lon, lbGeo.lat, rtGeo.lon, rtGeo.lat);	
+}
 ///Add the bounding box geometry into the map
 ///Parameters:
 ////map - the map where the geometry should be added into
@@ -113,6 +120,8 @@ function getControlDrawBox(){
 			var bbox = new OpenLayers.Geometry.Polygon([lRing]);
 			var featBbox = new OpenLayers.Feature.Vector(bbox);
 			vector.addFeatures([featBbox]);
+			
+			setGeoExtent(getGeographicalExtent(bbox.bounds));
 		}
 	});
 	
@@ -127,8 +136,8 @@ function getControlModify(){
 	return controlModify;
 }
 
-function showGeographicExtent(){
-	
+function afterFeatModified(evt){
+	setGeoExtent(getGeographicalExtent(evt.feature.geometry.bounds));
 }
 
 var controlDrawBox;
@@ -184,6 +193,8 @@ function addMapEditorTool(idMapToolbar){
 			$("#modify-box").removeClass("ui-state-press");
 		}
 	);
+	
+	vector.events.register("afterfeaturemodified", this, afterFeatModified);
 }
 
 

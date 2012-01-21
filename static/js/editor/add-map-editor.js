@@ -26,3 +26,32 @@ function getGeoExtent(idGeoExtentEle){
 	return geoExtVal;
 }
 
+var pbounds;
+function setGeoExtent(geoExtent){
+	pbounds = geoExtent;
+		
+	if($("#GeographicExtent-container").length > 0){
+		var arrayAttributes = $("#GeographicExtent > li > div > div[ele=attribute]");
+		var arrayValues = $("#GeographicExtent > li > div > div[ele=value]");
+		if(arrayAttributes.length == 4 && arrayValues.length == 4){
+			for(iPair = 0; iPair < 4; iPair ++){
+				switch(arrayAttributes[iPair].innerHTML){
+					case "NorthBound":
+						arrayValues[iPair].innerHTML = geoExtent.top;
+						break;
+					case "SouthBound":
+						arrayValues[iPair].innerHTML = geoExtent.bottom;
+						break;
+					case "WestBound":
+						arrayValues[iPair].innerHTML = geoExtent.left;
+						break;
+					case "EastBound":
+						arrayValues[iPair].innerHTML = geoExtent.right;
+						break;
+				}
+
+				
+			}
+		}		
+	}
+}
