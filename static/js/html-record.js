@@ -31,7 +31,8 @@ $(document).ready(function(){
 	}
 	
 	$("#edit-button").button();
-	addMap("map", geoExtent);	
+	addMap("map", geoExtent);
+	$("#site-info-block").insertAfter("#formal-metadata-block");
 });
 
 function addCollection(collection){	
