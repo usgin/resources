@@ -147,6 +147,15 @@ h1 {
 	padding-bottom: 4px;
 }
 
+.block-title a {
+    color: white;
+    text-decoration: none;
+}
+
+.block-title a:hover {
+    text-decoration: underline;
+}
+
 .clear-block::after {
 	content: ".";
 	display: block;

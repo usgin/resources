@@ -25,6 +25,15 @@
 	background-image: url("../img/add-arr.png");
 }
 
+.record-remove-button {
+    background-image: url("../img/cancel.png");
+    height: 16px;
+	width: 16px;
+	float: left;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
 .collection-content {
 	font-size: 14px;
     color: #006891;

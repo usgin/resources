@@ -2,15 +2,15 @@ $(document).ready(function() {
 	
 });
 
-function recordAsHtml(record) {
-	html = "<div id='" + record.id + "-container' class='record-container'>";
-	html += "<div id='" + record.id + "-remove-button'></div>";
+function recordAsHtml(record, collectionId) {
+	html = "<div id='" + record.id + "-container' class='record-container clear-block'>";
+	//html += "<div id=\"" + record.id + "-remove-button\" class=\"record-remove-button\" onclick=\"removeRecord(\'" + record.id + "\', \'" + collectionId + "\')\"></div>";
 	html += "<a href='/resource/" + record.id + "/html'>" + record.doc.Title || "No Title Was Given" + "</a>";
 	html += "</div>";
 	return html;
 }
 
-function editRecords(collectionId) {
+function showRecords(collectionId) {
 	if ($("#" + collectionId + "-record-list").children().length > 0) {
 		$("#" + collectionId + "-record-list").empty();
 		$("#" + collectionId + "-record-list").removeClass("list-separator");
@@ -20,8 +20,20 @@ function editRecords(collectionId) {
 			for (r in response.rows) {
 				thisDoc = response.rows[r].doc, thisId = response.rows[r].id;
 				$("#" + collectionId + "-record-list").addClass("list-separator");
-				$("#" + collectionId + "-record-list").append(recordAsHtml(response.rows[r]));
+				$("#" + collectionId + "-record-list").append(recordAsHtml(response.rows[r], collectionId));
 			}
 		});
 	}
+}
+
+function removeCollection(collectionId) {
+	
+}
+
+function editCollection(collectionId) {
+	
+}
+
+function removeRecord(recordId, collectionId) {
+	
 }
