@@ -151,9 +151,6 @@ server.get("*", function(req, res) {
 // Metadata "rant"?
 // server.get("/on-metadata/", function(req, res) {});
 
-// Sitemap
-// server.get("/resources/sitemap", function(req, res) {});
-
 // Register as a user
 // server.get("/register/", function(req, res) {});
 

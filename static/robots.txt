@@ -1,7 +1,7 @@
 User-agent:*
-Allow /
-Disallow /search/*
-Disallow /resource/*
-Allow /resource/*/html
-Disallow /resources/*
-Allow /resources/sitemap.xml
+Allow: /
+Disallow: /search/*
+Disallow: /resource/*
+Allow: /resource/*/html
+Disallow: /resources/*
+Allow: /resources/sitemap.xml
