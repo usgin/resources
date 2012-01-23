@@ -66,6 +66,11 @@ server.post("/collection-names", collection.getCollectionNames, function(req, re
 	res.json(req.collectionNames);
 });
 
+// Browse collections page
+server.get("/browse/", collection.getAllCollections, function(req, res) {
+	utils.renderToResponse(req, res, "manage-collections", { collections: req.collections });
+});
+
 server.get("/robots.txt", express.static("../static/"));
 server.get("/favicon.ico", express.static("../static/"));
 server.get("/google*.html", express.static("../static/"));
@@ -116,11 +121,6 @@ server.post("/new-harvest/",
 			utils.renderToResponse(req, res, "harvestResponse", { saveResponses: req.saveResponses });
 		}
 );
-
-// Manage collections page
-server.get("/manage-collections/", requireAuth, collection.getAllCollections, function(req, res) {
-	utils.renderToResponse(req, res, "manage-collections", { collections: req.collections });
-});
 
 // Create a new collection
 server.get("/new-collection/", requireAuth, function(req, res) {

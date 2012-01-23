@@ -10,17 +10,18 @@ block scripts
 
 block page-content
 	#collections-list-container
-		#collections-list-title.block-title Available collections
+		#collections-list-title-bar.clear-block.block-title
+			ul#collection-list-title-tools.collection-tools
+			#collection-list-title Available Collections
 		#collections-list-content.block-content
 			#collection-list
 				- for (c in collections) {
 				div(id=collections[c].id + "-container")
 					div.collection-title-bar.clear-block.block-title
-						ul(id=collections[c].id + "-toolbar").collection-tools
-							li(id=collections[c].id + "-edit", onclick="editCollection('#{collections[c].id}')").collection-edit-button							
-							li(id=collections[c].id + "-records", onclick="editRecords('#{collections[c].id}')").collection-records-button
-							li(id=collections[c].id + "-remove", onclick="removeCollection('#{collections[c].id}')").collection-remove-button
-						div(id=collections[c].id + "-title")= collections[c].doc.Title
+						ul(id=collections[c].id + "-toolbar").collection-tools												
+							li(id=collections[c].id + "-records", onclick="showRecords('#{collections[c].id}')").collection-records-button
+						div(id=collections[c].id + "-title")
+							a(href="/collection/" + collections[c].id)= collections[c].doc.Title
 					div(id=collections[c].id + "-content").block-content.collection-content
 						div(id=collections[c].id + "-description")= collections[c].doc.Description
 						div(id=collections[c].id + "-record-list").record-list
