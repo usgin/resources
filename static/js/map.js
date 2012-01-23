@@ -79,6 +79,9 @@ function getMercatorExtent(geoExtent){
 	return new OpenLayers.Bounds(lbMerc.lon, lbMerc.lat, rtMerc.lon, rtMerc.lat);
 }
 
+///Return the wgs84 geographic extent
+///Parameters:
+////mercExtent - the spherical mercator extent
 function getGeographicalExtent(mercExtent){
 	var lbPt = new OpenLayers.Geometry.Point(mercExtent.left, mercExtent.bottom);
 	var lbGeo = OpenLayers.Layer.SphericalMercator.inverseMercator(lbPt.x, lbPt.y);
