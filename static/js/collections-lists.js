@@ -17,10 +17,10 @@ function editRecords(collectionId) {
 	} else {
 		searchObj = { index: "collection", terms: collectionId };
 		$.post("/search/", searchObj, function(response) {
-			for (r in response) {
-				thisDoc = response[r].doc, thisId = response[r].id;
+			for (r in response.rows) {
+				thisDoc = response.rows[r].doc, thisId = response.rows[r].id;
 				$("#" + collectionId + "-record-list").addClass("list-separator");
-				$("#" + collectionId + "-record-list").append(recordAsHtml(response[r]));
+				$("#" + collectionId + "-record-list").append(recordAsHtml(response.rows[r]));
 			}
 		});
 	}

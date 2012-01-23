@@ -34,14 +34,14 @@ function performSearch(index, terms) {
 function listSearchResults(response) {
 	$("#results-container").empty(); ///Clear the previous search results
 	///Set number of results found
-	if (!collectionId) { $("#results-container").append("<h2>You found " + response.length + " results</h2>"); }
-	else { $("#results-container").append("<h2>Containing " + response.length + " records</h2>"); }
+	if (!collectionId) { $("#results-container").append("<h2>You found " + response.total_rows + " results</h2>"); }
+	else { $("#results-container").append("<h2>Containing " + response.total_rows + " records</h2>"); }
 	///List the search results
 	$("#results-container").append("<dl id='results' class='search-results'></dl>");
 
 	///Parse each search result object
-	for( var iObj = 0; iObj < response.length; iObj++) {
-		eachResult("#results", response[iObj]);
+	for( var iObj = 0; iObj < response.rows.length; iObj++) {
+		eachResult("#results", response.rows[iObj]);
 	}
 }
 
