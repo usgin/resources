@@ -6,23 +6,20 @@ var http = require("http"),
 /** MIDDLEWARE FOR PERFORMING A SEARCH FOR RESOURCES **/
 exports.doSearch = function(req, res, next) {
 	searchObj = req.body;
+	queryParams = "?include_docs=true&";
+	if (searchObj.hasOwnProperty("limit")) { queryParams += "limit=" + searchObj.limit + "&"; }
+	if (searchObj.hasOwnProperty("skip")) { queryParams += "skip" + searchObj.skip + "&"; }
 	searchOptions = {
 		host: config.dbInfo.dbHost,
 		port: config.dbInfo.dbPort,
-		path: utils.searchUrl + searchObj.index + "?q=" + searchObj.terms
+		path: utils.searchUrl + searchObj.index + queryParams + "q=" + searchObj.terms
 	};
 	
 	http.get(searchOptions, function(searchResponse) {
 		searchData = "";
 		searchResponse.on("data", function(chunk) { searchData += chunk; });
 		searchResponse.on("end", function() {
-			searchResults = JSON.parse(searchData);
-			ids = [];
-			for (var r in searchResults.rows) {
-				ids.push(searchResults.rows[r].id);
-			}
-			req.searchResults = searchResults;
-			req.resourceIds = ids;
+			req.searchResults = JSON.parse(searchData);
 			next();
 		});
 	}).on("error", function(err) {

@@ -42,8 +42,8 @@ server.get("/search/:keyword?", function(req, res) {
 	keyword = req.param("keyword", null);
 	utils.renderToResponse(req, res, "search", { keyword: keyword });
 });
-server.post("/search/", search.doSearch, retrieval.getMultipleResources, function(req, res) {
-	res.json(req.resources);
+server.post("/search/", search.doSearch, function(req, res) {
+	res.json(req.searchResults);
 });
 
 // Get a single record in some defined output format
