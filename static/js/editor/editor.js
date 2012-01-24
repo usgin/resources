@@ -1,4 +1,7 @@
 $(document).ready(function() {
+	var published = startObj.Published || false;
+	$("#publish-resource-checkbox").prop("checked", published);
+	
 	typeChooser(startObj, "theResource");
 	
 	// A couple of adjustments:
@@ -42,6 +45,9 @@ function writeResource() {
 	$("#theResource").children().each(function(index, ele) {
 		domChooser($(this), theResource);
 	});
+	
+	// Add properties that are not directly connected to the form
+	theResource["Published"] = $("#publish-resource-checkbox").prop("checked");
 	theResource["Collections"] = collectionsList;
 	if (harvestInfo) {
 		theResource["HarvestInformation"] = harvestInfo;

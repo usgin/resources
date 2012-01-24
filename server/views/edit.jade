@@ -75,9 +75,12 @@ block sidebar-content
 	
 		
 block page-content	
-	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="writeResource()")	
+	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="writeResource()")			
 		#editor-header.clear-block
 			input.save-resource-button(type="submit", value="Save Your Resource")
+			#published-container				
+				input#publish-resource-checkbox(type="checkbox", name="published")
+				label(for="publish-resource-checkbox") Published?			
 			- if (existingResource) {
 			h1#editor-title Edit an Existing Resource
 			- } else {

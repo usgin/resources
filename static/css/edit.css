@@ -4,6 +4,24 @@
 	float: left;
 }
 
+#published-container {
+    float: right;
+    margin-right: 20px;
+    margin-top: 8px;
+}
+
+#published-container input {
+    float: left !important;
+    margin-right: 10px;
+}
+
+#published-container label {
+    font-size: 14px;
+    font-weight: bold;    
+    color: #006891;
+    float: right;
+}
+
 #editor-header input {
     float: right;
     margin-top: 0px;

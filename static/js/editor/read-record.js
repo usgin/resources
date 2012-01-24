@@ -23,6 +23,10 @@ function typeChooser(obj, parentId) {
 			collectionsList = obj[property];
 			continue;
 		}
+		if (property.indexOf("Published") == 0) {
+			published = obj[property];
+			continue;
+		}
 		switch ($.type(obj[property])) {
 		case "function":
 			break;
