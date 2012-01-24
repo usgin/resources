@@ -2,6 +2,11 @@ extends ./base
 
 block styles
 	link(rel="stylesheet", type="text/css", href="/static/css/harvest.css")
+	link(rel="stylesheet", type="text/css", href="/static/css/jqueryui/jquery-ui-1.8.16.custom.css")
+
+block scripts
+	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
+	script(type="application/javascript", src="/static/js/harvest.js")
 	
 block page-content
 	#harvest-form-block
@@ -16,6 +21,10 @@ block page-content
 							input(id=format, type="radio", name="harvestFormat", value=format) 
 							label(for=format) #{"  " + inputFormats[format]}
 						- }
+				#input-collection-container.input-container
+					#input-collection-title.input-title Add harvested metadata to a collection?
+					input#collection-selector
+					input#selected-collection(style="display:none;", name="collection")
 				#input-url-container.input-container
 					#input-url-title.input-title Enter the metadata URL
 					input#input-url(name="url")

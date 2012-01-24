@@ -104,6 +104,10 @@ exports.viewHarvestedResource = function(req, res, next) {
 					theResource.HarvestInformation.HarvestURL = req.body.url;
 					theResource.HarvestInformation.HarvestDate = utils.getCurrentDate();
 					
+					if (req.body.collection && req.body.collection != "") {
+						theResource.Collections = [ req.body.collection ];
+					}
+					
 					req.resources.push(theResource);					
 				}
 				completionCheck();

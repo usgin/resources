@@ -23,8 +23,9 @@
 #harvest-form-block {
     width: 500px;
 }
-#input-url {
-    width: 450px;
+#input-url, #collection-selector {
+    width: 430px;
+    margin-left: 20px;
 }
 input, textarea {
     border: 3px solid #F08B6F;
