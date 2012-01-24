@@ -128,7 +128,7 @@ exports.views = {
 			// TODO: Collect Metadata Contact Information. Preferably through login information. 
 			// Metadata Contact Information -- I'm not collecting this yet! -- Using AZGS For now.
 			azgsContact = {
-		        Name: "Arizona Geological Survey",
+		        OrganizationName: "Arizona Geological Survey",
 		        ContactInformation: {
 		            Phone: "520-770-3500",
 		            email: "metadata@usgin.org",
