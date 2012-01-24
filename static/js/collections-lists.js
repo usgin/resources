@@ -5,7 +5,7 @@ $(document).ready(function() {
 function recordAsHtml(record, collectionId) {
 	html = "<div id='" + record.id + "-container' class='record-container clear-block'>";
 	//html += "<div id=\"" + record.id + "-remove-button\" class=\"record-remove-button\" onclick=\"removeRecord(\'" + record.id + "\', \'" + collectionId + "\')\"></div>";
-	html += "<a href='/resource/" + record.id + "/html'>" + record.doc.Title || "No Title Was Given" + "</a>";
+	html += "<strong><a href='/resource/" + record.id + "/html'>" + record.doc.Title || "No Title Was Given" + "</a></strong>";
 	html += "</div>";
 	return html;
 }
