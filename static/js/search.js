@@ -6,42 +6,42 @@ $(document).ready(function(){
 				if (window.event) { keyNum = evt.keyCode; }
 				else { keyNum = evt.which; }
 				
-				if(keyNum == 13) { performSearch("full", $("#search-terms").val()); }
+				if(keyNum == 13) { performSearch("full", $("#search-terms").val()), 0};
 			}
 		);
 		
 		if($("#search-terms").val()){ 
-			performSearch("full", $("#search-terms").val()); 
+			performSearch("full", $("#search-terms").val(), 0); 
 		}	
 	} else {
-		performSearch("collection", collectionId);
+		performSearch("collection", collectionId, 0);
 	}	
 });
 
-function performSearch(index, terms) {
-	searchObj = { index: index, terms: escape(terms) };
+function performSearch(index, terms, begin) {
+	searchObj = { index: index, terms: escape(terms), limit: 10, skip: begin};
 	
 	///Send request to get the search results
 	$.post("/search/", searchObj, function(response) {
-		console.log(response); ///For debug purpose, to monitor the response object
-		listSearchResults(response);		
+		console.log(response.rows); ///For debug purpose, to monitor the response object
+		listSearchResults(response.rows);		
 	});
 }
 
 ///List the search results in "results-container" element
 ///Parameters:
-/////response - search results object
-function listSearchResults(response) {
+/////rows - search results object
+function listSearchResults(rows) {
 	$("#results-container").empty(); ///Clear the previous search results
 	///Set number of results found
-	if (!collectionId) { $("#results-container").append("<h2>You found " + response.total_rows + " results</h2>"); }
-	else { $("#results-container").append("<h2>Containing " + response.total_rows + " records</h2>"); }
+	if (!collectionId) { $("#results-container").append("<h2>You found " + rows.length + " results</h2>"); }
+	else { $("#results-container").append("<h2>Containing " + rows.length + " records</h2>"); }
 	///List the search results
 	$("#results-container").append("<dl id='results' class='search-results'></dl>");
 
 	///Parse each search result object
-	for( var iObj = 0; iObj < response.rows.length; iObj++) {
-		eachResult("#results", response.rows[iObj]);
+	for( var iObj = 0; iObj < rows.length; iObj++) {
+		eachResult("#results", rows[iObj]);
 	}
 }
 
@@ -177,4 +177,13 @@ function parseValues(types, values) {
 	}
 	
 	return valueString;
+}
+
+/**********************Page Switcher****************************************/
+function addPager(resultCount){
+	var pageCount = (resultCount - 1) / 10 + 1;	
+	
+	$("#page-switcher").append("<ul id='pager'>");
+	
+	$("#page-switcher").append("</ul>");
 }

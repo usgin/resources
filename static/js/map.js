@@ -16,15 +16,16 @@ function addMap(idMap, geoExtent){
 	///Add google basemap
     var gphy = new OpenLayers.Layer.Google(
         "Google Physical",
-        {type: google.maps.MapTypeId.TERRAIN}
+        {type: google.maps.MapTypeId.TERRAIN},
+        {wrapDateLine: true,
+         isBaseLayer: true}
     );
     map.addLayer(gphy);
     
     ///Add a vector layer
 	vector = new OpenLayers.Layer.Vector();
-	//vector.styleMap = getLayerStyle();
+
 	map.addLayer(vector);
-	
 	///Add bounding box feature to the vector layer, and zoom to this extent
 	///If the bounding box is invalid, zoom to the world extent
     if(geoExtent){
@@ -33,7 +34,11 @@ function addMap(idMap, geoExtent){
 	    	|| Math.abs(geoExtent.EastBound) < 180
 	    	|| Math.abs(geoExtent.NorthBound) < 180
 	    	) {
-		    var extent = getMercatorExtent(geoExtent);
+	    	///Identify if the box is crossing the dateline	    	
+	    	if(geoExtent.WestBound > geoExtent.EastBound){
+				geoExtent.EastBound = 360 + geoExtent.EastBound;	    		
+	    	}
+		    var extent = getMercatorExtentFromEles(geoExtent);
 		    addBoundsGeometry(map, vector, extent);
 		    map.zoomToExtent(extent);	
 	    }else{
@@ -43,46 +48,26 @@ function addMap(idMap, geoExtent){
 
 }
 
-function getLayerStyle(){
-	var styleMap = new OpenLayers.StyleMap({
-		"default": new OpenLayers.Style({
-			fillOpacity: 0.2,
-			fillColor: "#F08B6F",
-			strokeColor : "#F08B6F",
-			strokeWidth : 2
-		}),
-		"select": new OpenLayers.Style({
-			fillOpacity: 0.2,
-			fillColor: "#F08B6F",
-			strokeColor : "#F08B6F",
-			strokeWidth : 2
-		}),
-		"temporary": new OpenLayers.Style({
-			fillOpacity: 0.2,
-			fillColor: "#F08B6F",
-			strokeColor : "#F08B6F",
-			strokeWidth : 2
-		})	
-	});
-	
-	return styleMap;
-}
-
 ///Return the spherical mercator extent
 ///Parameters:
 ////geoExtent - the WGS84 geographic extent
+function getMercatorExtentFromEles(extent){
+	var newExtent = getMercatorExtent(new OpenLayers.Bounds(extent.WestBound, extent.SouthBound, extent.EastBound, extent.NorthBound));
+	return newExtent;
+}
+
 function getMercatorExtent(geoExtent){
-	var lbPt = new OpenLayers.Geometry.Point(geoExtent.WestBound, geoExtent.SouthBound);
+	var lbPt = new OpenLayers.Geometry.Point(geoExtent.left, geoExtent.bottom);
 	var lbMerc = OpenLayers.Layer.SphericalMercator.forwardMercator(lbPt.x, lbPt.y);
-	var rtPt = new OpenLayers.Geometry.Point(geoExtent.EastBound, geoExtent.NorthBound);
+	var rtPt = new OpenLayers.Geometry.Point(geoExtent.right, geoExtent.top);
 	var rtMerc = OpenLayers.Layer.SphericalMercator.forwardMercator(rtPt.x, rtPt.y);
-	return new OpenLayers.Bounds(lbMerc.lon, lbMerc.lat, rtMerc.lon, rtMerc.lat);
+	return new OpenLayers.Bounds(lbMerc.lon, lbMerc.lat, rtMerc.lon, rtMerc.lat);	
 }
 
 ///Return the wgs84 geographic extent
 ///Parameters:
 ////mercExtent - the spherical mercator extent
-function getGeographicalExtent(mercExtent){
+function getGeographicExtent(mercExtent){
 	var lbPt = new OpenLayers.Geometry.Point(mercExtent.left, mercExtent.bottom);
 	var lbGeo = OpenLayers.Layer.SphericalMercator.inverseMercator(lbPt.x, lbPt.y);
 	var rtPt = new OpenLayers.Geometry.Point(mercExtent.right, mercExtent.top);
@@ -100,6 +85,7 @@ function addBoundsGeometry(map, vector, bounds){
 }
 
 ///*********************Add toolbar above the map********************************/
+var geoExt;
 function getControlDrawBox(){
 	var controlDrawBox = new OpenLayers.Control({
 		draw: function(){
@@ -113,18 +99,33 @@ function getControlDrawBox(){
 			vector.removeAllFeatures();
 		},
 		done: function(bounds){
+			///Convert pixel values into map coordinates
 			var lt = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.top));
 			var rb = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.bottom));
-			var ptLt = new OpenLayers.Geometry.Point(lt.lon, lt.lat);
-			var ptRt = new OpenLayers.Geometry.Point(rb.lon, lt.lat);
-			var ptRb = new OpenLayers.Geometry.Point(rb.lon, rb.lat);
-			var ptLb = new OpenLayers.Geometry.Point(lt.lon, rb.lat);
-			var lRing = new OpenLayers.Geometry.LinearRing([ptLt, ptRt, ptRb, ptLb]);
-			var bbox = new OpenLayers.Geometry.Polygon([lRing]);
-			var featBbox = new OpenLayers.Feature.Vector(bbox);
+		
+			///Get the bounding box
+			var bbox = new OpenLayers.Bounds(lt.lon, rb.lat, rb.lon, lt.lat);
+			var bboxShown = bbox; ///The extent shown in the page
+			///Convert the mercator bounding box into the geographic bounding box
+			geoExt = getGeographicExtent(bbox); 
+			
+			///Identify if the geometry is crossing the dateline
+			///If it is, change the left and right value 
+			if(geoExt.left > geoExt.right){				
+				var left = geoExt.left ;
+				var right = 360 + geoExt.right;
+
+				geoExt.left = left;
+				geoExt.right = right;
+				
+				bbox = getMercatorExtent(geoExt); ///Get the bounding box with mecator projection			
+			}
+
+			var featBbox = new OpenLayers.Feature.Vector(bbox.toGeometry());
 			vector.addFeatures([featBbox]);
 			
-			setGeoExtent(getGeographicalExtent(bbox.bounds));
+			///Display the geographic extent on the right panel
+			setGeoExtent(getGeographicExtent(bboxShown));
 		}
 	});
 	
@@ -140,14 +141,27 @@ function getControlModify(){
 }
 
 function afterFeatModified(evt){
-	setGeoExtent(getGeographicalExtent(evt.feature.geometry.bounds));
+	var bounds = getGeographicExtent(evt.feature.geometry.bounds);	
+	bounds.left = getWrapCoordinate(bounds.left);
+	bounds.right = getWrapCoordinate(bounds.right);
+	setGeoExtent(bounds);
 }
 
-var controlDrawBox;
-var controlModify;
+///Wrap coordinate into [-180, 180]
+function getWrapCoordinate(geoCoor){
+	if(geoCoor < -180){
+		return 360 + geoCoor;
+	}else if(geoCoor > 180){
+		return geoCoor - 360;
+	}else{
+		return geoCoor;
+	}
+}
+
+
 function addMapEditorTool(idMapToolbar){
-	controlDrawBox = getControlDrawBox();
-	controlModify = getControlModify();
+	var controlDrawBox = getControlDrawBox();
+	var controlModify = getControlModify();
 	
 	$("#map-edit-tool button:first").button({
 		icons:{
