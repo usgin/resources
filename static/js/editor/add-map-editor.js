@@ -26,9 +26,8 @@ function getGeoExtent(idGeoExtentEle){
 	return geoExtVal;
 }
 
-var pbounds;
+
 function setGeoExtent(geoExtent){
-	pbounds = geoExtent;
 		
 	if($("#GeographicExtent-container").length < 1){ addGeographicExtent(); }
 	

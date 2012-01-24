@@ -126,6 +126,8 @@ function getControlDrawBox(){
 			
 			///Display the geographic extent on the right panel
 			setGeoExtent(getGeographicExtent(bboxShown));
+			///Disable the "Add bbox" button
+			$("#add-box").click();
 		}
 	});
 	
