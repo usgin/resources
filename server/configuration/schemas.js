@@ -25,7 +25,8 @@ exports.contact = {
 	id: "http://resources.usgin.org/uri-gin/usgin/schema/json-metadata-contact/",
 	type: "object",
 	properties: {
-		Name: { type: "string", required: true }, 
+		Name: { type: "string", required: true },
+		OrganizationName: { type: "string", required: false },
 		ContactInformation: { type: "object", required: true,
 			properties: {
 				Phone: { type: "string", format: "phone", required: false }, 

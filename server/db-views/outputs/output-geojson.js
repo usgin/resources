@@ -46,6 +46,7 @@ exports.views = {
 					thisLookup = "properties.Authors." + a + ".";
 					thisAuthor = doc.Authors[a];
 					geojson.setProperty(thisLookup + "Name", objGet(thisAuthor, "Name", ""));
+					geojson.setProperty(thisLookup + "OrganizationName", objGet(thisAuthor, "OrganizationName", ""));
 					geojson.setProperty(thisLookup + "ContactInformation.Phone", objGet(thisAuthor, "ContactInformation.Phone", ""));
 					geojson.setProperty(thisLookup + "ContactInformation.email", objGet(thisAuthor, "ContactInformation.email", ""));
 					geojson.setProperty(thisLookup + "ContactInformation.Address.Street", objGet(thisAuthor, "ContactInformation.Address.Street", ""));
@@ -69,6 +70,7 @@ exports.views = {
 					thisLookup = "properties.Distributors." + d + ".";
 					thisDist = doc.Distributors[d];
 					geojson.setProperty(thisLookup + "Name", objGet(thisDist, "Name", ""));
+					geojson.setProperty(thisLookup + "OrganizationName", objGet(thisAuthor, "OrganizationName", ""));
 					geojson.setProperty(thisLookup + "ContactInformation.Phone", objGet(thisDist, "ContactInformation.Phone", ""));
 					geojson.setProperty(thisLookup + "ContactInformation.email", objGet(thisDist, "ContactInformation.email", ""));
 					geojson.setProperty(thisLookup + "ContactInformation.Address.Street", objGet(thisDist, "ContactInformation.Address.Street", ""));

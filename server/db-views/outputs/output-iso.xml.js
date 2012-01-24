@@ -53,6 +53,7 @@ exports.views = {
 			
 			function writeContactInfo(contactObj, isoLocation, role) {
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", objGet(contactObj, "Name", "No Name Was Given"));
+				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", objGet(contactObj, "OrganizationName", "No Organization Name Was Given"));
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Phone", "No Phone Number Was Given"));				
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:deliveryPoint.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.Street", "No Street Was Given"));
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:city.gco:CharacterString.$t", objGet(contactObj, "ContactInformation.Address.City", "No Street Was Given"));
@@ -219,7 +220,8 @@ exports.views = {
 				
 				var dl = 0;
 				for (var l = docLinks.length -1;l >= 0;l--) {
-					if (objGet(docLinks[l], "Distributor", "None").trim() == objGet(docDistributors[d], "Name", null)) {
+					distName = objGet(docLinks[l], "Distributor", "None").trim();
+					if (distName == objGet(docDistributors[d], "Name", null) || distName == objGet(docDistributors[d], "OrganizationName", null)) {
 						if (!objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", false)) {
 							iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", []);
 						}

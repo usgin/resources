@@ -91,8 +91,10 @@ exports.views = {
 				role = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeListValue", "");
 				if (["originator", "pointOfContact", "resourceProvider"].indexOf(role) != -1) {
 					var author = {};
-					author["Name"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", "");
-					if (author["Name"] == "Missing" || author["Name"] == "missing") { author["Name"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Name Was Given"); }
+					author["Name"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", "No Name Was Given");
+					if (author["Name"] == "Missing" || author["Name"] == "missing" || author["Name"] == "No Name Was Given") { 
+						author["OrganizationName"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Organization Name Was Given"); 
+					}
 					author["ContactInformation"] = {};
 					author["ContactInformation"]["Phone"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", "No Phone Number Was Given");
 					author["ContactInformation"]["email"] = objGet(thisParty, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:electronicMailAddress.gco:CharacterString.$t", "No email Was Given");
@@ -158,8 +160,10 @@ exports.views = {
 			distributors = [], links = {};
 			for (var iDist in isoDistributors) {
 				thisDist = objGet(isoDistributors[iDist], "gmd:MD_Distributor.gmd:distributorContact", {}); newDist = {};
-				newDist["Name"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", "");
-				if (newDist["Name"] == "Missing" || newDist["Name"] == "missing") { newDist["Name"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Name Was Given"); }
+				newDist["Name"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:individualName.gco:CharacterString.$t", "No Name Was Given");
+				if (newDist["Name"] == "Missing" || newDist["Name"] == "missing" || newDist["Name"] == "No Name Was Given") { 
+					newDist["OrganizationName"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:organisationName.gco:CharacterString.$t", "No Organization Name Was Given"); 
+				}
 				newDist["ContactInformation"] = {};
 				newDist["ContactInformation"]["Phone"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:phone.gmd:CI_Telephone.gmd:voice.gco:CharacterString.$t", "No Phone Number Was Given");
 				newDist["ContactInformation"]["email"] = objGet(thisDist, "gmd:CI_ResponsibleParty.gmd:contactInfo.gmd:CI_Contact.gmd:address.gmd:CI_Address.gmd:electronicMailAddress.gco:CharacterString.$t", "No email Was Given");
@@ -193,8 +197,16 @@ exports.views = {
 					} else {
 						guessedServiceType = guessServiceType(thisLink["URL"]);
 						if (guessedServiceType) { thisLink["ServiceType"] = guessedServiceType; }
-					}				
-					thisLink["Distributor"] = newDist.Name;
+					}
+					
+					if (newDist["Name"] == "Missing" || newDist["Name"] == "missing" || newDist["Name"] == "No Name Was Given") {
+						if (newDist["OrganizationName"] && newDist["OrganizationName"] != "No Organization Name Was Given") {
+							thisLink["Distributor"] = newDist["OrganizationName"];
+						}
+					} else  {
+						thisLink["Distributor"] = newDist["Name"];
+					}
+										
 					thisLink["Description"] = objGet(thisDist, "gmd:description.gco:CharacterString.$t", "No Description Was Given");
 					links[thisLink["URL"]] = thisLink;					
 				}

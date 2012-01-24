@@ -67,7 +67,7 @@ exports.views = {
 				for(var a in theAuthors) {
 					thisAuthor = theAuthors[a];
 					thisPath ="feed.entry.author." + a;
-					atom.setProperty(thisPath + ".name.$t", objGet(thisAuthor, "Name", ""));
+					atom.setProperty(thisPath + ".name.$t", objGet(thisAuthor, "Name", objGet(thisAuthor, "OrganizationName", "")));
 					atom.setProperty(thisPath + ".contactInformation.phone.$t", objGet(thisAuthor, "ContactInformation.Phone", ""));
 					atom.setProperty(thisPath + ".contactInformation.email.$t", objGet(thisAuthor, "ContactInformation.Email", ""));
 					atom.setProperty(thisPath + ".contactInformation.address.street.$t", objGet(thisAuthor, "ContactInformation.Address.Street", ""));
