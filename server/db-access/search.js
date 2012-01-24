@@ -15,6 +15,9 @@ exports.doSearch = function(req, res, next) {
 		path: utils.searchUrl + searchObj.index + queryParams + "q=" + searchObj.terms
 	};
 	
+	// If the request is not authenticated, do not return unpublished records
+	if (!req.isAuthenticated()) { searchOptions.path += "%20AND%20published:true"; }
+	
 	http.get(searchOptions, function(searchResponse) {
 		searchData = "";
 		searchResponse.on("data", function(chunk) { searchData += chunk; });

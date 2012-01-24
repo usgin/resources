@@ -37,24 +37,26 @@ exports.viewResource = function(req, res, next) {
 };
 
 /** MIDDLEWARE FOR RETREIVING MULTIPLE RESOURCES THROUGH A PARTICULAR VIEW **/
-// req.resourceIds must have already been set by prior middleware.
+// req.resources must have already been set by prior middleware.
 exports.viewMultipleResources = function(req, res, next) {	
 	format = req.param("format", null);
 	if (format in output.stdFormatsAvailable) {
 		// ISO is a special case that does not require any db-views
 		if (format == "iso.xml") {
 			addContext = { recordUrls: [] };
-			for (var i in req.resourceIds) { addContext.recordUrls.push("/resource/" + req.resourceIds[i] + "/" + format); }
+			for (var i in req.resources) { addContext.recordUrls.push("/resource/" + req.resources[i]["_id"] + "/" + format); }
 			utils.renderToResponse(req, res, "waf", addContext);
 		} 
 		// sitemap.xml is another special case that does not require any db-views
 		else if (format == "sitemap.xml") {
 			addContext = { recordUrls: [] };
-			for (var i in req.resourceIds) { addContext.recordUrls.push("http://" + config.serverInfo.serverHostname + "/resource/" + req.resourceIds[i] + "/html"); }
+			for (var i in req.resources) { addContext.recordUrls.push("http://" + config.serverInfo.serverHostname + "/resource/" + req.resources[i]["_id"] + "/html"); }
 			res.contentType("application/xml");
 			utils.renderToResponse(req, res, "sitemap", addContext);
 		} else {
-			repository.view("outputs/" + format, { keys: req.resourceIds }, function(err, viewResponse) {
+			resourceIds = [];
+			for (var i in req.resources) { resourceIds.push(req.resources[i]["_id"]); }
+			repository.view("outputs/" + format, { keys: resourceIds }, function(err, viewResponse) {
 				if (err) { utils.renderToResponse(req, res, "errorResponse", { message: "Error retrieving views from the database", status: 500 }); }
 				else {
 					req.viewResources = viewResponse.rows;

@@ -22,6 +22,9 @@ exports.views = {
 					        	break;
 				        }
 				    }
+					
+					if (obj.hasOwnProperty("Published")) { ret.add(obj.Published, { field: "published" }); }
+					else { ret.add("false", { field: "published" }); }
 				}
 
 				idx(doc);
@@ -37,6 +40,8 @@ exports.views = {
 				if (doc.hasOwnProperty("Collections")) {
 					for (c in doc.Collections) {
 						ret.add(doc.Collections[c]);
+						if (doc.hasOwnProperty("Published")) { ret.add(doc.Published, { field: "published" }); }
+						else { ret.add("false", { field: "published" }); }
 					}
 				}
 				

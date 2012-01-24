@@ -47,12 +47,12 @@ server.post("/search/", search.doSearch, function(req, res) {
 });
 
 // Get a single record in some defined output format
-server.get("/resource/:id/:format", retrieval.getResource, views.viewResource, formatting.formatResource, function(req, res) {
+server.get("/resource/:id/:format", retrieval.getResource, retrieval.removeUnpublished, views.viewResource, formatting.formatResource, function(req, res) {
 	res.send(req.formatResource);
 });
 
 // Get all records in some defined output format
-server.get("/resources/:format", retrieval.getAllResources, views.viewMultipleResources, formatting.formatMultipleResources, function(req, res) {
+server.get("/resources/:format", retrieval.getAllResources, retrieval.removeUnpublished, views.viewMultipleResources, formatting.formatMultipleResources, function(req, res) {
 	res.send(req.formatResources);
 });
 
@@ -136,9 +136,6 @@ server.get("*", function(req, res) {
 });
 
 /** ROUTES THAT STILL NEED TO BE BUILT **/
-// Browse collections
-// server.get("/browse/", function(req, res) {});
-
 // Contact webmaster
 // server.get("/contact/", function(req, res) {});
 

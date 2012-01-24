@@ -34,17 +34,42 @@ exports.getMultipleResources = function(req, res, next) {
 
 /** MIDDLEWARE FOR RETREIVING ALL RESOURCES **/
 exports.getAllResources = function(req, res, next) {
-	repository.all(function(err, dbResponse) {
+	repository.all({ include_docs:true }, function(err, dbResponse) {
 		if (err) { utils.renderToResponse(req, res, "errorResponse", { message: "Error retrieving all resources", status: 500 }); }
 		else {
-			req.resources = dbResponse.rows;
-			req.resourceIds = [];
+			req.resources = [];
 			for (var r in dbResponse.rows) {
-				thisId = dbResponse.rows[r].id;
-				if (thisId.indexOf("_") != 0) { req.resourceIds.push(thisId); }
-				
+				if (dbResponse.rows[r].id.indexOf("_") != 0) {
+					req.resources.push(dbResponse.rows[r].doc);
+				}
 			}
 			next();
 		}
 	});
+};
+
+/** MIDDLEWARE TO REMOVE UNPUBLISHED DOCS FROM A LIST OF RETURNED RESOURCES **/
+// req.resources or req.resource must have already been set by prior middleware
+exports.removeUnpublished = function(req, res, next) {
+	if (!req.isAuthenticated()) {
+		hasResources = req.hasOwnProperty("resources");
+		if (hasResources) {
+			docs = req.resources;
+			req.resources = [];
+		} else {
+			docs = [ req.resource ];
+			req.resource = null;
+		}
+		
+		for (d in docs) {
+			if (docs[d].Published) {
+				if (docs.length > 1) { req.resources.push(docs[d]); }
+				else (req.resource = docs[d]);
+			}
+		}
+		
+		if ((hasResources && req.resources.length == 0) || (!hasResources && req.resource == null)) {
+			utils.renderToResponse(req, res, "errorResponse", { message: "Resource does not exist.", status: 404});
+		} else { next(); }
+	} else { next(); }
 };
