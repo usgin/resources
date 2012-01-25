@@ -104,7 +104,7 @@ server.get("/resource/:id", requireAuth, retrieval.getResource, editing.editReso
 	utils.renderToResponse(req, res, "edit", req.editContext);
 });
 server.post("/resource/:id", requireAuth, editing.saveResource, function(req, res) {
-	res.redirect("/resource/" + req.saveResponse.id);
+	res.redirect("/resource/" + req.saveResponse.id + "/html");
 });
 
 // Harvest a new resource
