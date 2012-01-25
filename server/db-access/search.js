@@ -8,7 +8,7 @@ exports.doSearch = function(req, res, next) {
 	searchObj = req.body;
 	queryParams = "?include_docs=true&";
 	if (searchObj.hasOwnProperty("limit")) { queryParams += "limit=" + searchObj.limit + "&"; }
-	if (searchObj.hasOwnProperty("skip")) { queryParams += "skip" + searchObj.skip + "&"; }
+	if (searchObj.hasOwnProperty("skip")) { queryParams += "skip=" + searchObj.skip + "&"; }
 	searchOptions = {
 		host: config.dbInfo.dbHost,
 		port: config.dbInfo.dbPort,

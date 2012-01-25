@@ -22,6 +22,6 @@ block page-content
 				input#search-terms
 			- else
 				input#search-terms(value="#{keyword}")			
-			button#search-button(onclick="performSearch('full', $('#search-terms').val())") Search	
+			button#search-button(onclick="performSearch('full', $('#search-terms').val(), 0)") Search	
 	#results-container
-	#page-switcher
+	ul#page-switcher

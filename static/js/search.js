@@ -6,7 +6,9 @@ $(document).ready(function(){
 				if (window.event) { keyNum = evt.keyCode; }
 				else { keyNum = evt.which; }
 				
-				if(keyNum == 13) { performSearch("full", $("#search-terms").val(), 0);}
+				if(keyNum == 13) { 
+					performSearch("full", $("#search-terms").val(), 0);
+				}
 			}
 		);
 		
@@ -18,28 +20,53 @@ $(document).ready(function(){
 	}	
 });
 
-function performSearch(index, terms, begin) {
-	searchObj = { index: index, terms: escape(terms), limit: 10, skip: begin};
+function performSearch(index, terms, skip) {
+	searchObj = { index: index, 
+				terms: escape(terms), 
+				limit: 10, 
+				skip: skip};
 	
 	///Send request to get the search results
 	$.post("/search/", searchObj, function(response) {
 		console.log(response); ///For debug purpose, to monitor the response object
-		searchResults(response);		
+		searchResults(index, escape(terms), response, Math.ceil(skip / 10) + 1);		
 	});
 }
 
-function searchResults(response){
+function searchResults(index, terms, response, currentPageNum){
 	$("#results-container").empty(); ///Clear the previous search results
 	///Set number of results found
 	if (!collectionId) { $("#results-container").append("<h2>You found " + response.total_rows + " results</h2>"); }
 	else { $("#results-container").append("<h2>Containing " + response.total_rows + " records</h2>"); }	
 	
 	listSearchResults(response.rows);
+	
+	pageSwitcher(index, terms, response.total_rows, currentPageNum);
 }
 
-function pageSwitcher(numRows){
-	var numPages = (numRows - 1) / 10 + 1;
+function pageSwitcher(index, terms, numRows, currentPageNum){
+	$("#page-switcher").empty();
 	
+	var numPages = Math.ceil((numRows - 1) / 10);
+	
+	if(numPages < 10){
+		for(iPg = 1; iPg <= numPages; iPg ++){
+			var skipIndex = (iPg - 1) * 10;
+			var strLi = "<li class='pager-item' id=";
+			strLi += "pager-" + iPg;
+			strLi += " onclick="; 
+			strLi += "performSearch("
+			strLi += "&#39;" + index + "&#39;,"; 
+			strLi += "&#39;" + terms + "&#39;,"; 
+			strLi += skipIndex + ")" ;
+			strLi += ">";
+			strLi += iPg
+			strLi += "</li>";
+			$("#page-switcher").append(strLi);
+		}
+	}
+	
+	$("#pager-" + currentPageNum).addClass("pager-current");	
 }
 
 ///List the search results in "results-container" element
