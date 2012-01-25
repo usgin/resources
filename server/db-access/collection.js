@@ -1,4 +1,5 @@
 var cradle = require("cradle"),
+	http = require("http"),
 	config = require("../configuration/config.js"),
 	utils = require("../configuration/utils.js"),
 	exports = module.exports;
@@ -65,4 +66,33 @@ exports.getCollectionNames = function(req, res, next) {
 			next();
 		}
 	});
+};
+
+/** MIDDLEWARE FOR RETREIVING THE RECORDS IN A SPECIFIC COLLECTION **/
+exports.getCollectionRecords = function(req, res, next) {
+	collectionId = req.param("id", false);
+	if (collectionId) {
+		searchOptions = {
+			host: config.dbInfo.dbHost,
+			port: config.dbInfo.dbPort,
+			path: utils.searchUrl + "collection?include_docs=true&q=" + collectionId
+		};
+		
+		// If the request is not authenticated, do not return unpublished records
+		if (!req.isAuthenticated()) { searchOptions.path += "%20AND%20published:true"; }
+		
+		http.get(searchOptions, function(searchResponse) {
+			searchData = "";
+			searchResponse.on("data", function(chunk) { searchData += chunk; });
+			searchResponse.on("end", function() {
+				req.resources = []; searchedRows = JSON.parse(searchData).rows;
+				for (r in searchedRows) { req.resources.push(searchedRows[r].doc); }
+				next();
+			});
+		}).on("error", function(err) {
+			utils.renderToResponse(req, res, "errorResponse", { message: "There was an error performing the search", status: 500 });
+		});
+	} else {
+		utils.renderToResponse(req, res, "errorResponse", { message: "Please provide a valid collection Id in your request", status: 400 });
+	}
 };
