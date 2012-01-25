@@ -13,6 +13,10 @@ var service_types = {
 var resp;
 
 $(document).ready(function(){
+	// Add schema.org microdata markup to content element
+	$("#content").attr("itemscope", "");
+	$("#content").attr("itemtype", "http://schema.org/CreativeWork");
+	
 	if(links){
 		for(var iLink = 0; iLink < links.length; iLink ++){
 			addOnlineFile(links[iLink]);
@@ -62,13 +66,13 @@ function addOnlineFile(link){
 	}
 
 	var strMenuItem = "<li>";
-	strMenuItem += "<a href=";
+	strMenuItem += "<a href='";
 	if(link_url != "Nothing"){
 		strMenuItem += link_url;
 	}else{
 		strMenuItem += "*";
 	}	
-	strMenuItem += ">";
+	strMenuItem += "' itemprop='url'>";
 	strMenuItem += link_type;
 	strMenuItem += "</a>";
 	strMenuItem += "</li>";			
