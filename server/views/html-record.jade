@@ -45,6 +45,9 @@ block sidebar-content
 				
 block page-content
 	#record-container
+		- if (authenticated && !(doc.hasOwnProperty("Published") && doc.Published)) {
+		p#not-published ---- THIS RECORD IS UNPUBLISHED ----
+		- }
 		#title-container.clear-block
 			h1#record-title #{doc.Title || "No Title Was Given"}
 			- if (authenticated) {
