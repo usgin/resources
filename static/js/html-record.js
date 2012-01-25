@@ -14,8 +14,8 @@ var resp;
 
 $(document).ready(function(){
 	// Add schema.org microdata markup to content element
-	$("#content").attr("itemscope", "");
-	$("#content").attr("itemtype", "http://schema.org/CreativeWork");
+	//$("#content").attr("itemscope", "");
+	//$("#content").attr("itemtype", "http://schema.org/CreativeWork");
 	
 	if(links){
 		for(var iLink = 0; iLink < links.length; iLink ++){
