@@ -1,10 +1,13 @@
 extends ./base
 
+block styles
+	link(rel="stylesheet", type="text/css", href="/static/css/harvest-response.css")
 block page-content
 	h2(style="padding-bottom: 10px;") Your harvest was successful (#{saveResponses.length} new resources)
-	div(style="width: 300px;")
+	div#response-container
 		div.block-title Please edit your harvested content:
 		div.block-content
+			p Please note that your records will not be available to the public until they are published.
 			ul#edit-links.menu
 				- for (r in saveResponses) {
 				li 

@@ -1,0 +1,12 @@
+#response-container {
+    width: 600px;
+}
+
+.block-content p {
+    color: #F08B6F;
+    font-weight: bold;
+    text-align: center;
+    padding: 60px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
