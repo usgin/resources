@@ -2,27 +2,10 @@
 ////links - links array
 ////geoExtent - the geographic extent for ths record
 ////collIds - collection ids array for this record
-var service_types = {
-		"OGC:WMS": "WMS Capabilities",
-		"OGC:WFS": "WFS Capabilities",
-		"OGC_WCS": "WCS Capabilities",
-		"ESRI": "ESRI Service Endpoint",
-		"OPENDAP": "OPeNDap Service"
-};
-
 var resp;
 
 $(document).ready(function(){
-	// Add schema.org microdata markup to content element
-	//$("#content").attr("itemscope", "");
-	//$("#content").attr("itemtype", "http://schema.org/CreativeWork");
-	
-	if(links){
-		for(var iLink = 0; iLink < links.length; iLink ++){
-			addOnlineFile(links[iLink]);
-		}		
-	}
-
+	// Add links to the collections for this record
 	if(collIds && collIds.length > 0){
 		$.post("/collection-names", { ids: collIds }, function(response) {
 			resp = response;
@@ -34,8 +17,13 @@ $(document).ready(function(){
 		$("#collections-menu").append("<li>Not included in any collections</li>");
 	}
 	
+	// Add the edit button
 	$("#edit-button").button();
+	
+	// Add Geographic Extent Map
 	addMap("map", geoExtent);
+	
+	// Shuffle the sidebar
 	$("#site-info-block").insertAfter("#formal-metadata-block");
 });
 
@@ -50,42 +38,6 @@ function addCollection(collection){
 	
 	$("#collections-menu").append(strMenuItem);
 		
-}
-
-function addOnlineFile(link){	
-	var link_url = objGet(link, "URL", "Nothing");
-	
-	var link_type = objGet(link, "Name", "Downloadable Files");
-	if(link_type == "Downloadable Files"){
-		var service_type = objGet(link, "ServiceType", "").toUpperCase();
-		if(service_type){
-			if(service_types.hasOwnProperty(service_type)){
-				link_type = service_types[service_type];
-			}
-		}
-	}
-
-	var strMenuItem = "<li>";
-	strMenuItem += "<a href='";
-	if(link_url != "Nothing"){
-		strMenuItem += link_url;
-	}else{
-		strMenuItem += "*";
-	}	
-	strMenuItem += "' itemprop='url'>";
-	strMenuItem += link_type;
-	strMenuItem += "</a>";
-	strMenuItem += "</li>";			
-	$("#file-attachment-menu").append(strMenuItem);
-}
-
-///Get property value
-function objGet(obj, prop, defVal){
-	if(obj.hasOwnProperty(prop)){
-		return obj[prop];
-	}else{
-		return defVal;
-	}
 }
 
 
