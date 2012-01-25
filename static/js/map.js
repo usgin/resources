@@ -28,6 +28,7 @@ function addMap(idMap, geoExtent){
 	map.addLayer(vector);
 	///Add bounding box feature to the vector layer, and zoom to this extent
 	///If the bounding box is invalid, zoom to the world extent
+	geoExtent = getExtConversion(geoExtent);
     if(geoExtent){
 	     if(Math.abs(geoExtent.WestBound) < 180
 	    	|| Math.abs(geoExtent.SouthBound) < 180
@@ -46,6 +47,14 @@ function addMap(idMap, geoExtent){
 	    }   	
     }
 
+}
+
+function getExtConversion(geoExtent){
+	geoExtent.EastBound = parseFloat(geoExtent.EastBound);
+	geoExtent.WestBound = parseFloat(geoExtent.WestBound);
+	geoExtent.SouthBound = parseFloat(geoExtent.SouthBound);
+	geoExtent.NorthBound = parseFloat(geoExtent.NorthBound);
+	return geoExtent;
 }
 
 ///Return the spherical mercator extent

@@ -6,7 +6,7 @@ $(document).ready(function(){
 				if (window.event) { keyNum = evt.keyCode; }
 				else { keyNum = evt.which; }
 				
-				if(keyNum == 13) { performSearch("full", $("#search-terms").val()), 0};
+				if(keyNum == 13) { performSearch("full", $("#search-terms").val(), 0);}
 			}
 		);
 		
@@ -23,19 +23,29 @@ function performSearch(index, terms, begin) {
 	
 	///Send request to get the search results
 	$.post("/search/", searchObj, function(response) {
-		console.log(response.rows); ///For debug purpose, to monitor the response object
-		listSearchResults(response.rows);		
+		console.log(response); ///For debug purpose, to monitor the response object
+		searchResults(response);		
 	});
+}
+
+function searchResults(response){
+	$("#results-container").empty(); ///Clear the previous search results
+	///Set number of results found
+	if (!collectionId) { $("#results-container").append("<h2>You found " + response.total_rows + " results</h2>"); }
+	else { $("#results-container").append("<h2>Containing " + response.total_rows + " records</h2>"); }	
+	
+	listSearchResults(response.rows);
+}
+
+function pageSwitcher(numRows){
+	var numPages = (numRows - 1) / 10 + 1;
+	
 }
 
 ///List the search results in "results-container" element
 ///Parameters:
 /////rows - search results object
 function listSearchResults(rows) {
-	$("#results-container").empty(); ///Clear the previous search results
-	///Set number of results found
-	if (!collectionId) { $("#results-container").append("<h2>You found " + rows.length + " results</h2>"); }
-	else { $("#results-container").append("<h2>Containing " + rows.length + " records</h2>"); }
 	///List the search results
 	$("#results-container").append("<dl id='results' class='search-results'></dl>");
 
