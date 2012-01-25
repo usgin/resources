@@ -1,5 +1,8 @@
 extends ./base
 
+block page-title
+	title= doc.Title || "No Title"
+	
 block styles
 	link(rel="stylesheet", type="text/css", href="/static/css/html-record.css")
 	link(rel="stylesheet", type="text/css", href="/static/css/map.css")
