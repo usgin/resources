@@ -47,26 +47,51 @@ function searchResults(index, terms, response, currentPageNum){
 function pageSwitcher(index, terms, numRows, currentPageNum){
 	$("#page-switcher").empty();
 	
-	var numPages = Math.ceil((numRows - 1) / 10);
+	var numPages = Math.ceil(numRows / 10);
 	
-	if(numPages < 10){
-		for(iPg = 1; iPg <= numPages; iPg ++){
-			var skipIndex = (iPg - 1) * 10;
-			var strLi = "<li class='pager-item' id=";
-			strLi += "pager-" + iPg;
-			strLi += " onclick="; 
-			strLi += "performSearch("
-			strLi += "&#39;" + index + "&#39;,"; 
-			strLi += "&#39;" + terms + "&#39;,"; 
-			strLi += skipIndex + ")" ;
-			strLi += ">";
-			strLi += iPg
-			strLi += "</li>";
-			$("#page-switcher").append(strLi);
-		}
+	///Add function to the first page
+	if(currentPageNum != 1){
+		$("#page-switcher").append(getListItem(index, terms, 0, "pager-first", "&lt;&lt; first"));
+	}	
+	
+	///Add function to the previous page
+	if(currentPageNum != 1){
+		$("#page-switcher").append(getListItem(index, terms, (currentPageNum - 2) * 10, "pager-pre", "&lt; previous"));
+	}
+	
+	///Add page numbers
+	for( iPg = 1; iPg <= numPages; iPg++) {
+		var skipIndex = ( iPg - 1) * 10;
+
+		$("#page-switcher").append(getListItem(index, terms, skipIndex, "pager-" + iPg, iPg));
+	}
+	
+	///Add function to the next page
+	if(currentPageNum != numPages){
+		$("#page-switcher").append(getListItem(index, terms, currentPageNum * 10, "pager-nxt", "next &gt;"));
+	}
+	
+	///Add function to the last page
+	if(currentPageNum != numPages){
+		$("#page-switcher").append(getListItem(index, terms, (numPages - 1) * 10, "pager-last", "last &gt;&gt;"));
 	}
 	
 	$("#pager-" + currentPageNum).addClass("pager-current");	
+}
+
+function getListItem(index, terms, skipIndex, id, text){
+		var strLi = "<li class='pager-item' id=";
+		strLi += id;
+		strLi += " onclick=";
+		strLi += "performSearch("
+		strLi += "&#39;" + index + "&#39;,";
+		strLi += "&#39;" + terms + "&#39;,";
+		strLi += skipIndex + ")";
+		strLi += ">";
+		strLi += text;
+		strLi += "</li>";
+		
+		return strLi;	
 }
 
 ///List the search results in "results-container" element
