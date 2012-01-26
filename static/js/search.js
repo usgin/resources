@@ -162,9 +162,9 @@ function parseValues(types, values) {
 					var authors = "";
 					for(var iAu = 0; iAu < value.length; iAu ++){
 						if(iAu == 0){
-							authors = value[iAu].Name;
+							authors = value[iAu].Name || value[iAu].OrganizationName;
 						}else{
-							authors += ", " + value[iAu].Name;
+							authors += ", " + value[iAu].Name || value[iAu].OrganizationName;
 						}
 					}
 					valueString += authors;
