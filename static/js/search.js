@@ -6,7 +6,9 @@ $(document).ready(function(){
 				if (window.event) { keyNum = evt.keyCode; }
 				else { keyNum = evt.which; }
 				
-				if(keyNum == 13) { performSearch("full", $("#search-terms").val(), 0);}
+				if(keyNum == 13) { 
+					performSearch("full", $("#search-terms").val(), 0);
+				}
 			}
 		);
 		
@@ -18,28 +20,78 @@ $(document).ready(function(){
 	}	
 });
 
-function performSearch(index, terms, begin) {
-	searchObj = { index: index, terms: escape(terms), limit: 10, skip: begin};
+function performSearch(index, terms, skip) {
+	searchObj = { index: index, 
+				terms: escape(terms), 
+				limit: 10, 
+				skip: skip};
 	
 	///Send request to get the search results
 	$.post("/search/", searchObj, function(response) {
 		console.log(response); ///For debug purpose, to monitor the response object
-		searchResults(response);		
+		searchResults(index, escape(terms), response, Math.ceil(skip / 10) + 1);		
 	});
 }
 
-function searchResults(response){
+function searchResults(index, terms, response, currentPageNum){
 	$("#results-container").empty(); ///Clear the previous search results
 	///Set number of results found
 	if (!collectionId) { $("#results-container").append("<h2>You found " + response.total_rows + " results</h2>"); }
 	else { $("#results-container").append("<h2>Containing " + response.total_rows + " records</h2>"); }	
 	
 	listSearchResults(response.rows);
+	
+	pageSwitcher(index, terms, response.total_rows, currentPageNum);
 }
 
-function pageSwitcher(numRows){
-	var numPages = (numRows - 1) / 10 + 1;
+function pageSwitcher(index, terms, numRows, currentPageNum){
+	$("#page-switcher").empty();
 	
+	var numPages = Math.ceil(numRows / 10);
+	
+	///Add function to the first page
+	if(currentPageNum != 1){
+		$("#page-switcher").append(getListItem(index, terms, 0, "pager-first", "&lt;&lt; first"));
+	}	
+	
+	///Add function to the previous page
+	if(currentPageNum != 1){
+		$("#page-switcher").append(getListItem(index, terms, (currentPageNum - 2) * 10, "pager-pre", "&lt; previous"));
+	}
+	
+	///Add page numbers
+	for( iPg = 1; iPg <= numPages; iPg++) {
+		var skipIndex = ( iPg - 1) * 10;
+
+		$("#page-switcher").append(getListItem(index, terms, skipIndex, "pager-" + iPg, iPg));
+	}
+	
+	///Add function to the next page
+	if(currentPageNum != numPages){
+		$("#page-switcher").append(getListItem(index, terms, currentPageNum * 10, "pager-nxt", "next &gt;"));
+	}
+	
+	///Add function to the last page
+	if(currentPageNum != numPages){
+		$("#page-switcher").append(getListItem(index, terms, (numPages - 1) * 10, "pager-last", "last &gt;&gt;"));
+	}
+	
+	$("#pager-" + currentPageNum).addClass("pager-current");	
+}
+
+function getListItem(index, terms, skipIndex, id, text){
+		var strLi = "<li class='pager-item' id=";
+		strLi += id;
+		strLi += " onclick=";
+		strLi += "performSearch("
+		strLi += "&#39;" + index + "&#39;,";
+		strLi += "&#39;" + terms + "&#39;,";
+		strLi += skipIndex + ")";
+		strLi += ">";
+		strLi += text;
+		strLi += "</li>";
+		
+		return strLi;	
 }
 
 ///List the search results in "results-container" element

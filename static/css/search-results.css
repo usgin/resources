@@ -102,4 +102,27 @@ input, textarea, button {
     background-color: #EDCFC7;
 }
 
+/***********************Style for page switcher*********************/
+#page-switcher {
+	text-align: center;	
+}
+
+#page-switcher li {
+	font-family: Arial, Helvetica, 'Bitstream Vera Sans', sans-serif;
+	font-size: 12px;
+	display: inline;
+	list-style-type: none;
+	padding: 6px;
+}
+
+#page-switcher li:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.pager-current {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
 
