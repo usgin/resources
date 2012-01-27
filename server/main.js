@@ -10,8 +10,9 @@ var express = require("express"),
 	contacts = require("./db-access/contacts.js"),
 	editing = require("./db-access/editing.js"),
 	harvest = require("./db-access/harvest.js"),
-	collection = require("./db-access/collection.js");
-	input = require("./db-views/inputs/inputFormats.js");
+	collection = require("./db-access/collection.js"),
+	input = require("./db-views/inputs/inputFormats.js"),
+	manage = require("./db-access/manage.js");
 
 var server = express.createServer(config.serverInfo.localListenAddress);
 
@@ -133,6 +134,11 @@ server.get("/new-collection/", requireAuth, function(req, res) {
 });
 server.post("/new-collection/", requireAuth, collection.saveCollection, function(req, res) {
 	res.redirect("/collection/" + req.saveResponse.id);
+});
+
+// Management views
+server.get("/manage/:id/:view", requireAuth, manage.viewResource, function(req, res) {
+	utils.renderToResponse(req, res, req.template, { result: req.result });
 });
 
 // All other requests should 404

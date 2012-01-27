@@ -78,6 +78,9 @@ block page-content
 	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="writeResource()")			
 		#editor-header.clear-block
 			input.save-resource-button(type="submit", value="Save Your Resource")
+			- if (existingResource) {
+			input#validate-button(type="button", value="Validate", onclick="showValidation('" + existingResource.id + "')")
+			- }
 			#published-container				
 				input#publish-resource-checkbox(type="checkbox", name="published")
 				label(for="publish-resource-checkbox") Published?			
@@ -100,3 +103,4 @@ block page-content
 		input#new-selected-collection(style="display:none;")
 	#saved-contact-dialog(title="Register a contact")
 		#contact-message-container.ui-corner-all
+	#validation-dialog(title="Validation Summary")

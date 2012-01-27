@@ -1,0 +1,11 @@
+ul(style="list-style:none; padding-left:0px;")
+	- for (r in result) {
+	li
+		- if (result[r] == false) {
+		span(style="color:red;") #{r}: 
+		strong(style="color:red;")= result[r].toString().toUpperCase()
+		- } else {
+		span #{r}:  
+		strong= result[r]
+		- }
+	- }
