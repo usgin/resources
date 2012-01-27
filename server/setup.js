@@ -5,6 +5,7 @@ var cradle = require("cradle"),
 	indexes = require("./db-views/indexes.js"),
 	contacts = require("./db-views/contacts.js"),
 	collections = require("./db-views/collections.js");
+	management = require("./db-views/management.js");
 	
 var metadb = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort);
 
@@ -33,7 +34,7 @@ function saveDesignDocs(db) {
 	switch (db.name) {
 	case config.dbInfo.databases.dbCollectionName:
 		db.save("_design/search", collections.views, function(err, response) {
-			if (err) { console.log("Error creating index views in " + db.name + " database."); }
+			if (err) { console.log("Error creating views in " + db.name + " database."); }
 			else { console.log("Collections views up-to-date."); }
 		});
 		break;
@@ -51,6 +52,10 @@ function saveDesignDocs(db) {
 		db.save("_design/indexes", indexes.views, function(err, response) {
 			if (err) { console.log("Error creating index views in " + db.name + " database."); }
 			else { console.log("Index views up-to-date."); }
+		});
+		db.save("_design/manage", management.views, function(err, response) {
+			if (err) { console.log("Error creating management views in " + db.name + " database."); }
+			else { console.log("Management views up-to-date."); }
 		});
 		break;
 	case config.dbInfo.databases.dbContactsName:
