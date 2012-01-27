@@ -54,3 +54,23 @@ function writeResource() {
 	}
 	$("#the-new-resource").val(JSON.stringify(theResource));
 }
+
+function showValidation(id) {
+	$("#validation-dialog").dialog({
+		autoOpen: false,
+		modal: true,
+		resizable: true,
+		width: 850,
+		buttons: {			
+			"OK": function() {
+				$(this).dialog("close");
+			}
+		}
+	});
+	
+	$.get("/manage/" + id + "/summary", function(response) {
+		$("#validation-dialog").empty();
+		$("#validation-dialog").append(response);
+		$("#validation-dialog").dialog("open");
+	});
+}

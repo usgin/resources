@@ -43,6 +43,13 @@
 	display: none;	
 }
 
+#validate-button {
+    padding: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: 10px;
+}
+
 .save-resource-button {
 	margin-top: 10px;
 	padding: 4px;
