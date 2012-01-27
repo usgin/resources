@@ -44,7 +44,8 @@
 	font-size: 11px;
 	text-decoration: none;
 }
-#keywords-list a{
+
+#keywords-list li a{
 	color: #D8633C;
 	cursor: auto;
 	padding-left: 7px;
@@ -52,7 +53,8 @@
 	text-decoration: none;	
 }
 #keywords-list a:hover{
-	text-decoration: underline;	
+	text-decoration: underline;
+	cursor: pointer;	
 }
 
 .box-container{

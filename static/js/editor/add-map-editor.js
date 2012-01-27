@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	var geoExtent = getGeoExtent("#GeographicExtent");
 	addMap("map", geoExtent);
-	addMapEditorTool("map-toolbar");
+	addMapEditorTool();
 
 })
 

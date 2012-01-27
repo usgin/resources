@@ -201,3 +201,7 @@ h1 {
 	border: 1px solid #DEE7EA;
 	background-color: white;
 }
+
+button:hover{
+	cursor: pointer;
+}

@@ -53,35 +53,35 @@ function pageSwitcher(index, terms, numRows, currentPageNum){
 	
 	///Add function to the first page
 	if(currentPageNum != 1){
-		$("#page-switcher").append(getListItem(index, terms, 0, "pager-first", "&lt;&lt; first"));
+		$("#page-switcher").append(getPagerNumItem(index, terms, 0, "pager-first", "&lt;&lt; first"));
 	}	
 	
 	///Add function to the previous page
 	if(currentPageNum != 1){
-		$("#page-switcher").append(getListItem(index, terms, (currentPageNum - 2) * 10, "pager-pre", "&lt; previous"));
+		$("#page-switcher").append(getPagerNumItem(index, terms, (currentPageNum - 2) * 10, "pager-pre", "&lt; previous"));
 	}
 	
 	///Add page numbers
 	for( iPg = 1; iPg <= numPages; iPg++) {
 		var skipIndex = ( iPg - 1) * 10;
 
-		$("#page-switcher").append(getListItem(index, terms, skipIndex, "pager-" + iPg, iPg));
+		$("#page-switcher").append(getPagerNumItem(index, terms, skipIndex, "pager-" + iPg, iPg));
 	}
 	
 	///Add function to the next page
 	if(currentPageNum != numPages){
-		$("#page-switcher").append(getListItem(index, terms, currentPageNum * 10, "pager-nxt", "next &gt;"));
+		$("#page-switcher").append(getPagerNumItem(index, terms, currentPageNum * 10, "pager-nxt", "next &gt;"));
 	}
 	
 	///Add function to the last page
 	if(currentPageNum != numPages){
-		$("#page-switcher").append(getListItem(index, terms, (numPages - 1) * 10, "pager-last", "last &gt;&gt;"));
+		$("#page-switcher").append(getPagerNumItem(index, terms, (numPages - 1) * 10, "pager-last", "last &gt;&gt;"));
 	}
 	
 	$("#pager-" + currentPageNum).addClass("pager-current");	
 }
 
-function getListItem(index, terms, skipIndex, id, text){
+function getPagerNumItem(index, terms, skipIndex, id, text){
 		var strLi = "<li class='pager-item' id=";
 		strLi += id;
 		strLi += " onclick=";
