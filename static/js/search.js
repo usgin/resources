@@ -35,17 +35,19 @@ function performSearch(index, terms, skip) {
 
 function searchResults(index, terms, response, currentPageNum){
 	$("#results-container").empty(); ///Clear the previous search results
+	$("#page-switcher").empty(); ///Clear the page switcher
 	///Set number of results found
 	if (!collectionId) { $("#results-container").append("<h2>You found " + response.total_rows + " results</h2>"); }
 	else { $("#results-container").append("<h2>Containing " + response.total_rows + " records</h2>"); }	
 	
 	listSearchResults(response.rows);
 	
-	pageSwitcher(index, terms, response.total_rows, currentPageNum);
+	if(response.total_rows){
+		pageSwitcher(index, terms, response.total_rows, currentPageNum);
+	}	
 }
 
 function pageSwitcher(index, terms, numRows, currentPageNum){
-	$("#page-switcher").empty();
 	
 	var numPages = Math.ceil(numRows / 10);
 	
