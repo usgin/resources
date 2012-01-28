@@ -66,8 +66,8 @@ block page-content
 		#keywords-container
 			- if (doc.hasOwnProperty("Keywords")) {
 			ul#keywords-list.horizontal-list
-				li
-				- doc.Keywords.forEach(function(keyword) { 
+				- doc.Keywords.forEach(function(keyword) {
+				li 
 					a(href ="/search/"+"#{keyword}", itemprop="keywords") #{keyword}
 				- })
 			- }

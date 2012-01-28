@@ -77,6 +77,11 @@
 	text-decoration: none;
 }
 
+.search-results-title:hover {
+	text-decoration: underline;
+	cursor: pointer;	
+}
+
 .search-results dd {
 	color: #323232;
 	display: block;

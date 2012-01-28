@@ -169,36 +169,21 @@ function getWrapCoordinate(geoCoor){
 	}
 }
 
-
-function addMapEditorTool(idMapToolbar){
+///Add the editor tools on the title bar
+function addMapEditorTool(){
 	var controlDrawBox = getControlDrawBox();
 	var controlModify = getControlModify();
 	
-	$("#map-edit-tool button:first").button({
-		icons:{
-			primary: "ui-icon-pencil"
-		},
-		text: false
-	}).next().button({
-		icons:{
-			primary: "ui-icon-plus"
-		},
-		text: false
-	});
-	
-	var isAddBoxOn, isModifyBoxOn;
-	
 	$("#add-box").toggle(
-		function() {
-			isAddBoxOn = true;
-			
-			if(isModifyBoxOn){$("#modify-box").click();}
+		function() {			
+			if($("#modify-box").hasClass("ui-state-press")){
+				$("#modify-box").click();
+			}
 			
 			map.addControl(controlDrawBox);
 			map.controls[0].deactivate();			
 			$("#add-box").addClass("ui-state-press");
 		}, function() {
-			isAddBoxOn = false;
 			map.removeControl(controlDrawBox);
 			map.controls[0].activate();
 			$("#add-box").removeClass("ui-state-press");
@@ -207,15 +192,14 @@ function addMapEditorTool(idMapToolbar){
 	
 	$("#modify-box").toggle(
 		function() {
-			isModifyBoxOn = true;
-			
-			if(isAddBoxOn){$("#add-box").click();}
+			if($("#add-box").hasClass("ui-state-press")){
+				$("#add-box").click();
+			}
 			
 			map.addControl(controlModify);
 			controlModify.activate();			
 			$("#modify-box").addClass("ui-state-press");
 		}, function() {
-			isModifyBoxOn = false;
 			controlModify.deactivate();
 			map.removeControl(controlModify);
 			$("#modify-box").removeClass("ui-state-press");
