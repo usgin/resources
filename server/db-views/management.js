@@ -25,6 +25,7 @@ exports.views = {
 			}
 			
 			result = {
+				"Published": objGet(doc, "Published", false),
 				"ESRI Service": false,
 				"WMS Service": false,
 				"WFS Service": false,
@@ -37,7 +38,7 @@ exports.views = {
 			docLinks = objGet(doc, "Links", []);			
 			for (d in docLinks) {
 				if (docLinks[d].hasOwnProperty("Distributor")) {
-					if (!(docLinks[d].Distributor in distNames)) { result["Links have Distributors"] = false; }
+					if (!(docLinks[d].Distributor.trim() in distNames)) { result["Links have Distributors"] = false; }
 				} else { result["Links have Distributors"] = false; }
 				
 				serviceType = objGet(docLinks[d], "ServiceType", "File").toUpperCase();
