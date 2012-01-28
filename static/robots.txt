@@ -5,3 +5,4 @@ Disallow: /resource/*
 Allow: /resource/*/html
 Disallow: /resources/*
 Allow: /resources/sitemap.xml
+Disallow: /record/*
