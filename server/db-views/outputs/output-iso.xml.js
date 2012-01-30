@@ -41,11 +41,12 @@ exports.views = {
 			function toXmlValidText(strValue){
 				if (strValue) {
 					if(strValue.constructor.toString().indexOf("String") != -1){
-						strValue = strValue.replace(/&(?!(amp;|lt;|gt;|quot;|apos;))/g, "&amp;");
+						strValue = strValue.replace(/&(?!(amp;|lt;|gt;|quot;|apos;|nbsp;))/g, "&amp;");
 						strValue = strValue.replace(/</g, "&lt;");
 						strValue = strValue.replace(/>/g, "&gt;");
 						strValue = strValue.replace(/"/g, "&quot;");
 						strValue = strValue.replace(/'/g, "&apos;");
+						strValue = strValue.replace(/&nbsp;/g, " ");
 					}
 				}
 				return strValue;
