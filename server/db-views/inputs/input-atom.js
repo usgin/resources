@@ -97,6 +97,22 @@ exports.views = {
 				});
 			}
 			
+			// There has to be one author, even if it is blank.
+			if (outAuthors.length == 0) {
+				outAuthors.push({
+					Name: "No name found",
+					ContactInformation: {
+						Phone: "No phone found",
+						email: "No email found",
+						Address: {
+							Street: "No address found",
+							City: "No city found",
+							State: "No state found",
+							Zip: "No zip found"
+						}
+					}
+				});
+			}
 			doc.setProperty("Author", outAuthors);
 			
 			///Atom feed does not contain publication date, but we need one
@@ -118,9 +134,7 @@ exports.views = {
 			
 			///Use the first author as a Distributor, because what else are we supposed to do?
 			doc.setProperty("Distributors", []);
-			if(outAuthors[0]){
-				doc.setProperty("Distributors.0", outAuthors[0]);
-			}			
+			doc.setProperty("Distributors.0", outAuthors[0]);
 			
 			///Identify if this is a scast atom feed
 			thisLinks = objGet(atom, "link", []);
