@@ -113,7 +113,7 @@ exports.views = {
 					}
 				});
 			}
-			doc.setProperty("Author", outAuthors);
+			doc.setProperty("Authors", outAuthors);
 			
 			///Atom feed does not contain publication date, but we need one
 			doc.setProperty("PublicationDate", "1900-01-01T00:00:00");
