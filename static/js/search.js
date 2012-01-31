@@ -37,6 +37,11 @@ function searchResults(index, terms, response, currentPageNum){
 	$("#results-container").empty(); ///Clear the previous search results
 	$("#page-switcher").empty(); ///Clear the page switcher
 	///Set number of results found
+	if(response.code == 400){
+		$("#results-container").append("<h2>Please input keyword for search!</h2>");
+		return;
+	}
+	
 	if (!collectionId) { $("#results-container").append("<h2>You found " + response.total_rows + " results</h2>"); }
 	else { $("#results-container").append("<h2>Containing " + response.total_rows + " records</h2>"); }	
 	
