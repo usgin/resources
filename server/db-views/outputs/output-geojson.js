@@ -83,19 +83,19 @@ exports.views = {
 				
 				geojson.setProperty("properties.ModifiedDate", objGet(doc, "ModifiedDate", ""));
 				
-				n = objGet(doc, "GeographicExtent.NorthBound", 89);
-				s = objGet(doc, "GeographicExtent.SouthBound", -89);
-				e = objGet(doc, "GeographicExtent.EastBound", 179);
-				w = objGet(doc, "GeographicExtent.WestBound", -179);
+				n = parseFloat(objGet(doc, "GeographicExtent.NorthBound", "89"));
+				s = parseFloat(objGet(doc, "GeographicExtent.SouthBound", "-89"));
+				e = parseFloat(objGet(doc, "GeographicExtent.EastBound", "179"));
+				w = parseFloat(objGet(doc, "GeographicExtent.WestBound", "-179"));
 
 				geojson.setProperty("bbox", [w, s, e, n]);
 				geojson.setProperty("geometry.type", "polygon");
-				geojson.setProperty("geometry.coordinates", []);
-				geojson.setProperty("geometry.coordinates.0", [w, n]);
-				geojson.setProperty("geometry.coordinates.1", [w, s]);
-				geojson.setProperty("geometry.coordinates.2", [e, s]);
-				geojson.setProperty("geometry.coordinates.3", [e, n]);
-				geojson.setProperty("geometry.coordinates.4", [w, n]);
+				geojson.setProperty("geometry.coordinates", [[]]);
+				geojson.setProperty("geometry.coordinates.0.0", [w, n]);
+				geojson.setProperty("geometry.coordinates.0.1", [w, s]);
+				geojson.setProperty("geometry.coordinates.0.2", [e, s]);
+				geojson.setProperty("geometry.coordinates.0.3", [e, n]);
+				geojson.setProperty("geometry.coordinates.0.4", [w, n]);
 				geojson.setProperty("crs.type", "name");
 				geojson.setProperty("crs.properties.name", "urn:ogc:def:crs:OGC:1.3:CRS84");
 
