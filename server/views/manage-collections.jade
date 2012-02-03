@@ -9,20 +9,17 @@ block scripts
 	script(type="application/javascript", src="/static/js/collections-lists.js")
 
 block page-content
-	#collections-list-container
-		#collections-list-title-bar.clear-block.block-title
-			ul#collection-list-title-tools.collection-tools
-			#collection-list-title Available Collections
 		#collections-list-content.block-content
 			#collection-list
 				- for (c in collections) {
 				div(id=collections[c].id + "-container")
-					div.collection-title-bar.clear-block.block-title
-						ul(id=collections[c].id + "-toolbar").collection-tools												
-							li(id=collections[c].id + "-records", onclick="showRecords('#{collections[c].id}')").collection-records-button
-						div(id=collections[c].id + "-title")
-							a(href="/collection/" + collections[c].id)= collections[c].doc.Title
-					div(id=collections[c].id + "-content").block-content.collection-content
+					div.block-title
+						span(onclick="showRecords('#{collections[c].id}')").ui-icon.ui-icon-triangle-1-e.collection-list-expand
+						a(class="collection-list-title")=collections[c].doc.Title
+						div.collection-list-actions
+							span(onclick="deleteCollection(#{collections[c].id})").ui-icon.ui-icon-circle-close
+							span(onclick="addNewCollection(#{collections[c].id})").ui-icon.ui-icon-circle-plus
+					div.block-content.collection-content
 						div(id=collections[c].id + "-description")= collections[c].doc.Description
 						div(id=collections[c].id + "-record-list").record-list
 				- }

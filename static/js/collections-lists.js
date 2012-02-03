@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+		
 });
 
 function recordAsHtml(record, collectionId) {
@@ -11,29 +11,56 @@ function recordAsHtml(record, collectionId) {
 }
 
 function showRecords(collectionId) {
-	if ($("#" + collectionId + "-record-list").children().length > 0) {
-		$("#" + collectionId + "-record-list").empty();
-		$("#" + collectionId + "-record-list").removeClass("list-separator");
+	var contentEle = $("#" + collectionId + "-record-list");
+	
+	if (contentEle.children().length > 0) {
+///**********Close the collection container*********************		
+		expandSymbolChange(false, collectionId); ///Change the expand symbol
+		clearCollectionContent(contentEle, collectionId);
+		
 	} else {
-		searchObj = { index: "collection", terms: collectionId };
-		$.post("/search/", searchObj, function(response) {
-			for (r in response.rows) {
-				thisDoc = response.rows[r].doc, thisId = response.rows[r].id;
-				$("#" + collectionId + "-record-list").addClass("list-separator");
-				$("#" + collectionId + "-record-list").append(recordAsHtml(response.rows[r], collectionId));
-			}
-		});
+///*********Expand the collection container*********************
+		expandSymbolChange(true, collectionId); ///Change the expand symbol
+		addCollectionContent(contentEle, collectionId);		
+
 	}
 }
 
-function removeCollection(collectionId) {
+function clearCollectionContent(contentEle, collectionId) {
+	contentEle.empty();
+	contentEle.removeClass("list-separator");
+}
+
+function addCollectionContent(contentEle, collectionId) {	
+	searchObj = {
+		index : "collection",
+		terms : collectionId
+	};
+	
+	$.post("/search/", searchObj, function(response) {
+		for(r in response.rows) { thisDoc = response.rows[r].doc, thisId = response.rows[r].id;
+			contentEle.addClass("list-separator");
+			contentEle.append(recordAsHtml(response.rows[r], collectionId));
+		}
+	});
+}
+
+///Change the triangle symbol in title bar
+function expandSymbolChange(isExpand, collectionId){
+	var titleTriangleEle = $("#" + collectionId + "-container > .block-title > span");
+	if(isExpand){
+		titleTriangleEle.removeClass("ui-icon-triangle-1-e");
+		titleTriangleEle.addClass("ui-icon-triangle-1-s");		
+	}else{
+		titleTriangleEle.removeClass("ui-icon-triangle-1-s");
+		titleTriangleEle.addClass("ui-icon-triangle-1-e");
+	}
+}
+
+function deleteCollection(collectionId){
 	
 }
 
-function editCollection(collectionId) {
-	
-}
-
-function removeRecord(recordId, collectionId) {
+function addCollection(collectionId){
 	
 }
