@@ -4,6 +4,7 @@ var exports = module.exports,
 
 /** SEARCH INFORMATION **/
 exports.searchUrl = config.dbInfo.dbVersion >= 1.1 ? "/_fti/local/" + config.dbInfo.databases.dbRepoName + "/_design/indexes/" : "/" + config.dbInfo.databases.dbRepoName + "/_fti/_design/indexes/";
+exports.collectionSearchUrl = config.dbInfo.dbVersion >= 1.1 ? "/_fti/local/" + config.dbInfo.databases.dbCollectionName + "/_design/indexes/" : "/" + config.dbInfo.databases.dbCollectionName + "/_fti/_design/indexes/";
 
 /** METADATA TEMPLATE GENERATION AND ANALYSIS **/
 // Export a key/value hash of { schema URI : schema object from schemas.js }

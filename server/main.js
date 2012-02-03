@@ -67,6 +67,11 @@ server.post("/collection-names", collection.getCollectionNames, function(req, re
 	res.json(req.collectionNames);
 });
 
+// Search collections
+server.post("/collection-search/", collection.doSearch, function(req, res) {
+	res.json(req.searchResults);
+});
+
 // Show all records in a specific collection in a specified output format
 server.get("/collection/:id/:format", collection.getCollectionRecords, views.viewMultipleResources, formatting.formatMultipleResources, function(req, res) {
 	res.send(req.formatResources);

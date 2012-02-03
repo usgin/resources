@@ -1,6 +1,6 @@
 var exports = module.exports;
 
-exports.views = {
+exports.repoViews = {
 	views: {},
 	fulltext: {
 		full: {
@@ -41,6 +41,27 @@ exports.views = {
 						ret.add(doc.Collections[c]);
 						if (doc.hasOwnProperty("Published")) { ret.add(doc.Published, { field: "published", store: "yes" }); }
 						else { ret.add("false", { field: "published", store: "yes" }); }
+					}
+				}
+				
+				return ret;
+			}
+		}
+	}
+};
+
+exports.collectionViews = {
+	views: {},
+	fulltext: {
+		parent: {
+			index: function(doc) {
+				if (doc._id.indexOf("_design/") == 0) { return null; }
+				
+				var ret = new Document();
+				
+				if (doc.hasOwnProperty("ParentCollections")) {
+					for (pc in doc.ParentCollections) {
+						ret.add(doc.ParentCollections[pc]);
 					}
 				}
 				

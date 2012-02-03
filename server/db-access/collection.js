@@ -96,3 +96,27 @@ exports.getCollectionRecords = function(req, res, next) {
 		utils.renderToResponse(req, res, "errorResponse", { message: "Please provide a valid collection Id in your request", status: 400 });
 	}
 };
+
+/** MIDDLEWARE FOR SEARCHING FOR A COLLECTION **/
+exports.doSearch = function(req, res, next) {
+	searchObj = req.body;
+	queryParams = "?include_docs=true&";
+	if (searchObj.hasOwnProperty("limit")) { queryParams += "limit=" + searchObj.limit + "&"; }
+	if (searchObj.hasOwnProperty("skip")) { queryParams += "skip=" + searchObj.skip + "&"; }
+	searchOptions = {
+		host: config.dbInfo.dbHost,
+		port: config.dbInfo.dbPort,
+		path: utils.collectionSearchUrl + searchObj.index + queryParams + "q=" + searchObj.terms
+	};
+	
+	http.get(searchOptions, function(searchResponse) {
+		searchData = "";
+		searchResponse.on("data", function(chunk) { searchData += chunk; });
+		searchResponse.on("end", function() {
+			req.searchResults = JSON.parse(searchData);
+			next();
+		});
+	}).on("error", function(err) {
+		utils.renderToResponse(req, res, "errorResponse", { message: "There was an error performing the search", status: 500 });
+	});
+};

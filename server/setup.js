@@ -37,6 +37,10 @@ function saveDesignDocs(db) {
 			if (err) { console.log("Error creating views in " + db.name + " database."); }
 			else { console.log("Collections views up-to-date."); }
 		});
+		db.save("_design/indexes", indexes.collectionViews, function(err, response) {
+			if (err) { console.log("Error creating index views in " + db.name + " database."); }
+			else { console.log(db.name + "Index views up-to-date."); }
+		});
 		break;
 	case config.dbInfo.databases.dbHarvestName:
 		db.save("_design/inputs", input.views, function(err, response) {
@@ -49,9 +53,9 @@ function saveDesignDocs(db) {
 			if (err) { console.log("Error creating output views in " + db.name + " database."); }
 			else { console.log("Output views up-to-date."); }
 		});
-		db.save("_design/indexes", indexes.views, function(err, response) {
+		db.save("_design/indexes", indexes.repoViews, function(err, response) {
 			if (err) { console.log("Error creating index views in " + db.name + " database."); }
-			else { console.log("Index views up-to-date."); }
+			else { console.log(db.name + "Index views up-to-date."); }
 		});
 		db.save("_design/manage", management.views, function(err, response) {
 			if (err) { console.log("Error creating management views in " + db.name + " database."); }
