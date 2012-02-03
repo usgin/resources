@@ -41,7 +41,7 @@ exports.saveNewContact = function(req, res, next) {
 	
 	// Validity checks
 	valid = true, message = "";
-	if (!contactObj.hasOwnProperty("Name")) { valid = false; message += "Name is missing.\n"; }
+	if (!contactObj.hasOwnProperty("Name") && !contactObj.hasOwnProperty("OrganizationName")) { valid = false; message += "Name is missing.\n"; }
 	if (!contactObj.hasOwnProperty("ContactInformation")) {
 		message += "ContactInformation is missing.\n"; 
 		req.saveResponse = { error: message, success: false };
