@@ -13,12 +13,32 @@
 	float: right;
 }
 
-.collection-list-actions span{
+.collection-list-actions span {
 	display: inline-block;
 	background-image: url("../css/jqueryui/images/ui-icons_ffffff_256x240.png") !important;
 }
 
-.collection-list-actions span:hover{
+.collection-list-actions span:hover {
 	cursor: pointer;
 	background-image: url("../css/jqueryui/images/ui-icons_F08B6F_256x240.png") !important;
+}
+
+
+.record-container {
+	list-style: none;
+}
+
+.record-container a{
+	color: #006891;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.collection-item {
+	display: inline-block;
+}
+
+.collection-item span {
+	background-image: url("../css/jqueryui/images/ui-icons_006891_256x240.png") !important;
 }

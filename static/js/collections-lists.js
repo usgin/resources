@@ -2,14 +2,6 @@ $(document).ready(function() {
 		
 });
 
-function recordAsHtml(record, collectionId) {
-	html = "<div id='" + record.id + "-container' class='record-container clear-block'>";
-	//html += "<div id=\"" + record.id + "-remove-button\" class=\"record-remove-button\" onclick=\"removeRecord(\'" + record.id + "\', \'" + collectionId + "\')\"></div>";
-	html += "<strong><a href='/resource/" + record.id + "/html'>" + record.doc.Title || "No Title Was Given" + "</a></strong>";
-	html += "</div>";
-	return html;
-}
-
 function showRecords(collectionId) {
 	var contentEle = $("#" + collectionId + "-record-list");
 	
@@ -28,21 +20,58 @@ function showRecords(collectionId) {
 
 function clearCollectionContent(contentEle, collectionId) {
 	contentEle.empty();
-	contentEle.removeClass("list-separator");
 }
 
-function addCollectionContent(contentEle, collectionId) {	
+function addCollectionContent(contentEle, collectionId) {
+	/// Search records in the repository database with a specific collection ID
 	searchObj = {
 		index : "collection",
 		terms : collectionId
 	};
 	
 	$.post("/search/", searchObj, function(response) {
-		for(r in response.rows) { thisDoc = response.rows[r].doc, thisId = response.rows[r].id;
-			contentEle.addClass("list-separator");
-			contentEle.append(recordAsHtml(response.rows[r], collectionId));
+		for(r in response.rows) { 
+			contentEle.append(getHtmlRecord(response.rows[r]));
 		}
 	});
+
+	/// Search childern collection with a specific parent collection ID
+	searchChildrenCollectionObj = {
+		index : "parent", ///Attribute name in the fulltext property in collections/_design/indexes, which is defined in indexes.js
+		terms : collectionId ///The parent collection ID
+	};
+		
+	$.post("/collection-search/", searchChildrenCollectionObj, function(response) {
+		for(r in response.rows) { 
+			contentEle.append(getHtmlCollection(response.rows[r]));
+		}
+	});
+}
+
+function getHtmlCollection(collection) {
+	var collectionContainerId = collection.id + "-container";
+	
+	var html = "<li id=" + collectionContainerId + " class='record-container collection-item'>";
+	html += "<span class='ui-icon ui-icon-triangle-1-e collection-list-expand'></span>";
+	html += "<a>";
+	html += collection.doc.Title || "No Title Was Given";
+	html += "</a>";
+	html += "</li>";
+	
+	return html;	
+}
+
+function getHtmlRecord(record) {
+	var recordContainerId = record.id + "-container";
+	var recordLink = "/resource/" + record.id + "/html";
+	
+	var html = "<li id=" + recordContainerId + " class='record-container'>";
+	html += "<a href=" + recordLink + ">";
+	html += record.doc.Title || "No Title Was Given";
+	html += "</a>";
+	html += "</li>";
+	
+	return html;
 }
 
 ///Change the triangle symbol in title bar

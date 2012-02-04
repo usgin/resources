@@ -98,7 +98,7 @@ exports.getCollectionRecords = function(req, res, next) {
 };
 
 /** MIDDLEWARE FOR SEARCHING FOR A COLLECTION **/
-exports.doSearch = function(req, res, next) {
+exports.getChildrenCollections = function(req, res, next) {
 	searchObj = req.body;
 	queryParams = "?include_docs=true&";
 	if (searchObj.hasOwnProperty("limit")) { queryParams += "limit=" + searchObj.limit + "&"; }
