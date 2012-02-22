@@ -13,7 +13,7 @@ block page-content
 			#collection-list
 				- for (c in collections) {
 				div(id=collections[c].id + "-container")
-					div.block-title
+					div.block-title.block-collection
 						span(onclick="showRecords('#{collections[c].id}')").ui-icon.ui-icon-triangle-1-e.collection-list-expand
 						a(class="collection-list-title")=collections[c].doc.Title
 						div.collection-list-actions
@@ -21,5 +21,5 @@ block page-content
 							span(onclick="addNewCollection(#{collections[c].id})").ui-icon.ui-icon-circle-plus
 					div.block-content.collection-content
 						div(id=collections[c].id + "-description")= collections[c].doc.Description
-						div(id=collections[c].id + "-record-list").record-list
+						div(id=collections[c].id).record-list
 				- }

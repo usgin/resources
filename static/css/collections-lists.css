@@ -1,11 +1,17 @@
+/**CSS for title bar******************************************************************/
+	
 .collection-list-expand {
 	background-image: url("../css/jqueryui/images/ui-icons_ffffff_256x240.png") !important;
 	display: inline-block;
 	height: 13px;
 }
 
-.collection-list-expand:hover {
+.block-collection span:hover {
 	cursor: pointer;
+}
+
+.block-collection a:hover {
+	text-decoration: none;
 }
 
 .collection-list-actions {
@@ -19,11 +25,10 @@
 }
 
 .collection-list-actions span:hover {
-	cursor: pointer;
 	background-image: url("../css/jqueryui/images/ui-icons_F08B6F_256x240.png") !important;
 }
 
-
+/**CSS for content*********************************************************************/
 .record-container {
 	list-style: none;
 }
@@ -35,8 +40,25 @@
 	text-decoration: none;
 }
 
+.record-container span:hover{
+	cursor: pointer;
+}
+
+.record-inner-list {
+	padding-left: 12px;
+}
+
+.record-item-link {
+	padding-left: 6px;
+}
+
+.record-item-link:hover {
+	text-decoration: underline !important;
+}
+
 .collection-item {
 	display: inline-block;
+	text-decoration: none !important;
 }
 
 .collection-item span {
