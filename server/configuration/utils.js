@@ -41,7 +41,7 @@ function generateGenericInstance(schemaId) {
 					break;
 				case "array":
 					outputObj[propName] = [];
-					for (var i = 0; i < (properties[propName].minItems || 1); i++) {
+					for (var i = 0; i < (properties[propName].minItems || 0); i++) {
 						outputObj[propName].push(objectGenerator(properties[propName].items));
 					}
 					break;
@@ -67,7 +67,24 @@ function generateGenericInstance(schemaId) {
 	}
 	
 	// Now, use that function to generate the instance of the specified schema
-	if (schemaId in schemas) { return objectGenerator(schemas[schemaId]); } 
+	if (schemaId in schemas) { 
+		// Only build top-level properties that are required
+		thisSchema = schemas[schemaId];
+		outputSchema = {};
+		for (propName in thisSchema || {}) {
+			if (propName == "properties") {
+				outputSchema.properties = {};
+				for (property in thisSchema.properties || {}) {
+					if (thisSchema.properties[property].hasOwnProperty("required") && thisSchema.properties[property].required) {
+						outputSchema.properties[property] = thisSchema.properties[property];
+					}
+				}				
+			} else {
+				outputSchema[propName] = thisSchema[propName];
+			}
+		}
+		return objectGenerator(outputSchema); 
+	} 
 	else { return null; }
 };
 

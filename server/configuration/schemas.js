@@ -33,10 +33,10 @@ exports.contact = {
 				email: { type: "string", format: "email", required: true }, 
 				Address: { type: "object", required: false,
 					properties: {
-						Street: { type: "string", required: false }, 
-						City: { type: "string", required: false }, 
-						State: { type: "string", required: false }, 
-						Zip: { type: "string", required: false }
+						Street: { type: "string", required: true }, 
+						City: { type: "string", required: true }, 
+						State: { type: "string", required: true }, 
+						Zip: { type: "number", required: true }
 					}
 				}
 			}
@@ -50,10 +50,10 @@ exports.metadata = {
 	properties: {
 		Title: { type: "string", required: true }, 
 		Description: { type: "string", required: true, minLength: 50 }, 
+		PublicationDate: { type: "string", format: "date-time", required: true }, 
 		Authors: { type: "array", required: true, minItems: 1,
 			items: { $ref: "http://resources.usgin.org/uri-gin/usgin/schema/json-metadata-contact/" }
-		}, 
-		PublicationDate: { type: "string", format: "date-time", required: true }, 
+		}, 		
 		Keywords: { type: "array", required: true, minItems: 1,
 			items: { type: "string" }
 		}, 
@@ -68,8 +68,21 @@ exports.metadata = {
 		Distributors: { type: "array", required: true, minItems: 1,
 			items: { $ref: "http://resources.usgin.org/uri-gin/usgin/schema/json-metadata-contact/" }
 		}, 
-		Links: { type: "array", required: false,
-			items: { $ref: "http://resources.usgin.org/uri-gin/usgin/schema/json-service-link/" }
-		}
+		Links: { type: "array", required: true, minItems: 0,
+			items: { $ref: "http://resources.usgin.org/uri-gin/usgin/schema/json-link/" }
+		},
+		HarvestInformation: { type: "object", required: false,
+			properties: {
+				OriginalFileIdentifier: { type: "string", required: false },
+				OriginalFormat: { type: "string", required: false },
+				HarvestRecordId: {type: "string", required: true },
+				HarvestURL: { type: "string", required: true },
+				HarvestDate: { type: "string", format: "date-time", required: true }
+			}
+		},
+		Collections: { type: "array", required: true, minItems: 0,
+			items: { type: "string" }
+		},
+		Published: { type: "boolean", required: true }
 	}
 };

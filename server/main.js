@@ -104,7 +104,7 @@ server.post("/new-contact/", requireAuth, contacts.saveNewContact, function(req,
 
 // Make a new resource
 server.get("/new-resource/", requireAuth, retrieval.getResource, editing.editResource, function(req, res) {
-	utils.renderToResponse(req, res, "edit", req.editContext);
+	utils.renderToResponse(req, res, "new-edit", req.editContext);
 });
 server.post("/new-resource/", requireAuth, editing.saveResource, function(req, res) {
 	res.redirect("/resource/" + req.saveResponse.id);
@@ -112,7 +112,7 @@ server.post("/new-resource/", requireAuth, editing.saveResource, function(req, r
 
 // Edit a resource
 server.get("/resource/:id", requireAuth, retrieval.getResource, editing.editResource, function(req, res) {
-	utils.renderToResponse(req, res, "edit", req.editContext);
+	utils.renderToResponse(req, res, "new-edit", req.editContext);
 });
 server.post("/resource/:id", requireAuth, editing.saveResource, function(req, res) {
 	res.redirect("/resource/" + req.saveResponse.id + "/html");
