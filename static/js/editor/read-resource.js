@@ -45,7 +45,8 @@ function readResource(theResource, theSchema) {
 	for (property in theSchema.properties || {}) { schemaController(property, theSchema.properties[property], theResource[property] || "", $("#theResource")); }
 	
 	// Cleanup Array Labels
-	$("ul.array > li > fieldset > legend, ul.array > li > span").addClass("hidden");
+	arrayItemNames();
+	arrayButtons();
 	
 	// Implement Date Pickers
 	$("input.date-time").datepicker({
@@ -60,5 +61,5 @@ function readResource(theResource, theSchema) {
 	// Some extra styling
 	adjustInputWidths();
 	collapseFieldsets();
-	
+	removeButtons();
 };

@@ -44,7 +44,9 @@ function enumStringRenderer(enumeration, value) {
 var arrayString = [
     "li(class=classes)",
     "\t" + "fieldset",
-    "\t\t" + "legend= label",
+    "\t\t" + "legend",
+    "\t\t\t" + "span= label",
+    "\t\t\t" + "div.add-button",
     "\t\t" + "ul(id=id, class='array')" 
 ], defaultArrayRenderer = jade.compile(arrayString.join("\n"));
 
@@ -52,7 +54,8 @@ var arrayString = [
 var objectString = [
     "li(class=classes)",
     "\t" + "fieldset",
-    "\t\t" + "legend= label",
+    "\t\t" + "legend",
+    "\t\t\t" + "span= label",
     "\t\t" + "ul(id=id, class='object')" 
 ], defaultObjectRenderer = jade.compile(objectString.join("\n"));
 

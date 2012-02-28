@@ -14,6 +14,7 @@ exports.editResource = function(req, res, next) {
 	req.editContext.metadataTemplate = JSON.stringify(utils.examples["http://resources.usgin.org/uri-gin/usgin/schema/json-metadata/"]);
 	req.editContext.templates = JSON.stringify(utils.examples);
 	req.editContext.schemas = JSON.stringify(utils.schemas);
+	req.editContext.instanceGenerator = utils.instanceGenerator;
 	next();
 };
 

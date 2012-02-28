@@ -13,7 +13,10 @@ var specialCases = {
 	"HarvestInformation": { adjustContext: hideElement, altRenderer: false, postProcess: false, breakAfterAltRender: false },
 	"Collections": { adjustContext: hideElement, altRenderer: collectionRenderer, postProcess: false, breakAfterAltRender: false },
 	"Distributor": { adjustContext: distributorContext, altRenderer: false, postProcess: distributorPostProcessor, breakAfterAltRender: false },
-	"Links": { adjustContext: false, altRenderer: linkRenderer, postProcess: false, breakAfterAltRender: true }
+	"Links": { adjustContext: false, altRenderer: linkRenderer, postProcess: linkPostProcessor, breakAfterAltRender: true },
+	"Authors": { adjustContext: false, altRenderer: false, postProcess: contactPostProcessor, breakAfterAltRender: false },
+	"Distributors": { adjustContext: false, altRenderer: false, postProcess: contactPostProcessor, breakAfterAltRender: false },
+	"Published": { adjustContext: hideElement, altRenderer: publishedRenderer, postProcess: publishedPostProcessor, breakAfterAltRender: false }
 };
 
 function hideElement(context) {
@@ -50,8 +53,12 @@ function distributorPostProcessor() {
 }
 
 function linkRenderer(type, propertyName, propertySchema, content, htmlParent, currentContext) {
+	linkString = []; for (as in arrayString) { linkString.push(arrayString[as]); }
+	linkString.splice(4, 1, "\t\t\tdiv.add-file-button", "\t\t\tdiv.add-service-button");
+	linkRenderer = jade.compile(linkString.join("\n"));
+	
 	// Create the HTML markup
-	html = renderer(currentContext);
+	html = linkRenderer(currentContext);
 	
 	// Append the HTML markup
 	linkContainer = $(html).appendTo(htmlParent).find("ul");
@@ -66,4 +73,43 @@ function linkRenderer(type, propertyName, propertySchema, content, htmlParent, c
 		
 		schemaController(item, linkSchema, content[item], linkContainer);
 	}
+}
+
+function linkPostProcessor() {
+	$(".add-file-button").click(function() {
+		addArrayContent("Links", "http://resources.usgin.org/uri-gin/usgin/schema/json-link/");
+	});
+	$(".add-service-button").click(function() {
+		addArrayContent("Links", "http://resources.usgin.org/uri-gin/usgin/schema/json-service-link/");
+	});
+}
+
+function contactPostProcessor() {
+	// Add the registered contact button
+	$("#theResource-Distributors, #theResource-Authors").prev("legend").each(function() {
+		if ($(this).children("div.add-contact-button").length == 0) { $(this).append("<div class='add-contact-button'></div>"); }
+	});
+	// Add contact button functionality
+	$(".add-contact-button").click(function() {
+		$("#add-contact-dialog").dialog("option", "context", $(this).parent("legend").next("ul"));
+		$("#add-contact-dialog").dialog("open");
+	});
+}
+
+function publishedRenderer(type, propertyName, propertySchema, content, htmlParent, currentContext) {
+	var pubBooleanString = [
+	    "#publisher",
+	    "\t" + "span.label Published?",
+	    "\t" + "input(type='checkbox')"
+	], pubBooleanRenderer = jade.compile(pubBooleanString.join("\n"));
+	html = pubBooleanRenderer();
+	$("#editor-header").prepend(html);
+}
+
+function publishedPostProcessor() {
+	// Check the box if the resource is published
+	$("#publisher > input, #theResource-Published > input").prop("checked", startingResource.Published || false);
+	$("#publisher > input").change(function() {
+		$("#theResource-Published > input").prop("checked", $(this).prop("checked"));
+	});
 }

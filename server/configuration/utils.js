@@ -12,61 +12,61 @@ var schemas = {};
 for (var s in schema) { schemas[schema[s].id] = schema[s]; }
 exports.schemas = schemas;
 
-// Create a generic instance of a given schema 
-function generateGenericInstance(schemaId) {
-	// First define an iterative function that will generate an instance of an arbitrary schema object
-	function objectGenerator(schemaObject) {
-		// If the object is by reference, resolve the reference
-		schemaObject = schemaObject.hasOwnProperty("$ref") ? schemas[schemaObject["$ref"]] : schemaObject;
-		
-		// Setup properties and output variables
-		var properties = schemaObject.properties || {},
-			outputObj = {};
-		
-		// If the object extends another object, grab the base-type's properties
-		if (schemaObject.hasOwnProperty("extends")) {
-			baseProperties = schemas[schemaObject["extends"]].properties || {};
-			for (var baseProp in baseProperties) { properties[baseProp] = baseProperties[baseProp]; }
-		}
-		
-		// Should really handle any type with a switch, for now just escape the string case...
-		if (schemaObject.type == "string") { return "Please insert a value of type: 'string'."; }
-		
-		// Loop through properties, handle each according to its type
-		for (var propName in properties || {}) {
-			var thisType = properties[propName].type ? properties[propName].type : "any";
-			switch (thisType) {
-				case "object":
-					outputObj[propName] = objectGenerator(properties[propName]);
-					break;
-				case "array":
-					outputObj[propName] = [];
-					for (var i = 0; i < (properties[propName].minItems || 0); i++) {
-						outputObj[propName].push(objectGenerator(properties[propName].items));
-					}
-					break;
-				case "boolean":
-					outputObj[propName] = false;
-					break;
-				case "null":
-					outputObj[propName] = null;
-					break;
-				default:
-					if (properties[propName].enum) { outputStr = properties[propName].enum[0]; } 
-					else {
-						outputStr = "Please insert a value of type: '" + thisType + "'";
-						outputStr += properties[propName].format ? " according to the format: '" + properties[propName].format + "'." : ".";
-					}
-					outputObj[propName] = outputStr;
-					break;
-			}
-		}
-		
-		// Return the object
-		return outputObj;
+// Define an iterative function that will generate an instance of an arbitrary schema object
+function objectGenerator(schemaObject) {
+	// If the object is by reference, resolve the reference
+	schemaObject = schemaObject.hasOwnProperty("$ref") ? schemas[schemaObject["$ref"]] : schemaObject;
+	
+	// Setup properties and output variables
+	var properties = schemaObject.properties || {},
+		outputObj = {};
+	
+	// If the object extends another object, grab the base-type's properties
+	if (schemaObject.hasOwnProperty("extends")) {
+		baseProperties = schemas[schemaObject["extends"]].properties || {};
+		for (var baseProp in baseProperties) { properties[baseProp] = baseProperties[baseProp]; }
 	}
 	
-	// Now, use that function to generate the instance of the specified schema
+	// Should really handle any type with a switch, for now just escape the string case...
+	if (schemaObject.type == "string") { return "Please insert a value of type: 'string'."; }
+	
+	// Loop through properties, handle each according to its type
+	for (var propName in properties || {}) {
+		var thisType = properties[propName].type ? properties[propName].type : "any";
+		switch (thisType) {
+			case "object":
+				outputObj[propName] = objectGenerator(properties[propName]);
+				break;
+			case "array":
+				outputObj[propName] = [];
+				for (var i = 0; i < (properties[propName].minItems || 0); i++) {
+					outputObj[propName].push(objectGenerator(properties[propName].items));
+				}
+				break;
+			case "boolean":
+				outputObj[propName] = false;
+				break;
+			case "null":
+				outputObj[propName] = null;
+				break;
+			default:
+				if (properties[propName].enum) { outputStr = properties[propName].enum[0]; } 
+				else {
+					outputStr = "Please insert a value of type: '" + thisType + "'";
+					outputStr += properties[propName].format ? " according to the format: '" + properties[propName].format + "'." : ".";
+				}
+				outputObj[propName] = outputStr;
+				break;
+		}
+	}
+	
+	// Return the object
+	return outputObj;
+}
+
+// Create a generic instance of a given schema 
+function generateGenericInstance(schemaId) {
+	// Use the object generator function to generate the instance of the specified schema
 	if (schemaId in schemas) { 
 		// Only build top-level properties that are required
 		thisSchema = schemas[schemaId];
@@ -87,6 +87,7 @@ function generateGenericInstance(schemaId) {
 	} 
 	else { return null; }
 };
+exports.instanceGenerator = objectGenerator;
 
 // Generate examples for each of the defined schemas
 var examples = {};

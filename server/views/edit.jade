@@ -1,68 +1,59 @@
 extends ./base
 
 block styles
-	link(rel="stylesheet", type="text/css", href="/static/css/edit.css")
 	link(rel="stylesheet", type="text/css", href="/static/css/jqueryui/jquery-ui-1.8.16.custom.css")
 	link(rel="stylesheet", type="text/css", href="/static/css/map.css")
+	link(rel="stylesheet/less", type="text/css", href="/static/less/edit.less")
 
 block scripts
 	script(type="application/javascript", src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false")
 	script(type="application/javascript", src="/static/openlayers/OpenLayers.js")
 	script(type="application/javascript", src="/static/js/jade.js")
 	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
-	script(type="application/javascript", src="/static/js/editor/read-record.js")
-	script(type="application/javascript", src="/static/js/editor/write-record.js")
-	script(type="application/javascript", src="/static/js/editor/toolbar-template.js")
-	script(type="application/javascript", src="/static/js/editor/obj-template.js")
-	script(type="application/javascript", src="/static/js/editor/value-template.js")
-	script(type="application/javascript", src="/static/js/editor/sidebar-functions.js")
-	script(type="application/javascript", src="/static/js/editor/editor.js")
+	script(type="application/javascript", src="/static/less/less-1.2.1.min.js")
+	
 	script(type="application/javascript", src="/static/js/map.js")
 	script(type="application/javascript", src="/static/js/editor/add-map-editor.js")
-
-
-	script(type="application/javascript")
-		| collectionsList = [];
-		| harvestInfo = false;
-		| contactObj = !{contactTemplate};
-		| fileLinkObj = !{fileLinkTemplate};
-		| serviceLinkObj = !{serviceLinkTemplate};
-		| metadataObj = !{metadataTemplate};
-		- if (existingResource) {
-		| startObj = !{existingResource};
-		- } else {
-		| startObj = metadataObj;
-		- }
 	
-block sidebar-content
+	script(type="application/javascript", src="/static/js/editor/main.js")
+	script(type="application/javascript", src="/static/js/editor/read-resource.js")
+	script(type="application/javascript", src="/static/js/editor/write-resource.js")
+	script(type="application/javascript", src="/static/js/editor/renderers.js")
+	script(type="application/javascript", src="/static/js/editor/special-cases.js")
+	script(type="application/javascript", src="/static/js/editor/additional-style.js")
+	script(type="application/javascript", src="/static/js/editor/add-remove.js")
+	
+	script(type="application/javascript")
+		| templates = !{templates};
+		| schemas = !{schemas};
+		| instanceGenerator = !{instanceGenerator};
+		- if (existingResource) {
+		| startingResource = !{existingResource};
+		- } else {
+		| startingResource = templates["http://resources.usgin.org/uri-gin/usgin/schema/json-metadata/"];
+		- }
+			
+block sidebar-content	
+	#collections-block
+		h2#collections-title.block-title Manage Collections
+		#collections-content.block-content
+			ul#collections-current-list.menu
+				li#add-to-collection
+					a(href="#", onclick="addCollection()") 
+						strong Add to a new collection
+	
 	#standard-addition-block
 		h2#standard-addition-title.block-title Add Formal Content
 		#standard-addition-content.block-content
 			ul#standard-addition-menu.menu
-				li#standard-addition-author
-					a(href="#", onclick="addAuthor()") Add a blank author
-				li#standard-addition-distributor
-					a(href="#", onclick="addDistributor()") Add a blank distributor
-				li#standard-addition-contact
-					a(href="#", onclick="addContact()") Add a registered contact
-				li#standard-addition-file-link
-					a(href="#", onclick="addLink('file')") Add a file link
-				li#standard-addition-service-link
-					a(href="#", onclick="addLink('service')") Add a service link
+				li Nothing yet!								
 					
 	#file-attachment-block
 		h2#file-attachment-title.block-title Manage File Attachments
 		#file-attachment-content.block-content
 			ul#file-attachment-menu.menu
 				li#file-attachment-add
-					a(href="#", onclick="addFile()") Add a File
-					
-	#collections-block
-		h2#collections-title.block-title Manage Collections
-		#collections-content.block-content
-			ul#collections-current-list.menu
-				li#add-to-collection
-					a(href="#", onclick="addCollection()") Add to a new collection
+					a(href="#", onclick="addFile()") Attach a File, someday...
 						
 				
 	#map-block
@@ -72,26 +63,18 @@ block sidebar-content
 				button#add-box
 		#map-content.block-content
 			#map
-	
-		
-block page-content	
-	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="writeResource()")			
-		#editor-header.clear-block
-			input.save-resource-button(type="submit", value="Save Your Resource")
-			- if (existingResource) {
+block page-content
+	#editor-header.clear-block
+		- if (existingResource) {
 			input#validate-button(type="button", value="Validate", onclick="showValidation('" + existingResource.id + "')")
-			- }
-			#published-container				
-				input#publish-resource-checkbox(type="checkbox", name="published")
-				label(for="publish-resource-checkbox") Published?			
-			- if (existingResource) {
 			h1#editor-title Edit an Existing Resource
-			- } else {
-			h1#editor-title Create a New Resource
-			- }	
-		#resource-container		
-			ul#theResource
-		input#the-new-resource(name="theResource")
+		- } else {
+		h1#editor-title Create a New Resource
+		- }
+	#resource-container
+		ul#theResource	
+	form#editor-form(name="resourceForm", method="post", enctype="multipart/form-data", onsubmit="writeResource()")
+		input#the-new-resource.hidden(name="theResource")
 		input.save-resource-button(type="submit", value="Save Your Resource")
 	#add-contact-dialog(title="Add a registered contact")
 		label(for="new-contact-selector") Type a name: 
