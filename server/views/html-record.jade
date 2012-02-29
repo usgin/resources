@@ -31,7 +31,7 @@ block sidebar-content
 			ul#online-links-menu.menu
 				- service_types = { "OGC:WMS": "WMS Capabilities", "OGC:WFS": "WFS Capabilities", "OGC_WCS": "WCS Capabilities", "ESRI": "ESRI Service Endpoint", "OPENDAP": "OPeNDap Service" };
 				- for (l in doc.Links || []) {
-				-  if (doc.Links[l].hasOwnProperty("Name")) { value = doc.Links[l].Name; }
+				-  if (doc.Links[l].hasOwnProperty("Name") && doc.Links[l].Name != "") { value = doc.Links[l].Name; }
 				-  else if (doc.Links[l].hasOwnProperty("ServiceType")) { value = service_types[doc.Links[l].ServiceType.toUpperCase()] || "Web Service"; }
 				-  else { value = "Downloadable File"; }
 				li: a(href=doc.Links[l].URL, itemprop="url")= value
