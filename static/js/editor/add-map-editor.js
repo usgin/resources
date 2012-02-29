@@ -1,54 +1,33 @@
+var geoExtentId = "#theResource-GeographicExtent";
+
 $(document).ready(function(){
-	var geoExtent = getGeoExtent("#GeographicExtent");
+	var geoExtent = getGeoExtent(geoExtentId);
 	addMap("map", geoExtent);
 	addMapEditorTool();
 
-})
+});
 
 function getGeoExtent(idGeoExtentEle){
 	var geoExtVal = {};
-	var arrayAttributes = $("#GeographicExtent > li > div > div[ele=attribute]");
-	var arrayValues = $("#GeographicExtent > li > div > div[ele=value]");
-	if(arrayAttributes.length == 4 && arrayValues.length == 4){
-		for(iPair = 0; iPair < 4; iPair ++){
-			var attr = arrayAttributes[iPair].innerHTML;
-			var val = arrayValues[iPair].innerHTML;
-			
-			if(parseFloat(val)){
-				geoExtVal[attr] = parseFloat(val);
-			}else{
-				geoExtVal[attr] = 999;
-			}
-			
-		}
-	}
-	
+	lis = $(geoExtentId).children("li");
+	for (var i = 0; i < lis.length; i++) {
+		attr = $(lis[i]).children("span.label").html();
+		val = $(lis[i]).children("input").val();
+		if (parseFloat(val)) { geoExtVal[attr] = parseFloat(val); }
+		else { geoExtVal[attr] = 999; }
+	}	
 	return geoExtVal;
 }
 
 
 function setGeoExtent(geoExtent){
-		
-	if($("#GeographicExtent-container").length < 1){ addGeographicExtent(); }
-	
-	var arrayAttributes = $("#GeographicExtent > li > div > div[ele=attribute]");
-	var arrayValues = $("#GeographicExtent > li > div > div[ele=value]");
-
-	for( iPair = 0; iPair < 4; iPair++) {
-		switch(arrayAttributes[iPair].innerHTML) {
-			case "NorthBound":
-				arrayValues[iPair].innerHTML = geoExtent.top;
-				break;
-			case "SouthBound":
-				arrayValues[iPair].innerHTML = geoExtent.bottom;
-				break;
-			case "WestBound":
-				arrayValues[iPair].innerHTML = geoExtent.left;
-				break;
-			case "EastBound":
-				arrayValues[iPair].innerHTML = geoExtent.right;
-				break;
+	$(geoExtentId).children("li").each(function() {
+		switch ($(this).children("span.label").html()) {
+			case "NorthBound": ext = geoExtent.top; break;
+			case "SouthBound": ext = geoExtent.bottom; break;
+			case "EastBound": ext = geoExtent.left; break;
+			case "WestBound": ext = geoExtent.right; break;
 		}
-	}
-		
+		$(this).children("input").val(ext);
+	});		
 }
