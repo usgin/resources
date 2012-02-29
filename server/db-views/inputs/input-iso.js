@@ -246,7 +246,7 @@ exports.views = {
 			// Extra stuff in ISO that should probably be collected:
 			doc.setProperty("ResourceIds", []);
 			dataSetUri = objGet(iso, "gmd:MD_Metadata.gmd:dataSetURI.gco:CharacterString.$t", null);
-			if (dataSetUri) { doc.setProperty("ResourceIds.0", dataSetUri); }
+			if (dataSetUri) { doc.setProperty("ResourceId", dataSetUri); }
 			
 			// Harvest Information
 			doc.setProperty("HarvestInformation.OriginalFileIdentifier", objGet(iso, "gmd:MD_Metadata.gmd:fileIdentifier.gco:CharacterString.$t"));

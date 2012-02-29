@@ -51,6 +51,7 @@ exports.metadata = {
 		Title: { type: "string", required: true }, 
 		Description: { type: "string", required: true, minLength: 50 }, 
 		PublicationDate: { type: "string", format: "date-time", required: true }, 
+		ResourceId: { type: "string", required: false },
 		Authors: { type: "array", required: true, minItems: 1,
 			items: { $ref: "http://resources.usgin.org/uri-gin/usgin/schema/json-metadata-contact/" }
 		}, 		

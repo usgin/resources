@@ -151,7 +151,7 @@ exports.views = {
 			iso.setProperty("gmd:MD_Metadata.gmd:metadataStandardVersion.gco:CharacterString.$t", "1.2");
 			
 			// Dataset URI -- if we have one...
-			dsId = objGet(doc, "ResourceIds.0", null);
+			dsId = objGet(doc, "ResourceId", null);
 			if (dsId) { iso.setProperty("gmd:MD_Metadata.gmd:dataSetURI.gco:CharacterString.$t", dsId); }
 
 			/**********************************************************************************************
