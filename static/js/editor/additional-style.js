@@ -90,10 +90,12 @@ function arrayItemNames() {
 }
 
 function arrayButtons() {
+	$(".add-button").unbind("click");
 	$(".add-button").click(function() {
 		var propName = $(this).parent().next().attr("id").replace("theResource-", "");
 		addArrayContent(propName);
 	});
+	$(".remove-array-item-button").unbind("click");
 	$(".remove-array-item-button").click(function(){
 		liHtml = $(this).parent("legend").parent("fieldset").parent("li");
 		ulHtml = $(this).parent("legend").next("ul");
@@ -112,6 +114,7 @@ function arrayButtons() {
 }
 
 function removeButtons() {
+	$(".remove-button").unbind("click");
 	$(".remove-button").click(function() {
 		liHtml = $(this).parent("li");
 		parentHtml = liHtml.parent("ul");

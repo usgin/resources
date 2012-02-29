@@ -3,8 +3,8 @@ function writeToArray(newItem, newItemSchema, htmlParent) {
 	schemaController(nextInArray, newItemSchema, newItem, htmlParent);
 	
 	// Bunch of functions to insure proper button functioning. Ugly-much?
-	adjustInputWidths();
 	arrayItemNames();
+	adjustInputWidths();
 	removeButtons();
 	arrayButtons();
 	distributorPostProcessor();
