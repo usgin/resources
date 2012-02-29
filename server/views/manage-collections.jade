@@ -9,6 +9,11 @@ block scripts
 	script(type="application/javascript", src="/static/js/collections-lists.js")
 
 block page-content
+		- if (authenticated) {
+		#hello Hello!!
+		- } else {
+		#noway Nope!!
+		- }
 		#collections-list-content.block-content
 			#collection-list
 				- for (c in collections) {
@@ -21,5 +26,5 @@ block page-content
 							span(onclick="addNewCollection(#{collections[c].id})").ui-icon.ui-icon-circle-plus
 					div.block-content.collection-content
 						div(id=collections[c].id + "-description").collection-description= collections[c].doc.Description
-						div(id=collections[c].id).record-list
+						ul(id=collections[c].id).record-list
 				- }

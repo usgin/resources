@@ -46,7 +46,8 @@ function addCollectionContent(searchTerm, collectionEleId) {
 	/// Search childern collection with a specific parent collection ID
 	searchChildrenCollectionObj = {
 		index : "parent", ///Attribute name in the fulltext property in collections/_design/indexes, which is defined in indexes.js
-		terms : searchTerm ///The search term in the parent property
+		terms : searchTerm, ///The search term in the parent property
+		limit : 9000 
 	};
 	
 	$.post("/search/", searchObj, function(response) {
@@ -76,7 +77,7 @@ function getHtmlCollection(collection, collectionEleId) {
 	html += "<a>";
 	html += collection.doc.Title || "No Title Was Given";
 	html += "</a>";
-	html += "<div id='" + collectionId + "' class='record-list record-inner-list'></div>"; /// This is the collection content element
+	html += "<ul id='" + collectionId + "' class='record-list record-inner-list'></ul>"; /// This is the collection content element
 	html += "</li>";
 	
 	return html;	

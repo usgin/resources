@@ -34,6 +34,10 @@
 	padding-bottom: 10px;	
 }
 
+.collection-content {
+	background-color: white;
+}
+
 /**CSS for content*********************************************************************/
 .record-container {
 	list-style: none;
@@ -55,6 +59,7 @@
 }
 
 .record-item-link {
+	color: #F08B6F !important;
 	padding-left: 6px;
 }
 
@@ -63,7 +68,7 @@
 }
 
 .collection-item {
-	display: inline-block;
+	display: block;
 	text-decoration: none !important;
 }
 

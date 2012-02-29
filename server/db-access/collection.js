@@ -68,6 +68,29 @@ exports.getCollectionNames = function(req, res, next) {
 	});
 };
 
+/** MIDDLEWARE FOR RETREIVING TOP LEVEL COLLECTIONS **/
+exports.getTopLevelCollections = function(req, res, next) {
+	searchOptions = {
+		host: config.dbInfo.dbHost,
+		port: config.dbInfo.dbPort,
+		path: utils.collectionSearchUrl + "parent?include_docs=true&q=top-level"
+	};
+	
+	//req.collections = [];
+	http.get(searchOptions, function(searchResponse) {
+		searchData = "";
+		searchResponse.on("data", function(chunk) { searchData += chunk; });
+		searchResponse.on("end", function() {
+			req.collections = [];
+			rows = JSON.parse(searchData).rows;
+			for (var i in rows) { req.collections.push({ id: rows[i].doc._id, doc: rows[i].doc }); }
+			next();
+		});
+	}).on("error", function(err) {
+		utils.renderToResponse(req, res, "errorResponse", { message: "There was an error performing the search", status: 500 });
+	});
+};
+
 /** MIDDLEWARE FOR RETREIVING THE RECORDS IN A SPECIFIC COLLECTION **/
 exports.getCollectionRecords = function(req, res, next) {
 	collectionId = req.param("id", false);

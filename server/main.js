@@ -78,7 +78,7 @@ server.get("/collection/:id/:format", collection.getCollectionRecords, views.vie
 });
 
 // Browse collections page
-server.get("/browse/", collection.getAllCollections, function(req, res) {
+server.get("/browse/", collection.getTopLevelCollections, function(req, res) {
 	utils.renderToResponse(req, res, "manage-collections", { collections: req.collections });
 });
 
