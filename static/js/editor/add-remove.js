@@ -34,3 +34,8 @@ function showValidation(id) {
 		$("#validation-dialog").dialog("open");
 	});
 }
+
+function showDeletion(id) {
+	$("#deletion-dialog").dialog("option", "theid", id);
+	$("#deletion-dialog").dialog("open");
+}

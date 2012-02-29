@@ -53,3 +53,21 @@ exports.saveMultipleResources = function(req, res, next) {
 		}
 	});
 };
+
+/** MIDDLEWARE FOR DELETING A RESOURCE **/
+exports.deleteResource = function(req, res, next) {
+	resourceId = req.param("id", false);
+	if (resourceId) {
+		repository.get(id, function(err, doc) {
+			if (err) { res.json({ id: resourceId, deleted: false, reason: err }); }
+			else { 
+				repository.remove(id, doc._rev, function(err, deleteRes) {
+					if (err) { res.json({ id: resourceId, deleted: false, reason: err }); }
+					else { next(); }
+				});
+			}
+		});
+	} else {
+		res.json({ id: "none", deleted: false, reason: "No valid id was given" });
+	}
+};

@@ -67,6 +67,7 @@ block page-content
 	#editor-header.clear-block
 		- if (existingResource) {
 			input#validate-button(type="button", value="Validate", onclick="showValidation('" + existingResource.id + "')")
+			input#delete-button(type="button", value="Delete", onclick="showDeletion('" + existingResource.id + "')")
 			h1#editor-title Edit an Existing Resource
 		- } else {
 		h1#editor-title Create a New Resource
@@ -87,3 +88,5 @@ block page-content
 	#saved-contact-dialog(title="Register a contact")
 		#contact-message-container.ui-corner-all
 	#validation-dialog(title="Validation Summary")
+	#deletion-dialog(title="Delete this resource?")
+		#deletion-message Are you certain that you want to delete this resource?

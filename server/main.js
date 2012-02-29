@@ -118,6 +118,11 @@ server.post("/resource/:id", requireAuth, editing.saveResource, function(req, re
 	res.redirect("/resource/" + req.saveResponse.id + "/html");
 });
 
+// Delete a resource
+server.get("/delete-resource/:id", requireAuth, editing.deleteResource, function(req, res) {
+	res.json({ id: req.id, deleted: true });
+});
+
 // Harvest a new resource
 server.get("/new-harvest/", requireAuth, function(req, res) {
 	utils.renderToResponse(req, res, "harvest", { inputFormats: input.stdFormatsHarvestable });

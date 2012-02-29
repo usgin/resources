@@ -75,7 +75,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	// Setup the validataion dialog
+	// Setup the validation dialog
 	$("#validation-dialog").dialog({
 		autoOpen: false,
 		modal: true,
@@ -83,6 +83,25 @@ $(document).ready(function() {
 		width: 850,
 		buttons: {			
 			"OK": function() {
+				$(this).dialog("close");
+			}
+		}
+	});
+	
+	// Setup the deletion dialog
+	$("#deletion-dialog").dialog({
+		autoOpen: false,
+		modal: true,
+		resizable: true,
+		width: 850,
+		buttons: {			
+			"OK": function() {
+				$.get("/delete-resource/" + $(this).dialog("option", "theid"), function(response) {
+					window.location = "/search/";
+				});
+				$(this).dialog("close");
+			},
+			Cancel: function() {
 				$(this).dialog("close");
 			}
 		}
