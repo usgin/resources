@@ -41,6 +41,10 @@ function saveDesignDocs(db) {
 			if (err) { console.log("Error creating index views in " + db.name + " database."); }
 			else { console.log(db.name + "Index views up-to-date."); }
 		});
+		if (config.buildCollections) {
+			var build = require("./collection-setup.js").buildStarterCollections;
+			build();
+		}
 		break;
 	case config.dbInfo.databases.dbHarvestName:
 		db.save("_design/inputs", input.views, function(err, response) {
