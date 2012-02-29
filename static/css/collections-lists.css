@@ -28,6 +28,12 @@
 	background-image: url("../css/jqueryui/images/ui-icons_F08B6F_256x240.png") !important;
 }
 
+.collection-description {
+	color: #F08B6F;
+	font-size: 12px;
+	padding-bottom: 10px;	
+}
+
 /**CSS for content*********************************************************************/
 .record-container {
 	list-style: none;

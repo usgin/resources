@@ -25,8 +25,8 @@ function setGeoExtent(geoExtent){
 		switch ($(this).children("span.label").html()) {
 			case "NorthBound": ext = geoExtent.top; break;
 			case "SouthBound": ext = geoExtent.bottom; break;
-			case "EastBound": ext = geoExtent.left; break;
-			case "WestBound": ext = geoExtent.right; break;
+			case "EastBound": ext = geoExtent.right; break;
+			case "WestBound": ext = geoExtent.left; break;
 		}
 		$(this).children("input").val(ext);
 	});		
