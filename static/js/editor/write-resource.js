@@ -37,14 +37,11 @@ function writeResource(topLevelHtml) {
 			propParts = propName.split(".");
 			for (var i = 0; i < propParts.length; i++) {
 				thisProp = propParts[i];
-				if (obj.hasOwnProperty(thisProp)) {
+				if (i == propParts.length - 1) { obj[thisProp] = value; }
+				else if (obj.hasOwnProperty(thisProp)) { obj = obj[thisProp]; }
+				else {
+					obj[thisProp] = {};
 					obj = obj[thisProp];
-				} else {
-					if (i == propParts.length - 1) { obj[thisProp] = value; } 
-					else {
-						obj[thisProp] = {};
-						obj = obj[thisProp];
-					}
 				}
 			}
 		}
