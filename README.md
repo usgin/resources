@@ -20,7 +20,7 @@ CSS, and we also wanted a great way to transform our metadata into whatever stan
 2. Create a configuration file just for you:
 
 	    cd server/configuration
-	    cp config-example.js config
+	    cp config-example.js config.js
 	
 3. Adjust the config.js file to suit your purposes.
 4. Run the setup routine
