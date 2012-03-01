@@ -1,0 +1,23 @@
+{
+  "author": "Ryan Clark and Genhan Chen <ryan.clark@azgs.az.gov>",
+  "name": "usginmeta",
+  "description": "Metadata manager developed for USGIN",
+  "version": "0.1.0",
+  "homepage": "http://github.com/usgin/resources",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/usgin/resources.git"
+  },
+  "main": "server/main.js",
+  "engines": {
+    "node": "~0.4.9"
+  },
+  "dependencies": {
+  	"connect-auth": ">= 0.4.1",
+  	"cradle": ">= 0.5.8",
+  	"express": ">= 2.5.8",
+  	"jade": ">= 0.20.3",
+  	"xml2json": ">= 0.2.4"
+  },
+  "devDependencies": {}
+}
