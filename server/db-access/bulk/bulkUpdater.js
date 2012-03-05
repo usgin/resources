@@ -31,7 +31,7 @@ function BulkUpdater(propertyToUpdate, updateMethod, updateValue, recordCollecti
 	// Otherwise, use the searchCriteria to perform a lucene search
 	else if (searchCriteria) {
 		var searchObj = { index: "full", terms: searchCriteria };
-		var queryParams = "?include_docs=true&limit=999999";
+		var queryParams = "?include_docs=true&limit=999999&";
 		var searchOptions = {
 			host: config.dbInfo.dbHost,
 			port:
