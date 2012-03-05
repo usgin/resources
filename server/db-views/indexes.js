@@ -25,8 +25,17 @@ exports.repoViews = {
 
 				idx(doc);
 				
-				if (doc.hasOwnProperty("Published")) { ret.add(doc.Published, { field: "published", store: "yes" }); }
+				if (doc.hasOwnProperty("Published")) { ret.add(doc.Published, { field: "published", store: "yes" }); }	
 				else { ret.add("false", { field: "published", store: "yes"}); }
+				
+				if (doc.hasOwnProperty("Links")) {
+					for (l in doc.Links) {
+						thisLink = doc.Links[l];
+						if (thisLink.hasOwnProperty("ServiceType")) {
+							ret.add(thisLink.ServiceType, { field: "services", store: "yes" });
+						}
+					}
+				};
 
 				return ret;
 			}
