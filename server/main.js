@@ -146,6 +146,12 @@ server.post("/new-collection/", requireAuth, collection.saveCollection, function
 	res.redirect("/collection/" + req.saveResponse.id);
 });
 
+//Delete a collection
+server.get("/delete-collection/:id", requireAuth, collection.deleteCollection, function(req, res) {
+	res.json({ id: req.id, deleted: true });
+});
+
+
 // Management views
 server.get("/manage/:id/:view", requireAuth, manage.viewResource, function(req, res) {
 	utils.renderToResponse(req, res, req.template, { result: req.result });

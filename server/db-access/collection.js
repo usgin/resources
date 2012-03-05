@@ -143,3 +143,21 @@ exports.getChildrenCollections = function(req, res, next) {
 		utils.renderToResponse(req, res, "errorResponse", { message: "There was an error performing the search", status: 500 });
 	});
 };
+
+/** MIDDLEWARE FOR DELETING A RESOURCE **/
+exports.deleteCollection = function(req, res, next) {
+	collectionId = req.param("id", false);
+	if (collectionId) {
+		collections.get(id, function(err, doc) {
+			if (err) { res.json({ id: collectionId, deleted: false, reason: err }); }
+			else { 
+				collections.remove(id, doc._rev, function(err, deleteRes) {
+					if (err) { res.json({ id: collectionId, deleted: false, reason: err }); }
+					else { next(); }
+				});
+			}
+		});
+	} else {
+		res.json({ id: "none", deleted: false, reason: "No valid id was given" });
+	}
+};
