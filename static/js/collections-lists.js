@@ -70,11 +70,13 @@ function addCollectionContent(searchTerm, collectionEleId) {
 ////collectionEleId - the collection content element id
 function getHtmlCollection(collection, collectionEleId) {	
 	var collectionId = collection.id + "-" + collectionEleId;
+	var collectionLink = "/collection/" + collection.id;
+	
 	var html = "<li id='" + collectionId + "-container' class='record-container collection-item'>";
 	html += "<span class='ui-icon ui-icon-triangle-1-e collection-list-expand'";
 	html += " onclick='collectionExpand(&#39;" + collectionId + "&#39;)'"; /// Use escape symbol to identify the quote symbol pair
 	html += "></span>";
-	html += "<a>";
+	html += "<a href='" + collectionLink + "'>";
 	html += collection.doc.Title || "No Title Was Given";
 	html += "</a>";
 	html += "<ul id='" + collectionId + "' class='record-list record-inner-list'></ul>"; /// This is the collection content element
