@@ -10,10 +10,6 @@
 	cursor: pointer;
 }
 
-.block-collection a:hover {
-	text-decoration: none;
-}
-
 .collection-list-actions {
 	display: inline-block;
 	float: right;
@@ -74,4 +70,8 @@
 
 .collection-item span {
 	background-image: url("../css/jqueryui/images/ui-icons_006891_256x240.png") !important;
+}
+
+.collection-item a:hover {
+	text-decoration: underline !important;
 }
