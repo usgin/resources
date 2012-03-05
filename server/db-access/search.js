@@ -6,7 +6,7 @@ var http = require("http"),
 /** MIDDLEWARE FOR PERFORMING A SEARCH FOR RESOURCES **/
 exports.doSearch = function(req, res, next) {
 	searchObj = req.body;
-	queryParams = "?include_docs=true&";
+	queryParams = "?include_docs=true&sort=title&";
 	if (searchObj.hasOwnProperty("limit")) { queryParams += "limit=" + searchObj.limit + "&"; }
 	else { queryParams += "limit=999999&"; }
 	if (searchObj.hasOwnProperty("skip")) { queryParams += "skip=" + searchObj.skip + "&"; }
