@@ -33,7 +33,7 @@ First, make sure that you've got couchdb-lucene running. Then:
 	cd resources/server
 	node main.js
 	
-Your application should be available at `http://<your config'd servername>:<you config'd server port>`
+Your application should be available at `http://<your config'd servername>:<your config'd server port>`
 
 ## Detailed Installation on a blank Ubuntu 11.10 Server
 ### Update your base install
@@ -51,7 +51,7 @@ If the `add-apt-repository` command doesn't work, you can `sudo apt-get install 
 
 ### Install packages
 
-	sudo apt-get install git couchdb curl g++ libexpat1-dev nodejs nodejs-dev maven2 sun-java6-jdk unzip curl
+	sudo apt-get install git couchdb curl g++ libexpat1-dev nodejs nodejs-dev maven2 sun-java6-jdk unzip
 	
 ### Install NPM
 
