@@ -57,6 +57,13 @@ server.get("/resources/:format", retrieval.getAllResources, retrieval.removeUnpu
 	res.send(req.formatResources);
 });
 
+// Get a specific attribute from a single resource
+server.get("/resource/:id/attr/:attribute", retrieval.getResource, function(req, res) {
+	attr = req.param("attribute", false);
+	if (attr && req.resource.hasOwnProperty(attr)) { res.json(req.resource[attr]); } 
+	else { res.json({ error: "Request was invalid or for a non-existent attribute."}); }
+});
+
 // View a collection page
 server.get("/collection/:id", collection.getCollection, function(req, res) {
 	utils.renderToResponse(req, res, "collection", { collection: req.collection });
@@ -118,6 +125,11 @@ server.post("/resource/:id", requireAuth, editing.saveResource, function(req, re
 	res.redirect("/resource/" + req.saveResponse.id + "/html");
 });
 
+// Edit a single attribute of a resource
+server.put("/resource/:id/attr/:attribute", requireAuth, retrieval.getResource, editing.editAttribute, function(req, res) {
+	res.json(req.attrUpdateResponse);
+});
+
 // Delete a resource
 server.get("/delete-resource/:id", requireAuth, editing.deleteResource, function(req, res) {
 	res.json({ id: req.id, deleted: true });
@@ -145,12 +157,6 @@ server.get("/new-collection/", requireAuth, function(req, res) {
 server.post("/new-collection/", requireAuth, collection.saveCollection, function(req, res) {
 	res.redirect("/collection/" + req.saveResponse.id);
 });
-
-//Delete a collection
-server.get("/delete-collection/:id", requireAuth, collection.deleteCollection, function(req, res) {
-	res.json({ id: req.id, deleted: true });
-});
-
 
 // Management views
 server.get("/manage/:id/:view", requireAuth, manage.viewResource, function(req, res) {
