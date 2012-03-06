@@ -41,7 +41,7 @@ exports.viewResource = function(req, res, next) {
 									"gmd:CI_Citation": {
 										"gmd:title": {
 											"gco:CharacterString": {
-												"$t": config.serverInfo.serverName + " collections"
+												"$t": config.serverInfo.serverTitle + " collections"
 											}										
 										}, 
 										"gmd:date": {
