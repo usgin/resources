@@ -69,18 +69,16 @@ exports.viewResource = function(req, res, next) {
 						for (var c in collectionIds) {
 							thisId = collectionIds[c];
 							collections.get(thisId, function(err, doc) {
-								if (doc) {
-									collectionNames.push(doc.Title || "");
-									if (collectionNames.length == collectionIds.length) {
-										for (var cn in collectionNames) {
-											newKeywords.push({
-												"gco:CharacterString": {
-													"$t": collectionNames[cn]
-												}
-											});
-										}
-										next(); // Your ISO record is ready, chap.
+								collectionNames.push(doc ? doc.Title || "" : "");
+								if (collectionNames.length == collectionIds.length) {
+									for (var cn in collectionNames) {
+										newKeywords.push({
+											"gco:CharacterString": {
+												"$t": collectionNames[cn]
+											}
+										});
 									}
+									next(); // Your ISO record is ready, chap.
 								}
 							});
 						}
