@@ -69,6 +69,13 @@ server.get("/collection/:id", collection.getCollection, function(req, res) {
 	utils.renderToResponse(req, res, "collection", { collection: req.collection });
 });
 
+//Get a specific attribute from a single collection
+server.get("/collection/:id/attr/:attribute", collection.getCollection, function(req, res) {
+	attr = req.param("attribute", false);
+	if (attr && req.collection.hasOwnProperty(attr)) { res.json(req.collection[attr]); } 
+	else { res.json({ error: "Request was invalid or for a non-existent attribute."}); }
+});
+
 // Get some collection names
 server.post("/collection-names", collection.getCollectionNames, function(req, res) {
 	res.json(req.collectionNames);
@@ -156,6 +163,11 @@ server.get("/new-collection/", requireAuth, function(req, res) {
 });
 server.post("/new-collection/", requireAuth, collection.saveCollection, function(req, res) {
 	res.redirect("/collection/" + req.saveResponse.id);
+});
+
+//Edit a single attribute of a collection
+server.put("/collection/:id/attr/:attribute", requireAuth, collection.getCollection, collection.editAttribute, function(req, res) {
+	res.json(req.attrUpdateResponse);
 });
 
 // Management views

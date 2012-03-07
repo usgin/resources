@@ -161,3 +161,21 @@ exports.deleteCollection = function(req, res, next) {
 		res.json({ id: "none", deleted: false, reason: "No valid id was given" });
 	}
 };
+
+/** MIDDLEWARE FOR EDITING AN ATTRIBUTE OF A SINGLE COLLECTION **/
+//req.collection must have already been set by prior middleware.
+exports.editAttribute = function(req, res, next) {
+	id = req.param("id", false);
+	attr = req.param("attribute", false);
+	value = req.body;
+	if (id && attr && value != null) {
+		req.collection[attr] = value;
+		collections.save(id, req.collection, function(err, dbRes) {
+			if (err) { res.json({ success: false, saveError: err }); }
+			else {
+				req.attrUpdateResponse = { success: true };
+				next();
+			}
+		});
+	}
+};

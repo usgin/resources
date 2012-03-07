@@ -6,6 +6,7 @@ var cradle = require("cradle"),
 
 var repository = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort, { cache: false }).database(config.dbInfo.databases.dbRepoName);
 var harvested = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort, { cache: false }).database(config.dbInfo.databases.dbHarvestName);
+var collections = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbPort, { cache: false }).database(config.dbInfo.databases.dbCollectionName);
 
 function invalidFormatRequested(req, res) {
 	formatsAvailable = [];
@@ -27,7 +28,63 @@ exports.viewResource = function(req, res, next) {
 				else {
 					if (dbRes.rows.length == 0) { req.viewResource = null; } 
 					else { req.viewResource = dbRes.rows[0].value; }
-					next();
+					if (format == "iso.xml") { // ISO records should contain some keywords about what collection they come from. This way we could feasibly build a browse tree from keywords in ISO records. Maybe.
+						var outputKeywords = req.viewResource["gmd:MD_Metadata"]["gmd:identificationInfo"]["gmd:MD_DataIdentification"]["gmd:descriptiveKeywords"];
+						var newKeywords = [];
+						
+						// ISO is fucking stupid.
+						outputKeywords.push({
+							"gmd:MD_Keywords": {
+								"gmd:keyword": newKeywords,
+								"gmd:thesaurusName": {
+									"xlink:href": "http://" + config.serverInfo.serverHostname + "/browse/",
+									"gmd:CI_Citation": {
+										"gmd:title": {
+											"gco:CharacterString": {
+												"$t": config.serverInfo.serverTitle + " collections"
+											}										
+										}, 
+										"gmd:date": {
+											"gmd:CI_Date": {
+												"gmd:date": {
+													"gco:Date": {
+														"$t": "2012-04-06"
+													}
+												},
+												"gmd:dateType": {
+													"gmd:CI_DateTypeCode": {
+														"codeList": "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode",
+														"codeListValue": "publication"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						});
+						
+						var collectionIds = req.resource.Collections || [];
+						var collectionNames = [];
+						for (var c in collectionIds) {
+							thisId = collectionIds[c];
+							collections.get(thisId, function(err, doc) {
+								collectionNames.push(doc ? doc.Title || "" : "");
+								if (collectionNames.length == collectionIds.length) {
+									for (var cn in collectionNames) {
+										newKeywords.push({
+											"gco:CharacterString": {
+												"$t": collectionNames[cn]
+											}
+										});
+									}
+									next(); // Your ISO record is ready, chap.
+								}
+							});
+						}
+					} else { // Not ISO, don't have to deal with that nonsense.
+						next();
+					}					
 				}
 			});
 		}
