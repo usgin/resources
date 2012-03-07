@@ -73,7 +73,14 @@ function addCollection(collectionId){
 }
 
 function deleteCollection(collectionId){
+	var objId = JSON.parse(collectionId);
 	
+	$.get("/collection/" + objId.id + "/attr/ParentCollections", function(data){
+		data.splice(data.indexOf(objId.parentId), 1);
+		$.put("/collection/" + objId.id + "/attr/ParentCollections", data, function(response){
+			refreshContent(objId.parentElementId);
+		})
+	});
 }
 
 function addRecord(collectionId){
