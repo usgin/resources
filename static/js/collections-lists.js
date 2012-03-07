@@ -79,6 +79,9 @@ function getHtmlCollection(collection, collectionEleId) {
 	html += "<a href='" + collectionLink + "'>";
 	html += collection.doc.Title || "No Title Was Given";
 	html += "</a>";
+	if(authenticated){
+		html += getToolbarHtml(collection.id, collectionEleId, true); /// Add toolbar after each collection
+	}
 	html += "<ul id='" + collectionId + "' class='record-list record-inner-list'></ul>"; /// This is the collection content element
 	html += "</li>";
 	
@@ -105,6 +108,9 @@ function getHtmlRecord(record, collectionEleId) {
 	html += "<a href=" + recordLink + " class='record-item-link'>";
 	html += record.doc.Title || "No Title Was Given";
 	html += "</a>";
+	if(authenticated){
+		html += getToolbarHtml(record.id, collectionEleId, false); ///Add toolbar after each record
+	}	
 	html += "</li>";
 	
 	return html;
@@ -121,10 +127,6 @@ function expandSymbolChange(isExpand, triangleEle){
 	}
 }
 
-function deleteCollection(collectionId){
-	
-}
 
-function addCollection(collectionId){
-	
-}
+
+
