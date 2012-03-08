@@ -47,6 +47,16 @@ server.post("/search/", search.doSearch, function(req, res) {
 	res.json(req.searchResults);
 });
 
+//Get a specific attribute from all resources
+server.get("/resource/attr/:attribute", retrieval.getAllResources, function(req, res) {
+	attr = req.param("attribute", false);
+	if (attr) {
+		response = [];
+		for (var r in req.resources) { response.push(req.resources[r][attr] || ""); }
+		res.json(response);
+	} else { res.json({ error: "Request was invalid or for a non-existent attribute."}); }
+});
+
 // Get a single record in some defined output format
 server.get("/resource/:id/:format", retrieval.getResource, retrieval.removeUnpublished, views.viewResource, formatting.formatResource, function(req, res) {
 	res.send(req.formatResource);
