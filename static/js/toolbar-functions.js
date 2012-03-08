@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	initAddCollectionDialog("add-collection-dialog");
+	initAddRecordDialog("add-record-dialog");
 });
 
 function initAddCollectionDialog(dialId){
@@ -22,7 +23,15 @@ function initAddCollectionDialog(dialId){
 			$("#input-collection-name").val("");
 			$.post("/collection-names", { ids: "all" }, function(response) {
 				var collections = [];
-				for (var r in response) { collections.push({ id: response[r].id, value: response[r].value.title }); }
+				for (var r in response) { 
+					collections.push(
+						{ 
+							id: response[r].id, 
+							value: response[r].value.title 
+						}
+					); 
+				}
+				
 				$("#input-collection-name").autocomplete({
 					source: collections,
 					select: function(event, ui) {
@@ -49,6 +58,65 @@ function addCollection2Collection(){
 		})
 	});
 }
+
+function initAddRecordDialog(dialId){
+	$("#" + dialId).dialog({
+		autoOpen: false,
+		modal: true,
+		resizable: false,
+		width: 500,
+		title: "Add Record",
+		buttons: {
+			"Add": function() {
+				addRecord2Collection();
+				$(this).dialog("close");
+			},
+			"Cancel": function() {
+				$(this).dialog("close");
+			}
+		},
+		open: function(evt, ui){
+			$("#input-record-name").val("");
+			$.get("/resource/attr/_id", function(ids) {
+				$.get("/resource/attr/Title", function(titles){
+					var records = [];
+					for (var r in titles) {
+						records.push(
+							{
+								id: ids[r],
+								value: titles[r]
+							}
+						);
+					}
+					
+					$("#input-record-name").autocomplete({
+						source: records,
+						select: function(event, ui) {
+							$("#selected-record-id").val(ui.item.id);
+							$(this).val(ui.item.value);
+							return false;
+						}
+					});					
+				})
+			});			
+		}
+	});
+}
+
+function addRecord2Collection(){
+	var selectedRecordId = $("#selected-record-id").val();
+	var parentCollectionId = $("#collection-id").val();
+	var refreshElementId = $("#refresh-collection-id").val();
+	
+	/// Get the ParentCollections property from the collection dataset
+	$.get("/resource/" + selectedRecordId + "/attr/Collections", function(data){
+		data.push(parentCollectionId); /// Add 
+		$.put("/resource/" + selectedRecordId + "/attr/Collections", data, function(response){
+			refreshContent(refreshElementId);
+		})
+	});		
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 function getObjId(id, parentId, pElementId){
 	var obj = {
@@ -144,6 +212,11 @@ function deleteCollection(collectionId){
 
 function addRecord(collectionId){
 	var objId = JSON.parse(collectionId);
+	
+	$("#collection-id").val(objId.id);
+	$("#refresh-collection-id").val(objId.id + "-" + objId.parentElementId);
+	
+	$("#add-record-dialog").dialog("open");
 			
 }
 
