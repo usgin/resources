@@ -12,7 +12,11 @@ function initAddCollectionDialog(dialId){
 		title: "Add Collection",
 		buttons: {
 			"Add": function() {
-				addCollection2Collection();
+				if($("#" + dialId + " > input").val()){
+					addCollection2Collection(dialId);
+				}else{
+					
+				}				
 				$(this).dialog("close");
 			},
 			"Cancel": function() {
@@ -20,22 +24,27 @@ function initAddCollectionDialog(dialId){
 			}
 		},
 		open: function(evt, ui){
-			$("#input-collection-name").val("");
+			var inputElement = $("#" + dialId + " > input");
+			var selectedIdInAutoPopup = $("#" + dialId + " > .selected-item-id");
+			
+			inputElement.val(""); /// Clear the input box
+			
+			/// Get the array for all the collection names 
 			$.post("/collection-names", { ids: "all" }, function(response) {
 				var collections = [];
 				for (var r in response) { 
 					collections.push(
 						{ 
 							id: response[r].id, 
-							value: response[r].value.title 
+							value: response[r].value.title /// value will be displayed in the autocomplete popup
 						}
 					); 
 				}
 				
-				$("#input-collection-name").autocomplete({
+				inputElement.autocomplete({
 					source: collections,
 					select: function(event, ui) {
-						$("#selected-collection-id").val(ui.item.id);
+						selectedIdInAutoPopup.val(ui.item.id);
 						$(this).val(ui.item.value);
 						return false;
 					}
@@ -45,14 +54,14 @@ function initAddCollectionDialog(dialId){
 	});
 }
 
-function addCollection2Collection(){
-	var selectedCollectionId = $("#selected-collection-id").val();
-	var parentCollectionId = $("#parent-collection-id").val();
-	var refreshElementId = $("#refresh-element-id").val();
+function addCollection2Collection(dialId){
+	var selectedCollectionId = $("#" + dialId + " > .selected-item-id").val();
+	var parentCollectionId = $("#" + dialId + " > .parent-collection-id").val();
+	var refreshElementId = $("#" + dialId + " > .refresh-element-id").val();
 	
 	/// Get the ParentCollections property from the collection dataset
 	$.get("/collection/" + selectedCollectionId + "/attr/ParentCollections", function(data){
-		data.push(parentCollectionId); /// Add 
+		data.push(parentCollectionId); /// Add the parent collection id to current collection
 		$.put("/collection/" + selectedCollectionId + "/attr/ParentCollections", data, function(response){
 			refreshContent(refreshElementId);
 		})
@@ -68,7 +77,12 @@ function initAddRecordDialog(dialId){
 		title: "Add Record",
 		buttons: {
 			"Add": function() {
-				addRecord2Collection();
+				if($("#" + dialId + " > input").val()){
+					addRecord2Collection(dialId);
+				}else{
+					
+				}
+				
 				$(this).dialog("close");
 			},
 			"Cancel": function() {
@@ -76,9 +90,13 @@ function initAddRecordDialog(dialId){
 			}
 		},
 		open: function(evt, ui){
-			$("#input-record-name").val("");
-			$.get("/resource/attr/_id", function(ids) {
-				$.get("/resource/attr/Title", function(titles){
+			var inputElement = $("#" + dialId + " > input");
+			var selectedIdInAutoPopup = $("#" + dialId + " > .selected-item-id");			
+						
+			inputElement.val(""); /// Clear the input box
+			
+			$.get("/resource/attr/_id", function(ids) { /// Get all record ids
+				$.get("/resource/attr/Title", function(titles){ /// Get all record titles
 					var records = [];
 					for (var r in titles) {
 						records.push(
@@ -89,10 +107,10 @@ function initAddRecordDialog(dialId){
 						);
 					}
 					
-					$("#input-record-name").autocomplete({
+					inputElement.autocomplete({
 						source: records,
 						select: function(event, ui) {
-							$("#selected-record-id").val(ui.item.id);
+							selectedIdInAutoPopup.val(ui.item.id);
 							$(this).val(ui.item.value);
 							return false;
 						}
@@ -103,14 +121,14 @@ function initAddRecordDialog(dialId){
 	});
 }
 
-function addRecord2Collection(){
-	var selectedRecordId = $("#selected-record-id").val();
-	var parentCollectionId = $("#collection-id").val();
-	var refreshElementId = $("#refresh-collection-id").val();
+function addRecord2Collection(dialId){
+	var selectedRecordId = $("#" + dialId + " > .selected-item-id").val();
+	var parentCollectionId = $("#" + dialId + " > .parent-collection-id").val();
+	var refreshElementId = $("#" + dialId + " > .refresh-element-id").val();
 	
 	/// Get the ParentCollections property from the collection dataset
 	$.get("/resource/" + selectedRecordId + "/attr/Collections", function(data){
-		data.push(parentCollectionId); /// Add 
+		data.push(parentCollectionId); /// Add the parent collection id to current record
 		$.put("/resource/" + selectedRecordId + "/attr/Collections", data, function(response){
 			refreshContent(refreshElementId);
 		})
@@ -118,6 +136,8 @@ function addRecord2Collection(){
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
+///Create the id object
+///id - id of the current selected 
 function getObjId(id, parentId, pElementId){
 	var obj = {
 		id: id,
@@ -191,8 +211,11 @@ jQuery.put = function(url, data, callback) {
 function addCollection(collectionId){
 	var objId = JSON.parse(collectionId);
 	
-	$("#parent-collection-id").val(objId.id);
-	$("#refresh-element-id").val(objId.id + "-" + objId.parentElementId);
+	///Set global values for the dialog/////////////////////////////////////////
+	/// Identify the current collection where the new collection will be added
+	$("#add-collection-dialog > .parent-collection-id").val(objId.id); 
+	/// Identify the current collection element which needs to be refreshed
+	$("#add-collection-dialog > .refresh-element-id").val(objId.id + "-" + objId.parentElementId); 
 	
 	$("#add-collection-dialog").dialog("open");
 	
@@ -213,8 +236,11 @@ function deleteCollection(collectionId){
 function addRecord(collectionId){
 	var objId = JSON.parse(collectionId);
 	
-	$("#collection-id").val(objId.id);
-	$("#refresh-collection-id").val(objId.id + "-" + objId.parentElementId);
+	///Set global values for the dialog/////////////////////////////////////////
+	/// Identify the current collection where the new record will be added
+	$("#add-record-dialog > .parent-collection-id").val(objId.id); 
+	/// Identify the current collection element which needs to be refreshed
+	$("#add-record-dialog > .refresh-element-id").val(objId.id + "-" + objId.parentElementId); 
 	
 	$("#add-record-dialog").dialog("open");
 			
