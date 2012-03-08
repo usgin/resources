@@ -21,8 +21,8 @@ block page-content
 						a(class="collection-list-title",href='/collection/'+'#{collections[c].id}')=collections[c].doc.Title
 						- if (authenticated) {
 						div.collection-list-actions
-							span(onclick="deleteCollection(#{collections[c].id})").ui-icon.ui-icon-circle-close
-							span(onclick="addNewCollection(#{collections[c].id})").ui-icon.ui-icon-circle-plus
+							span(onclick="addTopCollection('#{collections[c].id}')").ui-icon.ui-icon-folder-collapsed
+							span(onclick="addTopRecord('#{collections[c].id}')").ui-icon.ui-icon-document
 						- }
 					div.block-content.collection-content
 						div(id=collections[c].id + "-description").collection-description= collections[c].doc.Description

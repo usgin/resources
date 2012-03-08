@@ -261,5 +261,37 @@ function deleteRecord(recordId){
 
 function refreshContent(parentEleId){
 	clearCollectionContent(parentEleId);
-	collectionExpand(parentEleId)	
+	
+	var titleTriangleEle = $("#" + parentEleId + "-container > span");
+	
+	/// Identify if this is a top level collection
+	if(parentEleId .split("-").length == 1){
+		titleTriangleEle = $("#" + parentEleId + "-container > .block-title > span"); /// Identify top level title bar triangle
+	}
+	
+	attachRecords(parentEleId .split("-")[0], parentEleId, titleTriangleEle);
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+///Process the top-level toolbar
+
+function addTopCollection(id){
+	///Set global values for the dialog/////////////////////////////////////////
+	/// Identify the current collection where the new collection will be added
+	$("#add-collection-dialog > .parent-collection-id").val(id); 
+	/// Identify the current collection element which needs to be refreshed
+	$("#add-collection-dialog > .refresh-element-id").val(id); 
+	
+	$("#add-collection-dialog").dialog("open");	
+}
+
+function addTopRecord(id){
+	///Set global values for the dialog/////////////////////////////////////////
+	/// Identify the current collection where the new record will be added
+	$("#add-record-dialog > .parent-collection-id").val(id); 
+	/// Identify the current collection element which needs to be refreshed
+	$("#add-record-dialog > .refresh-element-id").val(id); 
+	
+	$("#add-record-dialog").dialog("open");	
 }

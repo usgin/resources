@@ -1,7 +1,3 @@
-$(document).ready(function() {
-		
-});
-
 function showRecords(collectionId) {
 	var titleTriangleEle = $("#" + collectionId + "-container > .block-title > span");
 	
@@ -126,7 +122,4 @@ function expandSymbolChange(isExpand, triangleEle){
 		triangleEle.addClass("ui-icon-triangle-1-e");
 	}
 }
-
-
-
 
