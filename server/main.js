@@ -101,6 +101,11 @@ server.get("/collection/:id/:format", collection.getCollectionRecords, views.vie
 	res.send(req.formatResources);
 });
 
+// Get JSON representation of collection hierarchy
+server.get("/collections/:format", collection.getTopLevelCollections, collection.getCollectionHierarchy, function(req, res) {
+	res.send(req.collectionHierarchy);
+});
+
 // Browse collections page
 server.get("/browse/", collection.getTopLevelCollections, function(req, res) {
 	utils.renderToResponse(req, res, "manage-collections", { collections: req.collections });

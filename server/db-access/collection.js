@@ -73,7 +73,7 @@ exports.getTopLevelCollections = function(req, res, next) {
 	searchOptions = {
 		host: config.dbInfo.dbHost,
 		port: config.dbInfo.dbPort,
-		path: utils.collectionSearchUrl + "parent?include_docs=true&q=top-level"
+		path: utils.collectionSearchUrl + "parent?include_docs=true&q=top-level&sort=title&"
 	};
 	
 	//req.collections = [];
@@ -123,7 +123,7 @@ exports.getCollectionRecords = function(req, res, next) {
 /** MIDDLEWARE FOR SEARCHING FOR A COLLECTION **/
 exports.getChildrenCollections = function(req, res, next) {
 	searchObj = req.body;
-	queryParams = "?include_docs=true&";
+	queryParams = "?include_docs=true&sort=title&";
 	if (searchObj.hasOwnProperty("limit")) { queryParams += "limit=" + searchObj.limit + "&"; }
 	if (searchObj.hasOwnProperty("skip")) { queryParams += "skip=" + searchObj.skip + "&"; }
 	searchOptions = {
@@ -179,3 +179,25 @@ exports.editAttribute = function(req, res, next) {
 		});
 	}
 };
+
+/** MIDDLEWARE FOR GENERATING A REPRESENTATION OF THE COLLECTION HIERARCHY **/
+//req.collections must have already been set by prior middleware.
+exports.getCollectionHierarchy = function(req, res, next) {
+	collections.all({ include_docs:true }, function(err, allResponse) {
+		req.collectionHierarchy = { "children":[] };
+		getChildren(req.collectionHierarchy.children, "top-level", allResponse.rows);
+		next();
+	});
+};
+
+function getChildren(parentObj, parentId, collections) {
+	for (var c in collections) {
+		thisDoc = collections[c].doc;
+		if (thisDoc._id.indexOf("_") != 0 && thisDoc.hasOwnProperty("ParentCollections") && thisDoc.ParentCollections.indexOf(parentId) != -1) {
+			parObj = { "id": thisDoc._id, "title": thisDoc.Title, "children": [] };
+			idx = parentObj.push(parObj);
+			getChildren(parentObj[idx-1].children, thisDoc._id, collections);
+		}
+	}
+}
+

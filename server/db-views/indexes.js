@@ -82,6 +82,10 @@ exports.collectionViews = {
 					}
 				}
 				
+				if (doc.hasOwnProperty("Title")) {
+					ret.add(doc.Title, { field: "title", store: "yes", index:"not_analyzed"}); // The not_analyzed part makes it so that you can sort on the entire field, but cannot search for individual words in the title
+				}
+				
 				return ret;
 			}
 		}
