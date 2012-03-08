@@ -1,3 +1,55 @@
+$(document).ready(function() {
+	initAddCollectionDialog("add-collection-dialog");
+});
+
+function initAddCollectionDialog(dialId){
+	$("#" + dialId).dialog({
+		autoOpen: false,
+		modal: true,
+		resizable: false,
+		width: 500,
+		title: "Add Collection",
+		buttons: {
+			"Add": function() {
+				addCollection2Collection();
+				$(this).dialog("close");
+			},
+			"Cancel": function() {
+				$(this).dialog("close");
+			}
+		},
+		open: function(evt, ui){
+			$("#input-collection-name").val("");
+			$.post("/collection-names", { ids: "all" }, function(response) {
+				var collections = [];
+				for (var r in response) { collections.push({ id: response[r].id, value: response[r].value.title }); }
+				$("#input-collection-name").autocomplete({
+					source: collections,
+					select: function(event, ui) {
+						$("#selected-collection-id").val(ui.item.id);
+						$(this).val(ui.item.value);
+						return false;
+					}
+				});
+			});			
+		}
+	});
+}
+
+function addCollection2Collection(){
+	var selectedCollectionId = $("#selected-collection-id").val();
+	var parentCollectionId = $("#parent-collection-id").val();
+	var refreshElementId = $("#refresh-element-id").val();
+	
+	/// Get the ParentCollections property from the collection dataset
+	$.get("/collection/" + selectedCollectionId + "/attr/ParentCollections", function(data){
+		data.push(parentCollectionId); /// Add 
+		$.put("/collection/" + selectedCollectionId + "/attr/ParentCollections", data, function(response){
+			refreshContent(refreshElementId);
+		})
+	});
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
 function getObjId(id, parentId, pElementId){
 	var obj = {
 		id: id,
@@ -7,7 +59,7 @@ function getObjId(id, parentId, pElementId){
 	
 	return obj;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////
+
 ///Add and delete buttons after each record
 function getToolbarHtml(id, parentCollectionEleId, isCollection){
 	var parentCollectionId = parentCollectionEleId.split("-")[0];
@@ -70,13 +122,20 @@ jQuery.put = function(url, data, callback) {
 
 function addCollection(collectionId){
 	var objId = JSON.parse(collectionId);
+	
+	$("#parent-collection-id").val(objId.id);
+	$("#refresh-element-id").val(objId.id + "-" + objId.parentElementId);
+	
+	$("#add-collection-dialog").dialog("open");
+	
 }
 
 function deleteCollection(collectionId){
 	var objId = JSON.parse(collectionId);
 	
+	/// Get the ParentCollections property from the collection dataset
 	$.get("/collection/" + objId.id + "/attr/ParentCollections", function(data){
-		data.splice(data.indexOf(objId.parentId), 1);
+		data.splice(data.indexOf(objId.parentId), 1); /// Delete the parent collection id from the ParentCollections property in collections dataset
 		$.put("/collection/" + objId.id + "/attr/ParentCollections", data, function(response){
 			refreshContent(objId.parentElementId);
 		})
@@ -91,6 +150,7 @@ function addRecord(collectionId){
 function deleteRecord(recordId){
 	var objId = JSON.parse(recordId);
 	
+	/// Get the Collections property from the repository dataset
 	$.get("/resource/" + objId.id + "/attr/Collections", function(data){
 		data.splice(data.indexOf(objId.parentId), 1);
 		$.put("/resource/" + objId.id + "/attr/Collections", data, function(response){

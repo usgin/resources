@@ -87,20 +87,22 @@
 
 .collection-toolbar span {
 	display: inline-block;
-	background-image: url("../css/jqueryui/images/ui-icons_ffffff_256x240.png") !important;
+	background-image: url("../css/jqueryui/images/ui-icons_006891_256x240.png") !important;
 	vertical-align: middle;
+	opacity: 0.2;
 }
 
 .collection-toolbar span:hover {
-	background-image: url("../css/jqueryui/images/ui-icons_006891_256x240.png") !important;
+	opacity: 1;
 }
 
 .record-toolbar span {
 	display: inline-block;
-	background-image: url("../css/jqueryui/images/ui-icons_ffffff_256x240.png") !important;
+	background-image: url("../css/jqueryui/images/ui-icons_F08B6F_256x240.png") !important;
 	vertical-align: middle;
+	opacity: 0.2;
 }
 
 .record-toolbar span:hover {
-	background-image: url("../css/jqueryui/images/ui-icons_F08B6F_256x240.png") !important;
+	opacity: 1;
 }
