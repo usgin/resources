@@ -37,7 +37,7 @@ exports.viewResource = function(req, res, next) {
 							"gmd:MD_Keywords": {
 								"gmd:keyword": newKeywords,
 								"gmd:thesaurusName": {
-									"xlink:href": "http://" + config.serverInfo.serverHostname + "/browse/",
+									"xlink:href": "http://" + config.serverInfo.serverHostname + "/collections/json",
 									"gmd:CI_Citation": {
 										"gmd:title": {
 											"gco:CharacterString": {
