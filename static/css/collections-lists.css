@@ -37,6 +37,7 @@
 /**CSS for content*********************************************************************/
 .record-container {
 	list-style: none;
+	padding-left: 6px;
 }
 
 .record-container a{
@@ -55,8 +56,7 @@
 }
 
 .record-item-link {
-	color: #F08B6F !important;
-	padding-left: 6px;
+	color: #F08B6F !important;	
 }
 
 .record-item-link:hover {
@@ -72,6 +72,37 @@
 	background-image: url("../css/jqueryui/images/ui-icons_006891_256x240.png") !important;
 }
 
+.collection-item a {
+	padding-right: 5px;
+}
+
 .collection-item a:hover {
 	text-decoration: underline !important;
+}
+
+/**Add buttons after each result ine******************************************************/
+.collection-toolbar, .record-toolbar {
+	display: inline-block;
+}
+
+.collection-toolbar span {
+	display: inline-block;
+	background-image: url("../css/jqueryui/images/ui-icons_006891_256x240.png") !important;
+	vertical-align: middle;
+	opacity: 0.2;
+}
+
+.collection-toolbar span:hover {
+	opacity: 1;
+}
+
+.record-toolbar span {
+	display: inline-block;
+	background-image: url("../css/jqueryui/images/ui-icons_F08B6F_256x240.png") !important;
+	vertical-align: middle;
+	opacity: 0.2;
+}
+
+.record-toolbar span:hover {
+	opacity: 1;
 }

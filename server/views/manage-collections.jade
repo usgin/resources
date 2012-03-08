@@ -7,6 +7,9 @@ block styles
 block scripts
 	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
 	script(type="application/javascript", src="/static/js/collections-lists.js")
+	script(type="application/javascript", src="/static/js/toolbar-functions.js")
+	script(type="application/javascript")
+		| authenticated = #{authenticated}
 
 block page-content
 		#collections-list-content.block-content
@@ -25,3 +28,11 @@ block page-content
 						div(id=collections[c].id + "-description").collection-description= collections[c].doc.Description
 						ul(id=collections[c].id).record-list
 				- }
+			- if (authenticated) {
+			#add-collection-dialog
+				input#input-collection-name
+				#selected-collection-id
+				#parent-collection-id
+				#refresh-element-id
+			#add-record-dialog
+			- }
