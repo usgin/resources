@@ -1,10 +1,3 @@
-$(document).ready(function() {
-	initAddCollectionDialog("add-collection-dialog");
-	initAddRecordDialog("add-record-dialog");
-	initDeleteCollectionDialog("delete-collection-dialog");
-	initDeleteRecordDialog("delete-record-dialog");
-});
-
 function initAddCollectionDialog(dialId){
 	$("#" + dialId).dialog({
 		autoOpen: false,
@@ -184,7 +177,7 @@ function deleteCollectionDialog(dialId){
 	$.get("/collection/" + selectedCollectionId + "/attr/ParentCollections", function(data){
 		data.splice(data.indexOf(parentCollectionId), 1); /// Delete the parent collection id from the ParentCollections property in collections dataset
 		$.put("/collection/" + selectedCollectionId + "/attr/ParentCollections", data, function(response){
-			refreshContent(parentCollectionId);
+			refreshContent(refreshElementId);
 		})
 	});	
 }

@@ -9,7 +9,11 @@ var collections = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbP
 /** MIDDLEWARE FOR SAVING A COLLECTION **/
 exports.saveCollection = function(req, res, next) {
 	collectionId = req.param("id", false);
-	collection = { Title: req.body.collectionTitle, Description: req.body.collectionDescription };
+	collection = { 
+		Title: req.body.collectionTitle,
+		ParentCollections: req.body.parentCollection, 
+		Description: req.body.collectionDescription 
+	};
 	
 	function saveResponse(err, dbRes) {
 		if (err) { utils.renderToResponse(req, res, "errorResponse", { message: "Error saving your collection.", status: 500 }); }
