@@ -89,7 +89,7 @@
 	display: inline-block;
 	background-image: url("../css/jqueryui/images/ui-icons_006891_256x240.png") !important;
 	vertical-align: middle;
-	opacity: 0.2;
+	opacity: 0.15;
 }
 
 .collection-toolbar span:hover {
@@ -100,7 +100,7 @@
 	display: inline-block;
 	background-image: url("../css/jqueryui/images/ui-icons_F08B6F_256x240.png") !important;
 	vertical-align: middle;
-	opacity: 0.2;
+	opacity: 0.15;
 }
 
 .record-toolbar span:hover {

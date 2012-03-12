@@ -1,3 +1,14 @@
+/// New method for Array
+/// Identify if this array contains the specified string
+Array.prototype.contains = function(value){
+	for(var i = 0; i < this.length; i ++){
+		if(this[i] === value){
+			return true;
+		}
+	}
+	return false;
+}
+
 function showRecords(collectionId) {
 	var titleTriangleEle = $("#" + collectionId + "-container > .block-title > span");
 	
@@ -47,14 +58,14 @@ function addCollectionContent(searchTerm, collectionEleId) {
 	};
 	
 	$.post("/search/", searchObj, function(response) {
-		for(r in response.rows) { 
-			contentEle.append(getHtmlRecord(response.rows[r], collectionEleId));
+		for(var i = 0; i < response.rows.length; i ++) { 
+			contentEle.append(getHtmlRecord(response.rows[i], collectionEleId));
 		}
 		
 		/// Set collection search after the record search is completed
 		$.post("/collection-search/", searchChildrenCollectionObj, function(response) {
-			for(r in response.rows) { 
-				contentEle.append(getHtmlCollection(response.rows[r], collectionEleId));
+			for(var i = 0; i < response.rows.length; i ++) { 
+				contentEle.append(getHtmlCollection(response.rows[i], collectionEleId));
 			}
 		});
 	});

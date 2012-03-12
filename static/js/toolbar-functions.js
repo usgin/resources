@@ -1,6 +1,8 @@
 $(document).ready(function() {
 	initAddCollectionDialog("add-collection-dialog");
 	initAddRecordDialog("add-record-dialog");
+	initDeleteCollectionDialog("delete-collection-dialog");
+	initDeleteRecordDialog("delete-record-dialog");
 });
 
 function initAddCollectionDialog(dialId){
@@ -11,6 +13,10 @@ function initAddCollectionDialog(dialId){
 		width: 500,
 		title: "Add Collection",
 		buttons: {
+			"New Collection": function(){
+				window.open("/new-collection/");
+				$(this).dialog("close");
+			},
 			"Add": function() {
 				if($("#" + dialId + " > input").val()){
 					addCollection2Collection(dialId);
@@ -32,11 +38,11 @@ function initAddCollectionDialog(dialId){
 			/// Get the array for all the collection names 
 			$.post("/collection-names", { ids: "all" }, function(response) {
 				var collections = [];
-				for (var r in response) { 
+				for (var i = 0; i < response.length; i ++) { 
 					collections.push(
 						{ 
-							id: response[r].id, 
-							value: response[r].value.title /// value will be displayed in the autocomplete popup
+							id: response[i].id, 
+							value: response[i].value.title /// value will be displayed in the autocomplete popup
 						}
 					); 
 				}
@@ -61,10 +67,15 @@ function addCollection2Collection(dialId){
 	
 	/// Get the ParentCollections property from the collection dataset
 	$.get("/collection/" + selectedCollectionId + "/attr/ParentCollections", function(data){
-		data.push(parentCollectionId); /// Add the parent collection id to current collection
+		if(data.error){return false;}
+		
+		if(!data.contains(parentCollectionId)){
+			data.push(parentCollectionId); /// Add the parent collection id to current collection
+		}
+
 		$.put("/collection/" + selectedCollectionId + "/attr/ParentCollections", data, function(response){
 			refreshContent(refreshElementId);
-		})
+		});		
 	});
 }
 
@@ -76,6 +87,10 @@ function initAddRecordDialog(dialId){
 		width: 500,
 		title: "Add Record",
 		buttons: {
+			"New Record": function(){
+				window.open("/new-resource/");
+				$(this).dialog("close");
+			},
 			"Add": function() {
 				if($("#" + dialId + " > input").val()){
 					addRecord2Collection(dialId);
@@ -98,11 +113,11 @@ function initAddRecordDialog(dialId){
 			$.get("/resource/attr/_id", function(ids) { /// Get all record ids
 				$.get("/resource/attr/Title", function(titles){ /// Get all record titles
 					var records = [];
-					for (var r in titles) {
+					for (var i = 0; i < titles.length; i ++) {
 						records.push(
 							{
-								id: ids[r],
-								value: titles[r]
+								id: ids[i],
+								value: titles[i]
 							}
 						);
 					}
@@ -128,11 +143,84 @@ function addRecord2Collection(dialId){
 	
 	/// Get the ParentCollections property from the collection dataset
 	$.get("/resource/" + selectedRecordId + "/attr/Collections", function(data){
-		data.push(parentCollectionId); /// Add the parent collection id to current record
+		if(data.error){return false;}
+		
+		if(!data.contains(parentCollectionId)){
+			data.push(parentCollectionId); /// Add the parent collection id to current record
+		}
+		
+		$.put("/resource/" + selectedRecordId + "/attr/Collections", data, function(response){
+			refreshContent(refreshElementId);
+		});
+	});		
+}
+
+function initDeleteCollectionDialog(dialId){
+	$("#" + dialId).dialog({
+		autoOpen: false,
+		resizable: false,
+		height: 60,
+		width: 350,
+		modal: true,
+		title: "Are you sure to delete this collection?",
+		buttons : {
+			"Delete" : function() {
+				deleteCollectionDialog(dialId);
+				$(this).dialog("close");
+			},
+			Cancel : function() {
+				$(this).dialog("close");
+			}
+		}
+	});
+}
+
+function deleteCollectionDialog(dialId){
+	var selectedCollectionId = $("#" + dialId + " > .selected-item-id").val();
+	var parentCollectionId = $("#" + dialId + " > .parent-collection-id").val();
+	var refreshElementId = $("#" + dialId + " > .refresh-element-id").val();	
+	
+	/// Get the ParentCollections property from the collection dataset
+	$.get("/collection/" + selectedCollectionId + "/attr/ParentCollections", function(data){
+		data.splice(data.indexOf(parentCollectionId), 1); /// Delete the parent collection id from the ParentCollections property in collections dataset
+		$.put("/collection/" + selectedCollectionId + "/attr/ParentCollections", data, function(response){
+			refreshContent(parentCollectionId);
+		})
+	});	
+}
+
+function initDeleteRecordDialog(dialId){
+	$("#" + dialId).dialog({
+		autoOpen: false,
+		resizable: false,
+		height: 60,
+		width: 350,
+		modal: true,
+		title: "Are you sure to delete this record?",
+		buttons : {
+			"Delete" : function() {
+				deleteRecordDialog(dialId);
+				$(this).dialog("close");
+			},
+			Cancel : function() {
+				$(this).dialog("close");
+			}
+		}
+	});	
+}
+
+function deleteRecordDialog(dialId){
+	var selectedRecordId = $("#" + dialId + " > .selected-item-id").val();
+	var parentCollectionId = $("#" + dialId + " > .parent-collection-id").val();
+	var refreshElementId = $("#" + dialId + " > .refresh-element-id").val();	
+	
+	/// Get the Collections property from the repository dataset
+	$.get("/resource/" + selectedRecordId + "/attr/Collections", function(data){
+		data.splice(data.indexOf(parentCollectionId), 1);
 		$.put("/resource/" + selectedRecordId + "/attr/Collections", data, function(response){
 			refreshContent(refreshElementId);
 		})
-	});		
+	});	
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -223,14 +311,20 @@ function addCollection(collectionId){
 
 function deleteCollection(collectionId){
 	var objId = JSON.parse(collectionId);
+
+	///Set global values for the dialog/////////////////////////////////////////////
+	/// Identify the parent collection where the selected collection will be deleted
+	$("#delete-collection-dialog > .selected-item-id").val(objId.id);
+	/// Identify the parent collection element
+	$("#delete-collection-dialog > .parent-collection-id").val(objId.parentId); 
+	/// Identify the parent collection element which needs to be refreshed
+	if(objId.parentElementId.indexOf("-conatainer")){
+		$("#delete-collection-dialog > .refresh-element-id").val(objId.parentElementId);
+	}else{
+		$("#delete-collection-dialog > .refresh-element-id").val(objId.parentElementId + "-container");
+	}
 	
-	/// Get the ParentCollections property from the collection dataset
-	$.get("/collection/" + objId.id + "/attr/ParentCollections", function(data){
-		data.splice(data.indexOf(objId.parentId), 1); /// Delete the parent collection id from the ParentCollections property in collections dataset
-		$.put("/collection/" + objId.id + "/attr/ParentCollections", data, function(response){
-			refreshContent(objId.parentElementId);
-		})
-	});
+	$("#delete-collection-dialog").dialog("open"); 	
 }
 
 function addRecord(collectionId){
@@ -248,15 +342,20 @@ function addRecord(collectionId){
 
 function deleteRecord(recordId){
 	var objId = JSON.parse(recordId);
+
+	///Set global values for the dialog/////////////////////////////////////////////
+	/// Identify the parent collection where the selected record will be deleted
+	$("#delete-record-dialog > .selected-item-id").val(objId.id);
+	/// Identify the parent collection element
+	$("#delete-record-dialog > .parent-collection-id").val(objId.parentId); 
+	/// Identify the parent collection element which needs to be refreshed
+	if(objId.parentElementId.indexOf("-conatainer")){
+		$("#delete-record-dialog > .refresh-element-id").val(objId.parentElementId);
+	}else{
+		$("#delete-record-dialog > .refresh-element-id").val(objId.parentElementId + "-container");
+	}	
 	
-	/// Get the Collections property from the repository dataset
-	$.get("/resource/" + objId.id + "/attr/Collections", function(data){
-		data.splice(data.indexOf(objId.parentId), 1);
-		$.put("/resource/" + objId.id + "/attr/Collections", data, function(response){
-			refreshContent(objId.parentElementId);
-		})
-	});
-	
+	$("#delete-record-dialog").dialog("open"); 
 }
 
 function refreshContent(parentEleId){
