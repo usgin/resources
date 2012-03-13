@@ -62,19 +62,6 @@ function initInputParentCollection(inputId) {
 	});
 }
 
-function onSubmit(){
-	var parentCollections = split($("#parentCollectionValues").val());
-	
-	var collectionObj={
-		collectionTitle: $("#collectionTitle").val(),
-		parentCollections: parentCollections,
-		collectionDescription: $("#collectionDescription").val()
-	};
-	
-	$.post("/new-collection/", collectionObj, function(response){
-		window.location = "/collection/" + response;
-	});
-}
 
 /// Add default parent collection info
 function addInitialParentCollection(collectionPairs){

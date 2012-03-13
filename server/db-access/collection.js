@@ -9,10 +9,11 @@ var collections = new(cradle.Connection)(config.dbInfo.dbHost, config.dbInfo.dbP
 /** MIDDLEWARE FOR SAVING A COLLECTION **/
 exports.saveCollection = function(req, res, next) {
 	collectionId = req.param("id", false);
+	var parentCollections = req.body.parentCollections.split(/,\s/);
 
 	collection = { 
 		Title: req.body.collectionTitle,
-		ParentCollections: req.body.parentCollections, 
+		ParentCollections: parentCollections, 
 		Description: req.body.collectionDescription 
 	};
 	

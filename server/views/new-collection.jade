@@ -25,8 +25,8 @@ block page-content
 						td.input-label
 							label(for="parentCollections") Parent Collections:
 						td.input-column
-							input#parentCollectionNames(name="parentCollectionNames")
-							#parentCollectionValues
+							input#parentCollectionNames
+							input#parentCollectionValues(name="parentCollections", style="display: none")
 					tr
 						td.input-label
 							label(for="collectionDescription") Description:
@@ -35,4 +35,4 @@ block page-content
 				table#submit-table
 					tr
 						td
-							input#save-collection(type="button", onclick="onSubmit()", value="Submit")
+							input#save-collection(type="submit") Submit
