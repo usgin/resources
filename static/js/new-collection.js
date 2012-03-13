@@ -66,7 +66,9 @@ function onSubmit(){
 		collectionDescription: $("#collectionDescription").val()
 	};
 	
-	$.post("/new-collection/", collectionObj);
+	$.post("/new-collection/", collectionObj, function(response){
+		window.location = "/collection/" + response;
+	});
 }
 
 

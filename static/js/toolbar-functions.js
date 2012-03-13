@@ -14,7 +14,7 @@ function initAddCollectionDialog(dialId){
 		title: "Add Collection",
 		buttons: {
 			"New Collection": function(){
-				window.open("/new-collection/");
+				window.location = "/new-collection/";
 				$(this).dialog("close");
 			},
 			"Add": function() {
@@ -88,7 +88,7 @@ function initAddRecordDialog(dialId){
 		title: "Add Record",
 		buttons: {
 			"New Record": function(){
-				window.open("/new-resource/");
+				window.location = "/new-resource/";
 				$(this).dialog("close");
 			},
 			"Add": function() {

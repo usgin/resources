@@ -177,7 +177,8 @@ server.get("/new-collection/", requireAuth, function(req, res) {
 	utils.renderToResponse(req, res, "new-collection");
 });
 server.post("/new-collection/", requireAuth, collection.saveCollection, function(req, res) {
-	res.redirect("/collection/" + req.saveResponse.id);
+	//res.redirect("/collection/" + req.saveResponse.id);
+	res.json(req.saveResponse.id);
 });
 
 //Edit a single attribute of a collection
