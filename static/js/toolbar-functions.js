@@ -1,3 +1,10 @@
+$(document).ready(function() {
+	initAddCollectionDialog("add-collection-dialog");
+	initAddRecordDialog("add-record-dialog");
+	initDeleteCollectionDialog("delete-collection-dialog");
+	initDeleteRecordDialog("delete-record-dialog");
+});
+
 function initAddCollectionDialog(dialId){
 	$("#" + dialId).dialog({
 		autoOpen: false,
@@ -35,7 +42,7 @@ function initAddCollectionDialog(dialId){
 					collections.push(
 						{ 
 							id: response[i].id, 
-							value: response[i].value.title /// value will be displayed in the autocomplete popup
+							value: response[i].value.title /// value will be displayed in the input box
 						}
 					); 
 				}

@@ -2,7 +2,10 @@ extends ./base
 
 block styles
 	link(rel="stylesheet", type="text/css", href="/static/css/new-collection.css")
-	script(type="application/javascript", src="/static/js/document-ready.js")
+	link(rel="stylesheet", type="text/css", href="/static/css/jqueryui/jquery-ui-1.8.16.custom.css")
+	
+block scripts
+	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
 	script(type="application/javascript", src="/static/js/new-collection.js")
 	
 block page-content
@@ -20,7 +23,8 @@ block page-content
 						td.input-label
 							label(for="parentCollections") Parent Collections:
 						td.input-column
-							input#parentCollections(name="parentCollections")
+							input#parentCollectionNames(name="parentCollectionNames")
+							#parentCollectionValues
 					tr
 						td.input-label
 							label(for="collectionDescription") Description:
@@ -29,4 +33,4 @@ block page-content
 				table#submit-table
 					tr
 						td
-							input#save-collection(type="submit")
+							input#save-collection(type="button", onclick="onSubmit()", value="Submit")
