@@ -7,6 +7,8 @@ block styles
 block scripts
 	script(type="application/javascript", src="/static/js/jquery-ui-1.8.16.custom.min.js")
 	script(type="application/javascript", src="/static/js/new-collection.js")
+	script(type="application/javascript")
+		| collectionName = "#{collectionName}"
 	
 block page-content
 	#new-collection-block

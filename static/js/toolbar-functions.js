@@ -14,7 +14,10 @@ function initAddCollectionDialog(dialId){
 		title: "Add Collection",
 		buttons: {
 			"New Collection": function(){
-				window.location = "/new-collection/";
+				var collectionName = $("a[href='/collection/" 
+					+ $("#" + dialId + " > .parent-collection-id").val() 
+					+ "']")[0].innerHTML;
+				window.location = "/new-collection/" + collectionName;
 				$(this).dialog("close");
 			},
 			"Add": function() {

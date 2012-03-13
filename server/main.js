@@ -176,10 +176,16 @@ server.post("/new-harvest/",
 server.get("/new-collection/", requireAuth, function(req, res) {
 	utils.renderToResponse(req, res, "new-collection");
 });
+
 server.post("/new-collection/", requireAuth, collection.saveCollection, function(req, res) {
 	//res.redirect("/collection/" + req.saveResponse.id);
 	res.json(req.saveResponse.id);
 });
+
+server.get("/new-collection/:collectionName?", requireAuth, function(req, res){
+	var collectionName = req.param("collectionName", null);
+	utils.renderToResponse(req, res, "new-collection", {collectionName: collectionName});
+})
 
 //Edit a single attribute of a collection
 server.put("/collection/:id/attr/:attribute", requireAuth, collection.getCollection, collection.editAttribute, function(req, res) {

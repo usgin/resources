@@ -2,6 +2,14 @@ $(document).ready(function() {
 	initInputParentCollection("parentCollectionNames");
 });
 
+function split(value){
+	return value.split(/,\s/);
+}
+
+function extractLast(term){
+	return split(term).pop();
+}
+
 function initInputParentCollection(inputId) {
 	var collections = [];
 	var collectionPairs = {};
@@ -13,6 +21,11 @@ function initInputParentCollection(inputId) {
 			});
 			
 			collectionPairs[response[i].value.title] = response[i].id;
+		}
+		
+		/// Input the passed collection name into the parent collection box
+		if(collectionName){
+			addInitialParentCollection(collectionPairs);
 		}
 
 		$("#" + inputId).autocomplete({
@@ -49,14 +62,6 @@ function initInputParentCollection(inputId) {
 	});
 }
 
-function split(value){
-	return value.split(/,\s/);
-}
-
-function extractLast(term){
-	return split(term).pop();
-}
-
 function onSubmit(){
 	var parentCollections = split($("#parentCollectionValues").val());
 	
@@ -69,6 +74,12 @@ function onSubmit(){
 	$.post("/new-collection/", collectionObj, function(response){
 		window.location = "/collection/" + response;
 	});
+}
+
+/// Add default parent collection info
+function addInitialParentCollection(collectionPairs){
+	$("#parentCollectionNames").val(collectionName + ", ");
+	$("#parentCollectionValues").val(collectionPairs[collectionName] + ", ");
 }
 
 

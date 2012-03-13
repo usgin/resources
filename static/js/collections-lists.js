@@ -116,7 +116,7 @@ function getHtmlRecord(record, collectionEleId) {
 	html += record.doc.Title || "No Title Was Given";
 	html += "</a>";
 	if(authenticated){
-		html += getToolbarHtml(record.id, collectionEleId, false); ///Add toolbar after each record
+		html += getToolbarHtml(record.id, record.doc.Title, collectionEleId, false); ///Add toolbar after each record
 	}	
 	html += "</li>";
 	
