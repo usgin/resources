@@ -9,7 +9,8 @@ block scripts
 	script(type="application/javascript", src="/static/js/collections-lists.js")
 	script(type="application/javascript", src="/static/js/toolbar-functions.js")
 	script(type="application/javascript")
-		| authenticated = #{authenticated}
+		| authenticated = #{authenticated};
+		| newRecordTemplate = !{metadataTemplate};
 
 block page-content
 		#collections-list-content.block-content
@@ -39,6 +40,8 @@ block page-content
 				.selected-item-id
 				.parent-collection-id
 				.refresh-element-id
+				form#submit-form(action="/new-resource/", method="post", enctype="multipart/form-data")
+					input#record-template(name="theResource", style="display: none")
 			#delete-collection-dialog
 				.selected-item-id
 				.parent-collection-id

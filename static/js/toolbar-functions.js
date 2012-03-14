@@ -91,8 +91,10 @@ function initAddRecordDialog(dialId){
 		title: "Add Record",
 		buttons: {
 			"New Record": function(){
-				window.location = "/new-resource/";
-				$(this).dialog("close");
+				var collectionId = $("#" + dialId + " > .parent-collection-id").val(); 
+				newRecordTemplate.Collections.push(collectionId);
+				$("#record-template").val(JSON.stringify(newRecordTemplate));
+				$("#submit-form").submit();
 			},
 			"Add": function() {
 				if($("#" + dialId + " > input").val()){

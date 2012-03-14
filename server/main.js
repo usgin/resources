@@ -108,7 +108,13 @@ server.get("/collections/:format", collection.getTopLevelCollections, collection
 
 // Browse collections page
 server.get("/browse/", collection.getTopLevelCollections, function(req, res) {
-	utils.renderToResponse(req, res, "manage-collections", { collections: req.collections });
+
+	var context = {
+		collections: req.collections,
+		metadataTemplate: JSON.stringify(utils.examples["http://resources.usgin.org/uri-gin/usgin/schema/json-metadata/"])
+	}
+	
+	utils.renderToResponse(req, res, "manage-collections", context);
 });
 
 server.get("/robots.txt", express.static("../static/"));
