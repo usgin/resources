@@ -205,3 +205,39 @@ h1 {
 button:hover{
 	cursor: pointer;
 }
+
+/**Customize the dialog***************/
+.ui-dialog .ui-dialog-buttonpane {
+	margin: 0 !important;
+	padding: 0 !important;
+	text-align: center !important;
+}
+
+.ui-dialog .ui-dialog-content {
+	min-height: 0px !important;
+	color: #006891;
+}
+
+.ui-dialog .ui-dialog-content input {
+	width: 250px;
+	font-size: 15px;
+	padding: .2em .4em;
+	margin: .2em .4em;	
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: .2em 1em !important;
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.ui-dialog .ui-dialog-title {
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.ui-menu .ui-menu-item a {
+	font-size: 15px;
+}
+
+

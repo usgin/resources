@@ -30,23 +30,25 @@ block page-content
 						ul(id=collections[c].id).record-list
 				- }
 			- if (authenticated) {
-			#add-collection-dialog
-				input.input-name
+			#add-collection-browser-dialog
+				label(for="add-collection-name") Type a collection name:
+				input#add-collection-name.input-name
 				.selected-item-id
 				.parent-collection-id
 				.refresh-element-id
-			#add-record-dialog
-				input.input-name
+			#add-record-browser-dialog
+				label(for="add-record-name") Type a record name:
+				input#add-record-name.input-name
 				.selected-item-id
 				.parent-collection-id
 				.refresh-element-id
 				form#submit-form(action="/new-resource/", method="post", enctype="multipart/form-data")
 					input#record-template(name="theResource", style="display: none")
-			#delete-collection-dialog
+			#delete-collection-browser-dialog
 				.selected-item-id
 				.parent-collection-id
 				.refresh-element-id
-			#delete-record-dialog
+			#delete-record-browser-dialog
 				.selected-item-id
 				.parent-collection-id
 				.refresh-element-id

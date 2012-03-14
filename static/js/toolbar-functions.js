@@ -1,8 +1,8 @@
 $(document).ready(function() {
-	initAddCollectionDialog("add-collection-dialog");
-	initAddRecordDialog("add-record-dialog");
-	initDeleteCollectionDialog("delete-collection-dialog");
-	initDeleteRecordDialog("delete-record-dialog");
+	initAddCollectionDialog("add-collection-browser-dialog");
+	initAddRecordDialog("add-record-browser-dialog");
+	initDeleteCollectionDialog("delete-collection-browser-dialog");
+	initDeleteRecordDialog("delete-record-browser-dialog");
 });
 
 function initAddCollectionDialog(dialId){
@@ -13,7 +13,7 @@ function initAddCollectionDialog(dialId){
 		width: 500,
 		title: "Add Collection",
 		buttons: {
-			"New Collection": function(){
+			"Create a New Collection": function(){
 				var collectionName = $("a[href='/collection/" 
 					+ $("#" + dialId + " > .parent-collection-id").val() 
 					+ "']")[0].innerHTML;
@@ -90,7 +90,7 @@ function initAddRecordDialog(dialId){
 		width: 500,
 		title: "Add Record",
 		buttons: {
-			"New Record": function(){
+			"Create a New Record": function(){
 				var collectionId = $("#" + dialId + " > .parent-collection-id").val(); 
 				newRecordTemplate.Collections.push(collectionId);
 				$("#record-template").val(JSON.stringify(newRecordTemplate));
@@ -306,11 +306,11 @@ function addCollection(collectionId){
 	
 	///Set global values for the dialog/////////////////////////////////////////
 	/// Identify the current collection where the new collection will be added
-	$("#add-collection-dialog > .parent-collection-id").val(objId.id); 
+	$("#add-collection-browser-dialog > .parent-collection-id").val(objId.id); 
 	/// Identify the current collection element which needs to be refreshed
-	$("#add-collection-dialog > .refresh-element-id").val(objId.id + "-" + objId.parentElementId); 
+	$("#add-collection-browser-dialog > .refresh-element-id").val(objId.id + "-" + objId.parentElementId); 
 	
-	$("#add-collection-dialog").dialog("open");
+	$("#add-collection-browser-dialog").dialog("open");
 	
 }
 
@@ -319,17 +319,17 @@ function deleteCollection(collectionId){
 
 	///Set global values for the dialog/////////////////////////////////////////////
 	/// Identify the parent collection where the selected collection will be deleted
-	$("#delete-collection-dialog > .selected-item-id").val(objId.id);
+	$("#delete-collection-browser-dialog > .selected-item-id").val(objId.id);
 	/// Identify the parent collection element
-	$("#delete-collection-dialog > .parent-collection-id").val(objId.parentId); 
+	$("#delete-collection-browser-dialog > .parent-collection-id").val(objId.parentId); 
 	/// Identify the parent collection element which needs to be refreshed
-	if(objId.parentElementId.indexOf("-conatainer")){
-		$("#delete-collection-dialog > .refresh-element-id").val(objId.parentElementId);
+	if(objId.parentElementId.indexOf("-container")){
+		$("#delete-collection-browser-dialog > .refresh-element-id").val(objId.parentElementId);
 	}else{
-		$("#delete-collection-dialog > .refresh-element-id").val(objId.parentElementId + "-container");
+		$("#delete-collection-browser-dialog > .refresh-element-id").val(objId.parentElementId + "-container");
 	}
 	
-	$("#delete-collection-dialog").dialog("open"); 	
+	$("#delete-collection-browser-dialog").dialog("open"); 	
 }
 
 function addRecord(collectionId){
@@ -337,11 +337,11 @@ function addRecord(collectionId){
 	
 	///Set global values for the dialog/////////////////////////////////////////
 	/// Identify the current collection where the new record will be added
-	$("#add-record-dialog > .parent-collection-id").val(objId.id); 
+	$("#add-record-browser-dialog > .parent-collection-id").val(objId.id); 
 	/// Identify the current collection element which needs to be refreshed
-	$("#add-record-dialog > .refresh-element-id").val(objId.id + "-" + objId.parentElementId); 
+	$("#add-record-browser-dialog > .refresh-element-id").val(objId.id + "-" + objId.parentElementId); 
 	
-	$("#add-record-dialog").dialog("open");
+	$("#add-record-browser-dialog").dialog("open");
 			
 }
 
@@ -350,17 +350,17 @@ function deleteRecord(recordId){
 
 	///Set global values for the dialog/////////////////////////////////////////////
 	/// Identify the parent collection where the selected record will be deleted
-	$("#delete-record-dialog > .selected-item-id").val(objId.id);
+	$("#delete-record-browser-dialog > .selected-item-id").val(objId.id);
 	/// Identify the parent collection element
-	$("#delete-record-dialog > .parent-collection-id").val(objId.parentId); 
+	$("#delete-record-browser-dialog > .parent-collection-id").val(objId.parentId); 
 	/// Identify the parent collection element which needs to be refreshed
 	if(objId.parentElementId.indexOf("-conatainer")){
-		$("#delete-record-dialog > .refresh-element-id").val(objId.parentElementId);
+		$("#delete-record-browser-dialog > .refresh-element-id").val(objId.parentElementId);
 	}else{
-		$("#delete-record-dialog > .refresh-element-id").val(objId.parentElementId + "-container");
+		$("#delete-record-browser-dialog > .refresh-element-id").val(objId.parentElementId + "-container");
 	}	
 	
-	$("#delete-record-dialog").dialog("open"); 
+	$("#delete-record-browser-dialog").dialog("open"); 
 }
 
 function refreshContent(parentEleId){
@@ -383,19 +383,19 @@ function refreshContent(parentEleId){
 function addTopCollection(id){
 	///Set global values for the dialog/////////////////////////////////////////
 	/// Identify the current collection where the new collection will be added
-	$("#add-collection-dialog > .parent-collection-id").val(id); 
+	$("#add-collection-browser-dialog > .parent-collection-id").val(id); 
 	/// Identify the current collection element which needs to be refreshed
-	$("#add-collection-dialog > .refresh-element-id").val(id); 
+	$("#add-collection-browser-dialog > .refresh-element-id").val(id); 
 	
-	$("#add-collection-dialog").dialog("open");	
+	$("#add-collection-browser-dialog").dialog("open");	
 }
 
 function addTopRecord(id){
 	///Set global values for the dialog/////////////////////////////////////////
 	/// Identify the current collection where the new record will be added
-	$("#add-record-dialog > .parent-collection-id").val(id); 
+	$("#add-record-browser-dialog > .parent-collection-id").val(id); 
 	/// Identify the current collection element which needs to be refreshed
-	$("#add-record-dialog > .refresh-element-id").val(id); 
+	$("#add-record-browser-dialog > .refresh-element-id").val(id); 
 	
-	$("#add-record-dialog").dialog("open");	
+	$("#add-record-browser-dialog").dialog("open");	
 }
