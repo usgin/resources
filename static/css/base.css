@@ -219,7 +219,7 @@ button:hover{
 }
 
 .ui-dialog .ui-dialog-content input {
-	width: 250px;
+	width: 56%;
 	font-size: 15px;
 	padding: .2em .4em;
 	margin: .2em .4em;	
