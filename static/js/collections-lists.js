@@ -81,9 +81,8 @@ function getHtmlCollection(collection, collectionEleId) {
 	
 	var html = "<li id='" + collectionId + "-container' class='record-container collection-item'>";
 	html += "<span class='ui-icon ui-icon-triangle-1-e collection-list-expand'";
-	html += " onclick='collectionExpand(&#39;" + collectionId + "&#39;)'"; /// Use escape symbol to identify the quote symbol pair
-	html += "></span>";
-	html += "<a href='" + collectionLink + "'>";
+	html += " onclick='collectionExpand(&#39;" + collectionId + "&#39;)'/>"; /// Use escape symbol to identify the quote symbol pair
+	html += "<a onclick='collectionExpand(&#39;" + collectionId + "&#39;)'>";
 	html += collection.doc.Title || "No Title Was Given";
 	html += "</a>";
 	if(authenticated){

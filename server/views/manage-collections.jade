@@ -19,7 +19,7 @@ block page-content
 				div(id=collections[c].id + "-container")
 					div.block-title.block-collection
 						span(onclick="showRecords('#{collections[c].id}')").ui-icon.ui-icon-triangle-1-e.collection-list-expand
-						a(class="collection-list-title",href='/collection/'+'#{collections[c].id}')=collections[c].doc.Title
+						a(class="collection-list-title",onclick="showRecords('#{collections[c].id}')")=collections[c].doc.Title
 						- if (authenticated) {
 						div.collection-list-actions
 							span(onclick="addTopCollection('#{collections[c].id}')").ui-icon.ui-icon-folder-collapsed
