@@ -6,6 +6,11 @@
 	height: 13px;
 }
 
+.collection-list-title:hover {
+	text-decoration: none !important;
+	cursor: pointer;
+}
+
 .block-collection span:hover {
 	cursor: pointer;
 }
@@ -77,7 +82,7 @@
 }
 
 .collection-item a:hover {
-	text-decoration: underline !important;
+	cursor: pointer;
 }
 
 /**Add buttons after each result ine******************************************************/

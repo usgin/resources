@@ -167,9 +167,9 @@ function initDeleteCollectionDialog(dialId){
 		height: 60,
 		width: 350,
 		modal: true,
-		title: "Are you sure to delete this collection?",
+		title: "Are you sure you want to remove this collection?",
 		buttons : {
-			"Delete" : function() {
+			"Remove" : function() {
 				deleteCollectionDialog(dialId);
 				$(this).dialog("close");
 			},
@@ -201,9 +201,9 @@ function initDeleteRecordDialog(dialId){
 		height: 60,
 		width: 350,
 		modal: true,
-		title: "Are you sure to delete this record?",
+		title: "Are you sure you want to remove this record from the collection?",
 		buttons : {
-			"Delete" : function() {
+			"Remove" : function() {
 				deleteRecordDialog(dialId);
 				$(this).dialog("close");
 			},

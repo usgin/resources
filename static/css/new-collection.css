@@ -2,7 +2,7 @@
     font-size: 14px;
     color: #006891;
 }
-#collectionTitle, #collectionDescription {
+#collectionTitle, #collectionDescription, #parentCollectionNames {
     width: 100%
 }
 .input-column {
