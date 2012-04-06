@@ -86,7 +86,7 @@ function getHtmlCollection(collection, collectionEleId) {
 	html += collection.doc.Title || "No Title Was Given";
 	html += "</a>";
 	if(authenticated){
-		html += getToolbarHtml(collection.id, collectionEleId, true); /// Add toolbar after each collection
+		html += getToolbarHtml(collection.id, collection.doc.Title, collectionEleId, true); /// Add toolbar after each collection
 	}
 	html += "<ul id='" + collectionId + "' class='record-list record-inner-list'></ul>"; /// This is the collection content element
 	html += "</li>";
@@ -115,7 +115,7 @@ function getHtmlRecord(record, collectionEleId) {
 	html += record.doc.Title || "No Title Was Given";
 	html += "</a>";
 	if(authenticated){
-		html += getToolbarHtml(record.id, collectionEleId, false); ///Add toolbar after each record
+		html += getToolbarHtml(record.id, record.doc.Title, collectionEleId, false); ///Add toolbar after each record
 	}	
 	html += "</li>";
 	

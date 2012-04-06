@@ -22,7 +22,7 @@ block page-content
 						a(class="collection-list-title",onclick="showRecords('#{collections[c].id}')")=collections[c].doc.Title
 						- if (authenticated) {
 						div.collection-list-actions
-							span(onclick="addTopCollection('#{collections[c].id}')").ui-icon.ui-icon-folder-collapsed
+							span(onclick="addTopCollection('#{collections[c].id}', '#{collections[c].doc.Title}')").ui-icon.ui-icon-folder-collapsed
 							span(onclick="addTopRecord('#{collections[c].id}')").ui-icon.ui-icon-document
 						- }
 					div.block-content.collection-content
@@ -35,6 +35,7 @@ block page-content
 				input#add-collection-name.input-name
 				.selected-item-id
 				.parent-collection-id
+				.parent-collection-name
 				.refresh-element-id
 			#add-record-browser-dialog
 				label(for="add-record-name") Type a record name:
