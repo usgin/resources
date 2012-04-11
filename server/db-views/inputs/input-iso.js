@@ -80,7 +80,9 @@ exports.views = {
 			doc.setProperty("Description", objGet(ident, "gmd:abstract.gco:CharacterString.$t", "No Description Was Given"));
 			
 			// Publication Date
-			doc.setProperty("PublicationDate", objGet(ident, "gmd:citation.gmd:CI_Citation.gmd:date.gmd:CI_Date.gmd:date.gco:DateTime.$t", "Publication Date Not Given"));
+			pubDate = objGet(ident, "gmd:citation.gmd:CI_Citation.gmd:date.gmd:CI_Date.gmd:date.gco:DateTime.$t", "Publication Date Not Given").trim();
+			if (pubDate.match(/T\d\d:\d\d(?!:)/)) { pubDate = pubDate + ":00Z"; }
+			doc.setProperty("PublicationDate", pubDate);
 			
 			// Find Authors
 			respParties = objGet(ident, "gmd:citation.gmd:CI_Citation.gmd:citedResponsibleParty", []);
