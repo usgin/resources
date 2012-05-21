@@ -65,9 +65,13 @@ exports.views = {
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.codeListValue", role);
 				iso.setProperty(isoLocation + ".gmd:CI_ResponsibleParty.gmd:role.gmd:CI_RoleCode.$t", role);
 			}
+			function computeId(linkObj) {
+				return linkObj.URL.replace(/http:\/\//, "").replace(/\//g, "-").replace(/\./g, "-").replace(/=/g, "-").replace(/\?.+$/g, "");
+			}
 			
-			function writeLinkInfo(linkObj, isoLocation) {
-				iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:linkage.gmd:URL.$t", objGet(linkObj, "URL", "No URL Was Given"));
+			function writeLinkInfo(linkObj, isoLocation, addId) {
+				if (addId) { iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.id", computeId(linkObj)); }
+				iso.setProperty(isoLocation + ".gmd:MD_DigitalTransferOptions.gmd:onLine.gmd:CI_OnlineResource.gmd:linkage.gmd:URL.$t", objGet(linkObj, "URL", "No URL Was Given"));				
 				serviceType = objGet(linkObj, "ServiceType", false);
 				descriptionString = objGet(linkObj, "Description", "");	
 				layerId = objGet(linkObj, "layerId", false);
@@ -215,29 +219,38 @@ exports.views = {
 			docLinks = objGet(doc, "Links", []); 
 			
 			iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor", []);
+			iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions", []);
+			
+			// Write all the links to gmd:transferOptions
+			for (var l = 0; l < docLinks.length; l++) {
+				writeLinkInfo(docLinks[l], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions." + l, true);
+			}
 			
 			// Loop through doc distributors. If links identify a distributor, then add it the the MD_Distributor
 			for (d in docDistributors) {
 				writeContactInfo(docDistributors[d], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorContact", "distributor");
 				
 				var dl = 0;
-				for (var l = docLinks.length -1;l >= 0;l--) {
+				
+				for (var l = docLinks.length -1; l >= 0; l--) {					
+					// Find the link's Distributor
 					distName = objGet(docLinks[l], "Distributor", "None").trim();
+					
+					// If the link's distributor matches the distributor we're currently working with ...
 					if (distName == objGet(docDistributors[d], "Name", null) || distName == objGet(docDistributors[d], "OrganizationName", null)) {
+						// If this distributor doesn't have any transferOptions yet...
 						if (!objGet(iso, "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", false)) {
+							// Create an empty array for this distributor's transferOptions
 							iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions", []);
 						}
-						writeLinkInfo(docLinks[l], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions." + dl);
+						// Write the link to the distributor's transferOptions as an xlink:href
+						iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:distributor." + d + ".gmd:MD_Distributor.gmd:distributorTransferOptions." + dl + ".xlink:href", "#" + computeId(docLinks[l]));
+						// Remove this link from the array, so subsequent loops are shorter
 						docLinks.splice(l, 1);
+						// Increment the counter for the number of transferOptions this distributor has
 						dl++;
 					}
 				}
-			}
-			
-			// Add remaining links where distributor was not specified explicitly
-			iso.setProperty("gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions", []);
-			for (var leftover in docLinks) {
-				writeLinkInfo(docLinks[leftover], "gmd:MD_Metadata.gmd:distributionInfo.gmd:MD_Distribution.gmd:transferOptions." + leftover);
 			}
 			
 			// Finished!!
