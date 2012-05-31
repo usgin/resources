@@ -104,7 +104,7 @@ exports.getCollectionRecords = function(req, res, next) {
 		searchOptions = {
 			host: config.dbInfo.dbHost,
 			port: config.dbInfo.dbPort,
-			path: utils.searchUrl + "collection?include_docs=true&q=" + collectionId
+			path: utils.searchUrl + "collection?include_docs=true&sort=title&limit=999999&q=" + collectionId
 		};
 		
 		// If the request is not authenticated, do not return unpublished records
