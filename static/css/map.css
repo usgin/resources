@@ -72,5 +72,8 @@
     background-color: #F08B6F !important;	
 }
 
-
+/*Disable Google copyright popup*/
+.olLayerGoogleV3.olLayerGooglePoweredBy {
+	display: none;
+}
 

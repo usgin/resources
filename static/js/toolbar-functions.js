@@ -14,9 +14,7 @@ function initAddCollectionDialog(dialId){
 		title: "Add Collection",
 		buttons: {
 			"Create a New Collection": function(){
-				var collectionName = $("a[href='/collection/" 
-					+ $("#" + dialId + " > .parent-collection-id").val() 
-					+ "']")[0].innerHTML;
+				var collectionName = $("#" + dialId + " > .parent-collection-name").val();
 				window.location = "/new-collection/" + collectionName;
 				$(this).dialog("close");
 			},
@@ -231,9 +229,10 @@ function deleteRecordDialog(dialId){
 /////////////////////////////////////////////////////////////////////////////////////////////////
 ///Create the id object
 ///id - id of the current selected 
-function getObjId(id, parentId, pElementId){
+function getObjId(id, name, parentId, pElementId){
 	var obj = {
 		id: id,
+		name: name,
 		parentId: parentId,
 		parentElementId: pElementId
 	};
@@ -242,9 +241,9 @@ function getObjId(id, parentId, pElementId){
 }
 
 ///Add and delete buttons after each record
-function getToolbarHtml(id, parentCollectionEleId, isCollection){
+function getToolbarHtml(id, name, parentCollectionEleId, isCollection){
 	var parentCollectionId = parentCollectionEleId.split("-")[0];
-	var objId = getObjId(id, parentCollectionId, parentCollectionEleId);
+	var objId = getObjId(id, escape(name), parentCollectionId, parentCollectionEleId);
 	var html;
 	if(isCollection){
 		html = "<div class='collection-toolbar'>";
@@ -307,8 +306,9 @@ function addCollection(collectionId){
 	///Set global values for the dialog/////////////////////////////////////////
 	/// Identify the current collection where the new collection will be added
 	$("#add-collection-browser-dialog > .parent-collection-id").val(objId.id); 
+	$("#add-collection-browser-dialog > .parent-collection-name").val(unescape(objId.name));
 	/// Identify the current collection element which needs to be refreshed
-	$("#add-collection-browser-dialog > .refresh-element-id").val(objId.id + "-" + objId.parentElementId); 
+	$("#add-collection-browser-dialog > .refresh-element-id").val(objId.id + "-" + objId.parentElementId);
 	
 	$("#add-collection-browser-dialog").dialog("open");
 	
@@ -380,10 +380,11 @@ function refreshContent(parentEleId){
 /////////////////////////////////////////////////////////////////////////////////////////////////
 ///Process the top-level toolbar
 
-function addTopCollection(id){
+function addTopCollection(id, name){
 	///Set global values for the dialog/////////////////////////////////////////
 	/// Identify the current collection where the new collection will be added
 	$("#add-collection-browser-dialog > .parent-collection-id").val(id); 
+	$("#add-collection-browser-dialog > .parent-collection-name").val(name); 
 	/// Identify the current collection element which needs to be refreshed
 	$("#add-collection-browser-dialog > .refresh-element-id").val(id); 
 	
